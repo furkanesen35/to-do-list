@@ -101,9 +101,10 @@ export default function TodoList() {
     }
     try {
       await fetch(`/api/users/${userId}`, { method: "DELETE" });
-      setUsers(users.filter((u) => u.id !== userId));
+      const remainingUsers = users.filter((u) => u.id !== userId);
+      setUsers(remainingUsers);
       if (selectedUserId === userId) {
-        setSelectedUserId(users.length > 1 ? users[0].id : null);
+        setSelectedUserId(remainingUsers.length > 0 ? remainingUsers[0].id : null);
       }
       setTodos(todos.filter((t) => t.userId !== userId));
     } catch (error) {
