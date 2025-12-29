@@ -55,6 +55,12 @@ export async function PATCH(
             name: true,
           },
         },
+        subTodos: true,
+        _count: {
+          select: {
+            comments: true,
+          },
+        },
       },
     });
 

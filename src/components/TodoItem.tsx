@@ -2,20 +2,38 @@
 
 import { useState } from "react";
 import type { Todo } from "./TodoList";
+import CommentSection from "./CommentSection";
 
 type TodoItemProps = {
   todo: Todo;
   onUpdate: (id: string, updates: Partial<Todo>) => void;
   onDelete: (id: string) => void;
+  onAddSubTodo?: (parentId: string, title: string) => void;
+  currentUserId: string;
   onDragStart?: (e: React.DragEvent, todoId: string) => void;
   onDragOver?: (e: React.DragEvent) => void;
   onDrop?: (e: React.DragEvent, status: Todo["status"]) => void;
+  isSubTodo?: boolean;
 };
 
-export default function TodoItem({ todo, onUpdate, onDelete, onDragStart, onDragOver, onDrop }: TodoItemProps) {
+export default function TodoItem({ 
+  todo, 
+  onUpdate, 
+  onDelete, 
+  onAddSubTodo,
+  currentUserId,
+  onDragStart, 
+  onDragOver, 
+  onDrop,
+  isSubTodo = false 
+}: TodoItemProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [title, setTitle] = useState(todo.title);
   const [description, setDescription] = useState(todo.description || "");
+  const [showComments, setShowComments] = useState(false);
+  const [showSubTodos, setShowSubTodos] = useState(true);
+  const [isAddingSubTodo, setIsAddingSubTodo] = useState(false);
+  const [newSubTodoTitle, setNewSubTodoTitle] = useState("");
 
   const getDateDisplay = (dateString: string) => {
     const date = new Date(dateString);
@@ -50,6 +68,17 @@ export default function TodoItem({ todo, onUpdate, onDelete, onDragStart, onDrag
     onUpdate(todo.id, { title, description });
     setIsEditing(false);
   };
+
+  const handleAddSubTodo = () => {
+    if (newSubTodoTitle.trim() && onAddSubTodo) {
+      onAddSubTodo(todo.id, newSubTodoTitle);
+      setNewSubTodoTitle("");
+      setIsAddingSubTodo(false);
+    }
+  };
+
+  const commentsCount = (todo as any)._count?.comments || 0;
+  const subTodos = (todo as any).subTodos || [];
 
   const handleStatusChange = (status: Todo["status"]) => {
     onUpdate(todo.id, { status });
@@ -99,6 +128,20 @@ export default function TodoItem({ todo, onUpdate, onDelete, onDragStart, onDrag
             >
               {todo.priority}
             </span>
+            {!isSubTodo && (
+              <button
+                onClick={() => setShowComments(true)}
+                className="relative p-1.5 md:p-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors text-sm"
+                title="Comments"
+              >
+                💬
+                {commentsCount > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
+                    {commentsCount}
+                  </span>
+                )}
+              </button>
+            )}
             <button
               onClick={() => setIsEditing(true)}
               className="p-1.5 md:p-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors text-sm"
@@ -130,8 +173,80 @@ export default function TodoItem({ todo, onUpdate, onDelete, onDragStart, onDrag
               <span>⏰ Due: {getDateDisplay(todo.dueDate)}</span>
             )}
           </div>
+
+          {/* Sub-todos Section (only for parent todos) */}
+          {!isSubTodo && (
+            <div className="mt-3 pt-3 border-t border-gray-700">
+              <div className="flex items-center justify-between mb-2">
+                <button
+                  onClick={() => setShowSubTodos(!showSubTodos)}
+                  className="text-sm font-medium text-gray-400 hover:text-white flex items-center gap-1"
+                >
+                  {showSubTodos ? "▼" : "▶"} Sub-tasks ({subTodos.length})
+                </button>
+                <button
+                  onClick={() => setIsAddingSubTodo(true)}
+                  className="text-xs px-2 py-1 bg-gray-700 hover:bg-gray-600 text-white rounded transition-colors"
+                >
+                  + Add Sub-task
+                </button>
+              </div>
+
+              {showSubTodos && (
+                <div className="space-y-2 ml-4">
+                  {isAddingSubTodo && (
+                    <div className="flex gap-2 mb-2">
+                      <input
+                        type="text"
+                        value={newSubTodoTitle}
+                        onChange={(e) => setNewSubTodoTitle(e.target.value)}
+                        placeholder="Sub-task title..."
+                        className="flex-1 px-2 py-1 text-sm bg-gray-900 border border-gray-600 rounded text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        onKeyPress={(e) => e.key === "Enter" && handleAddSubTodo()}
+                        autoFocus
+                      />
+                      <button
+                        onClick={handleAddSubTodo}
+                        className="px-2 py-1 text-xs bg-green-600 hover:bg-green-700 text-white rounded"
+                      >
+                        ✓
+                      </button>
+                      <button
+                        onClick={() => {
+                          setIsAddingSubTodo(false);
+                          setNewSubTodoTitle("");
+                        }}
+                        className="px-2 py-1 text-xs bg-gray-600 hover:bg-gray-700 text-white rounded"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  )}
+
+                  {subTodos.map((subTodo: Todo) => (
+                    <TodoItem
+                      key={subTodo.id}
+                      todo={subTodo}
+                      onUpdate={onUpdate}
+                      onDelete={onDelete}
+                      currentUserId={currentUserId}
+                      isSubTodo={true}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
         </div>
       )}
+
+      {/* Comment Section Modal */}
+      <CommentSection
+        todoId={todo.id}
+        currentUserId={currentUserId}
+        isOpen={showComments}
+        onClose={() => setShowComments(false)}
+      />
     </div>
   );
 }

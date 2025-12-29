@@ -4,11 +4,32 @@ import { prisma } from "@/lib/prisma";
 export async function GET() {
   try {
     const todos = await prisma.todo.findMany({
+      where: {
+        parentId: null, // Only get parent todos, not sub-todos
+      },
       include: {
         user: {
           select: {
             id: true,
             name: true,
+          },
+        },
+        subTodos: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+          },
+          orderBy: {
+            createdAt: "asc",
+          },
+        },
+        _count: {
+          select: {
+            comments: true,
           },
         },
       },
@@ -28,7 +49,7 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { title, description, userId, priority, dueDate } = body;
+    const { title, description, userId, priority, dueDate, parentId } = body;
 
     if (!title || !userId) {
       return NextResponse.json(
@@ -44,12 +65,19 @@ export async function POST(request: Request) {
         userId,
         priority: priority || "MEDIUM",
         dueDate: dueDate ? new Date(dueDate) : null,
+        parentId: parentId || null,
       },
       include: {
         user: {
           select: {
             id: true,
             name: true,
+          },
+        },
+        subTodos: true,
+        _count: {
+          select: {
+            comments: true,
           },
         },
       },

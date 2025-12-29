@@ -181,6 +181,30 @@ export default function TodoList() {
     }
   };
 
+  const handleAddSubTodo = async (parentId: string, title: string) => {
+    if (!selectedUserId) return;
+    
+    try {
+      const response = await fetch("/api/todos", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title,
+          userId: selectedUserId,
+          parentId,
+          status: "TODO",
+          priority: "MEDIUM",
+        }),
+      });
+      const newSubTodo = await response.json();
+      
+      // Refresh todos to get updated parent with sub-todos
+      await fetchTodos();
+    } catch (error) {
+      console.error("Failed to add sub-todo:", error);
+    }
+  };
+
   const userTodos = selectedUserId
     ? todos.filter((todo) => todo.userId === selectedUserId)
     : [];
@@ -280,6 +304,8 @@ export default function TodoList() {
                       todo={todo}
                       onUpdate={handleUpdateTodo}
                       onDelete={handleDeleteTodo}
+                      onAddSubTodo={handleAddSubTodo}
+                      currentUserId={selectedUserId || ""}
                       onDragStart={handleDragStart}
                       onDragOver={handleDragOver}
                       onDrop={handleDrop}
@@ -309,6 +335,8 @@ export default function TodoList() {
                       todo={todo}
                       onUpdate={handleUpdateTodo}
                       onDelete={handleDeleteTodo}
+                      onAddSubTodo={handleAddSubTodo}
+                      currentUserId={selectedUserId || ""}
                       onDragStart={handleDragStart}
                       onDragOver={handleDragOver}
                       onDrop={handleDrop}
@@ -338,6 +366,8 @@ export default function TodoList() {
                       todo={todo}
                       onUpdate={handleUpdateTodo}
                       onDelete={handleDeleteTodo}
+                      onAddSubTodo={handleAddSubTodo}
+                      currentUserId={selectedUserId || ""}
                       onDragStart={handleDragStart}
                       onDragOver={handleDragOver}
                       onDrop={handleDrop}
