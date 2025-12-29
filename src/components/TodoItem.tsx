@@ -34,6 +34,31 @@ export default function TodoItem({
   const [showSubTodos, setShowSubTodos] = useState(true);
   const [isAddingSubTodo, setIsAddingSubTodo] = useState(false);
   const [newSubTodoTitle, setNewSubTodoTitle] = useState("");
+  const [isHovered, setIsHovered] = useState(false);
+  const [isChildHovered, setIsChildHovered] = useState(false);
+
+  const handleMouseEnter = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (isSubTodo) {
+      // Notify parent that a child is hovered
+      const parentDiv = (e.currentTarget as HTMLElement).parentElement?.closest('.parent-todo');
+      if (parentDiv) {
+        (parentDiv as any).__childHovered = true;
+      }
+    }
+    setIsHovered(true);
+  };
+
+  const handleMouseLeave = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (isSubTodo) {
+      const parentDiv = (e.currentTarget as HTMLElement).parentElement?.closest('.parent-todo');
+      if (parentDiv) {
+        (parentDiv as any).__childHovered = false;
+      }
+    }
+    setIsHovered(false);
+  };
 
   const getDateDisplay = (dateString: string) => {
     const date = new Date(dateString);
@@ -79,16 +104,42 @@ export default function TodoItem({
 
   const commentsCount = (todo as any)._count?.comments || 0;
   const subTodos = (todo as any).subTodos || [];
+  
+  // Debug: log comment count for subtasks
+  if (isSubTodo) {
+    console.log(`[SUBTODO] ${todo.title} - _count:`, (todo as any)._count, `commentsCount: ${commentsCount}`);
+  }
 
   const handleStatusChange = (status: Todo["status"]) => {
     onUpdate(todo.id, { status });
   };
 
+  const shouldShowButtons = isHovered && !isChildHovered;
+
   return (
     <div
+      onDragStart={(e) => {
+        // Prevent drag if text is selected
+        const selection = window.getSelection();
+        if (selection && selection.toString().length > 0) {
+          e.preventDefault();
+          return;
+        }
+        onDragStart?.(e, todo.id);
+      }}
       draggable={!isEditing}
-      onDragStart={(e) => onDragStart?.(e, todo.id)}
-      className={`p-4 rounded-lg border-2 ${statusColors[todo.status]} transition-all cursor-move hover:shadow-lg ${isEditing ? 'cursor-default' : ''}`}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      ref={(el) => {
+        if (el && !isSubTodo) {
+          const checkChild = () => {
+            setIsChildHovered(!!(el as any).__childHovered);
+          };
+          el.addEventListener('mouseenter', checkChild, true);
+          el.addEventListener('mouseleave', checkChild, true);
+        }
+      }}
+      className={`${isSubTodo ? 'p-1.5' : 'p-2'} rounded-lg border-2 ${statusColors[todo.status]} transition-all cursor-move hover:shadow-lg ${isEditing ? 'cursor-default' : ''} ${isSubTodo ? 'bg-gray-900 border-opacity-50' : 'parent-todo'}`}
     >
       {isEditing ? (
         <div className="space-y-2">
@@ -121,17 +172,33 @@ export default function TodoItem({
         </div>
       ) : (
         <div className="space-y-2">
-          {/* Row 1: Priority and Action Buttons */}
-          <div className="flex items-center justify-end gap-2">
-            <span
-              className={`px-2 py-1 text-xs rounded-full ${priorityColors[todo.priority]}`}
-            >
-              {todo.priority}
-            </span>
-            {!isSubTodo && (
+          {/* Row 1: Title, Buttons, and Priority */}
+          <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-1 sm:gap-2">
+            <h3 
+              draggable={false}
+              onMouseDown={(e) => e.stopPropagation()}
+              className={`flex-1 font-semibold text-white select-text cursor-text ${isSubTodo ? 'text-xs' : 'text-base'}`}
+            >{todo.title}</h3>
+            <div className="flex items-center gap-2 flex-shrink-0 self-end sm:self-auto">
+              <div className={`flex items-center gap-2 transition-opacity ${shouldShowButtons ? 'opacity-100' : 'opacity-0'}`}>
+                <button
+                  onClick={() => setIsEditing(true)}
+                  className="w-6 h-6 flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white rounded transition-colors text-xs"
+                  title="Edit"
+                >
+                  ✏️
+                </button>
+                <button
+                  onClick={() => onDelete(todo.id)}
+                  className="w-6 h-6 flex items-center justify-center bg-red-600 hover:bg-red-700 text-white rounded transition-colors text-xs"
+                  title="Delete"
+                >
+                  🗑️
+                </button>
+              </div>
               <button
                 onClick={() => setShowComments(true)}
-                className="relative p-1.5 md:p-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors text-sm"
+                className="relative w-6 h-6 flex items-center justify-center bg-purple-600 hover:bg-purple-700 text-white rounded transition-colors text-xs"
                 title="Comments"
               >
                 💬
@@ -141,42 +208,34 @@ export default function TodoItem({
                   </span>
                 )}
               </button>
-            )}
-            <button
-              onClick={() => setIsEditing(true)}
-              className="p-1.5 md:p-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors text-sm"
-              title="Edit"
-            >
-              ✏️
-            </button>
-            <button
-              onClick={() => onDelete(todo.id)}
-              className="p-1.5 md:p-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors text-sm"
-              title="Delete"
-            >
-              🗑️
-            </button>
+              <span
+                className={`px-2 py-1 text-xs rounded-full ${priorityColors[todo.priority]}`}
+              >
+                {todo.priority}
+              </span>
+            </div>
           </div>
           
-          {/* Row 2: Title */}
-          <h3 className="text-lg font-semibold text-white">{todo.title}</h3>
-          
-          {/* Row 3: Description */}
+          {/* Row 2: Description */}
           {todo.description && (
-            <p className="text-gray-300">{todo.description}</p>
+            <p 
+              draggable={false}
+              onMouseDown={(e) => e.stopPropagation()}
+              className="text-gray-300 select-text cursor-text"
+            >{todo.description}</p>
           )}
           
-          {/* Row 4: Dates */}
-          <div className="flex items-center gap-4 text-sm text-gray-400">
-            <span>📅 Created: {getDateDisplay(todo.createdAt)}</span>
+          {/* Row 3: Dates */}
+          <div className="flex items-center gap-3 text-xs text-gray-400 select-text">
+            <span title={`Created: ${new Date(todo.createdAt).toLocaleString()}`}>📅 {getDateDisplay(todo.createdAt)}</span>
             {todo.dueDate && (
-              <span>⏰ Due: {getDateDisplay(todo.dueDate)}</span>
+              <span title={`Due: ${new Date(todo.dueDate).toLocaleString()}`}>🎯 {getDateDisplay(todo.dueDate)}</span>
             )}
           </div>
 
           {/* Sub-todos Section (only for parent todos) */}
           {!isSubTodo && (
-            <div className="mt-3 pt-3 border-t border-gray-700">
+            <div className="mt-1 pt-1 border-t border-gray-700">
               <div className="flex items-center justify-between mb-2">
                 <button
                   onClick={() => setShowSubTodos(!showSubTodos)}
@@ -193,7 +252,7 @@ export default function TodoItem({
               </div>
 
               {showSubTodos && (
-                <div className="space-y-2 ml-4">
+                <div className="space-y-1">
                   {isAddingSubTodo && (
                     <div className="flex gap-2 mb-2">
                       <input
@@ -229,6 +288,7 @@ export default function TodoItem({
                       todo={subTodo}
                       onUpdate={onUpdate}
                       onDelete={onDelete}
+                      onAddSubTodo={onAddSubTodo}
                       currentUserId={currentUserId}
                       isSubTodo={true}
                     />

@@ -22,6 +22,11 @@ export async function GET() {
                 name: true,
               },
             },
+            _count: {
+              select: {
+                comments: true,
+              },
+            },
           },
           orderBy: {
             createdAt: "asc",
