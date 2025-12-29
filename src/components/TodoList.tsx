@@ -32,8 +32,8 @@ export default function TodoList() {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
-  const [filter, setFilter] = useState<"ALL" | "TODO" | "IN_PROGRESS" | "DONE">("ALL");
   const [dateFilter, setDateFilter] = useState<"ALL" | "TODAY" | "YESTERDAY" | "LAST_WEEK">("ALL");
+  const [draggedTodoId, setDraggedTodoId] = useState<string | null>(null);
 
   useEffect(() => {
     fetchTodos();
@@ -163,6 +163,24 @@ export default function TodoList() {
     }
   };
 
+  const handleDragStart = (e: React.DragEvent, todoId: string) => {
+    setDraggedTodoId(todoId);
+    e.dataTransfer.effectAllowed = "move";
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "move";
+  };
+
+  const handleDrop = async (e: React.DragEvent, newStatus: Todo["status"]) => {
+    e.preventDefault();
+    if (draggedTodoId) {
+      await handleUpdateTodo(draggedTodoId, { status: newStatus });
+      setDraggedTodoId(null);
+    }
+  };
+
   const userTodos = selectedUserId
     ? todos.filter((todo) => todo.userId === selectedUserId)
     : [];
@@ -190,11 +208,7 @@ export default function TodoList() {
     });
   };
 
-  const filteredByStatus = filter === "ALL" 
-    ? userTodos 
-    : userTodos.filter((todo) => todo.status === filter);
-    
-  const filteredTodos = getFilteredByDate(filteredByStatus);
+  const filteredTodos = getFilteredByDate(userTodos);
 
   const selectedUser = users.find((u) => u.id === selectedUserId);
 
@@ -205,6 +219,12 @@ export default function TodoList() {
       </div>
     );
   }
+
+  const todosByStatus = {
+    TODO: filteredTodos.filter(t => t.status === "TODO"),
+    IN_PROGRESS: filteredTodos.filter(t => t.status === "IN_PROGRESS"),
+    DONE: filteredTodos.filter(t => t.status === "DONE")
+  };
 
   return (
     <div className="space-y-6">
@@ -219,35 +239,15 @@ export default function TodoList() {
 
       {selectedUser && (
         <>
-          <div className="bg-gray-800 rounded-lg p-4">
-            <h2 className="text-2xl font-bold text-white">{selectedUser.name}</h2>
-          </div>
-
-          <TodoForm userId={selectedUser.id} onAdd={handleAddTodo} />
-          
-          <div className="space-y-3">
-            <div className="flex gap-2 justify-center flex-wrap">
-              {["ALL", "TODO", "IN_PROGRESS", "DONE"].map((status) => (
-                <button
-                  key={status}
-                  onClick={() => setFilter(status as any)}
-                  className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                    filter === status
-                      ? "bg-blue-600 text-white"
-                      : "bg-gray-800 text-gray-300 hover:bg-gray-700"
-                  }`}
-                >
-                  {status.replace("_", " ")}
-                </button>
-              ))}
-            </div>
+          <div className="flex items-center gap-3 flex-wrap">
+            <TodoForm userId={selectedUser.id} onAdd={handleAddTodo} />
             
-            <div className="flex gap-2 justify-center flex-wrap">
+            <div className="flex gap-2 flex-wrap">
               {["ALL", "TODAY", "YESTERDAY", "LAST_WEEK"].map((date) => (
                 <button
                   key={date}
                   onClick={() => setDateFilter(date as any)}
-                  className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                  className={`px-3 py-2 rounded-lg font-medium transition-colors ${
                     dateFilter === date
                       ? "bg-green-600 text-white"
                       : "bg-gray-800 text-gray-300 hover:bg-gray-700"
@@ -259,21 +259,93 @@ export default function TodoList() {
             </div>
           </div>
 
-          <div className="space-y-4">
-            {filteredTodos.length === 0 ? (
-              <div className="text-center py-12 text-gray-500">
-                No todos found for {selectedUser.name}. Create one above!
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {/* TODO Column */}
+            <div 
+              className="bg-gray-800 rounded-lg p-4 min-h-[200px]"
+              onDragOver={handleDragOver}
+              onDrop={(e) => handleDrop(e, "TODO")}
+            >
+              <h3 className="text-xl font-bold text-blue-400 mb-4 flex items-center justify-between">
+                <span>📝 Todo</span>
+                <span className="text-sm bg-blue-600 px-2 py-1 rounded">{todosByStatus.TODO.length}</span>
+              </h3>
+              <div className="space-y-3">
+                {todosByStatus.TODO.length === 0 ? (
+                  <div className="text-center py-8 text-gray-500 text-sm">No todos</div>
+                ) : (
+                  todosByStatus.TODO.map((todo) => (
+                    <TodoItem
+                      key={todo.id}
+                      todo={todo}
+                      onUpdate={handleUpdateTodo}
+                      onDelete={handleDeleteTodo}
+                      onDragStart={handleDragStart}
+                      onDragOver={handleDragOver}
+                      onDrop={handleDrop}
+                    />
+                  ))
+                )}
               </div>
-            ) : (
-              filteredTodos.map((todo) => (
-                <TodoItem
-                  key={todo.id}
-                  todo={todo}
-                  onUpdate={handleUpdateTodo}
-                  onDelete={handleDeleteTodo}
-                />
-              ))
-            )}
+            </div>
+
+            {/* IN_PROGRESS Column */}
+            <div 
+              className="bg-gray-800 rounded-lg p-4 min-h-[200px]"
+              onDragOver={handleDragOver}
+              onDrop={(e) => handleDrop(e, "IN_PROGRESS")}
+            >
+              <h3 className="text-xl font-bold text-yellow-400 mb-4 flex items-center justify-between">
+                <span>⚡ In Progress</span>
+                <span className="text-sm bg-yellow-600 px-2 py-1 rounded">{todosByStatus.IN_PROGRESS.length}</span>
+              </h3>
+              <div className="space-y-3">
+                {todosByStatus.IN_PROGRESS.length === 0 ? (
+                  <div className="text-center py-8 text-gray-500 text-sm">No tasks in progress</div>
+                ) : (
+                  todosByStatus.IN_PROGRESS.map((todo) => (
+                    <TodoItem
+                      key={todo.id}
+                      todo={todo}
+                      onUpdate={handleUpdateTodo}
+                      onDelete={handleDeleteTodo}
+                      onDragStart={handleDragStart}
+                      onDragOver={handleDragOver}
+                      onDrop={handleDrop}
+                    />
+                  ))
+                )}
+              </div>
+            </div>
+
+            {/* DONE Column */}
+            <div 
+              className="bg-gray-800 rounded-lg p-4 min-h-[200px]"
+              onDragOver={handleDragOver}
+              onDrop={(e) => handleDrop(e, "DONE")}
+            >
+              <h3 className="text-xl font-bold text-green-400 mb-4 flex items-center justify-between">
+                <span>✅ Done</span>
+                <span className="text-sm bg-green-600 px-2 py-1 rounded">{todosByStatus.DONE.length}</span>
+              </h3>
+              <div className="space-y-3">
+                {todosByStatus.DONE.length === 0 ? (
+                  <div className="text-center py-8 text-gray-500 text-sm">No completed tasks</div>
+                ) : (
+                  todosByStatus.DONE.map((todo) => (
+                    <TodoItem
+                      key={todo.id}
+                      todo={todo}
+                      onUpdate={handleUpdateTodo}
+                      onDelete={handleDeleteTodo}
+                      onDragStart={handleDragStart}
+                      onDragOver={handleDragOver}
+                      onDrop={handleDrop}
+                    />
+                  ))
+                )}
+              </div>
+            </div>
           </div>
         </>
       )}
