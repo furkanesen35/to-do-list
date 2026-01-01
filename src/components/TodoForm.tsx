@@ -1,31 +1,45 @@
 "use client";
 
 import { useState } from "react";
-import type { Todo } from "./TodoList";
+import type { Todo, User } from "./TodoList";
+import { getContrastTextColor } from "@/lib/colorUtils";
 
 type TodoFormProps = {
-  userId: string;
-  onAdd: (todo: Omit<Todo, "id" | "createdAt" | "updatedAt" | "user">) => void;
+  currentUserId: string;
+  selectedUserId: string;
+  allUsers: User[];
+  onAdd: (todo: Omit<Todo, "id" | "createdAt" | "updatedAt" | "listOwner" | "creator">) => void;
 };
 
-export default function TodoForm({ userId, onAdd }: TodoFormProps) {
+export default function TodoForm({ currentUserId, selectedUserId, allUsers, onAdd }: TodoFormProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [priority, setPriority] = useState<"LOW" | "MEDIUM" | "HIGH" | "URGENT">("MEDIUM");
   const [dueDate, setDueDate] = useState("");
+  const [assignedUserIds, setAssignedUserIds] = useState<string[]>([currentUserId]);
+
+  const toggleAssignedUser = (userId: string) => {
+    if (assignedUserIds.includes(userId)) {
+      setAssignedUserIds(assignedUserIds.filter((id) => id !== userId));
+    } else {
+      setAssignedUserIds([...assignedUserIds, userId]);
+    }
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!title.trim()) return;
+    if (!title.trim() || assignedUserIds.length === 0) return;
 
     onAdd({
       title,
       description: description || null,
       status: "TODO",
       priority,
-      userId,
+      listOwnerId: selectedUserId,
+      createdById: currentUserId,
+      assignedUserIds,
       dueDate: dueDate || null,
     });
 
@@ -34,6 +48,7 @@ export default function TodoForm({ userId, onAdd }: TodoFormProps) {
     setDescription("");
     setPriority("MEDIUM");
     setDueDate("");
+    setAssignedUserIds([currentUserId]);
     setIsOpen(false);
   };
 
@@ -103,6 +118,32 @@ export default function TodoForm({ userId, onAdd }: TodoFormProps) {
                 onChange={(e) => setDueDate(e.target.value)}
                 className="w-full px-4 py-2 bg-gray-900 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">
+              Assign To *
+            </label>
+            <div className="flex flex-wrap gap-2">
+              {allUsers.map((user) => (
+                <button
+                  key={user.id}
+                  type="button"
+                  onClick={() => toggleAssignedUser(user.id)}
+                  className={`px-3 py-2 rounded-lg font-medium transition-colors ${
+                    assignedUserIds.includes(user.id)
+                      ? ""
+                      : "bg-gray-700 text-gray-300 hover:bg-gray-600"
+                  }`}
+                  style={{
+                    backgroundColor: assignedUserIds.includes(user.id) ? user.color : undefined,
+                    color: assignedUserIds.includes(user.id) ? getContrastTextColor(user.color) : undefined,
+                  }}
+                >
+                  {user.name}
+                </button>
+              ))}
             </div>
           </div>
 

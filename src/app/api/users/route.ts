@@ -7,9 +7,10 @@ export async function GET() {
       select: {
         id: true,
         name: true,
+        color: true,
         _count: {
           select: {
-            todos: true,
+            ownedTodos: true,
           },
         },
       },
@@ -29,7 +30,7 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { name } = body;
+    const { name, color } = body;
 
     if (!name) {
       return NextResponse.json(
@@ -41,6 +42,7 @@ export async function POST(request: Request) {
     const user = await prisma.user.create({
       data: {
         name,
+        color: color || "#1E3A8A",
       },
     });
 

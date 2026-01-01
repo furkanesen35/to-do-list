@@ -9,10 +9,18 @@ export async function GET(
     const todo = await prisma.todo.findUnique({
       where: { id: params.id },
       include: {
-        user: {
+        listOwner: {
           select: {
             id: true,
             name: true,
+            color: true,
+          },
+        },
+        creator: {
+          select: {
+            id: true,
+            name: true,
+            color: true,
           },
         },
       },
@@ -37,7 +45,7 @@ export async function PATCH(
 ) {
   try {
     const body = await request.json();
-    const { title, description, status, priority, dueDate } = body;
+    const { title, description, status, priority, dueDate, assignedUserIds } = body;
 
     const todo = await prisma.todo.update({
       where: { id: params.id },
@@ -47,12 +55,21 @@ export async function PATCH(
         ...(status && { status }),
         ...(priority && { priority }),
         ...(dueDate !== undefined && { dueDate: dueDate ? new Date(dueDate) : null }),
+        ...(assignedUserIds !== undefined && { assignedUserIds }),
       },
       include: {
-        user: {
+        listOwner: {
           select: {
             id: true,
             name: true,
+            color: true,
+          },
+        },
+        creator: {
+          select: {
+            id: true,
+            name: true,
+            color: true,
           },
         },
         subTodos: true,

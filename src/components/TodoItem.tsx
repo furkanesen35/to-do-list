@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import type { Todo } from "./TodoList";
+import type { Todo, User } from "./TodoList";
 import CommentSection from "./CommentSection";
+import { getContrastTextColor, getTextColorForGradient } from "@/lib/colorUtils";
 
 type TodoItemProps = {
   todo: Todo;
@@ -10,6 +11,7 @@ type TodoItemProps = {
   onDelete: (id: string) => void;
   onAddSubTodo?: (parentId: string, title: string) => void;
   currentUserId: string;
+  allUsers: User[];
   onDragStart?: (e: React.DragEvent, todoId: string) => void;
   onDragOver?: (e: React.DragEvent) => void;
   onDrop?: (e: React.DragEvent, status: Todo["status"]) => void;
@@ -22,6 +24,7 @@ export default function TodoItem({
   onDelete, 
   onAddSubTodo,
   currentUserId,
+  allUsers,
   onDragStart, 
   onDragOver, 
   onDrop,
@@ -30,12 +33,47 @@ export default function TodoItem({
   const [isEditing, setIsEditing] = useState(false);
   const [title, setTitle] = useState(todo.title);
   const [description, setDescription] = useState(todo.description || "");
+  const [priority, setPriority] = useState<"LOW" | "MEDIUM" | "HIGH" | "URGENT">(todo.priority);
+  const [dueDate, setDueDate] = useState(todo.dueDate ? new Date(todo.dueDate).toISOString().split('T')[0] : "");
+  const [assignedUserIds, setAssignedUserIds] = useState<string[]>(todo.assignedUserIds);
   const [showComments, setShowComments] = useState(false);
   const [showSubTodos, setShowSubTodos] = useState(true);
   const [isAddingSubTodo, setIsAddingSubTodo] = useState(false);
   const [newSubTodoTitle, setNewSubTodoTitle] = useState("");
   const [isHovered, setIsHovered] = useState(false);
   const [isChildHovered, setIsChildHovered] = useState(false);
+
+  const toggleAssignedUser = (userId: string) => {
+    if (assignedUserIds.includes(userId)) {
+      // Don't allow removing the last user
+      if (assignedUserIds.length > 1) {
+        setAssignedUserIds(assignedUserIds.filter((id) => id !== userId));
+      }
+    } else {
+      setAssignedUserIds([...assignedUserIds, userId]);
+    }
+  };
+
+  const getBackgroundColor = () => {
+    if (todo.assignedUserIds.length === 1) {
+      // Single user - use creator's color
+      return todo.creator.color;
+    } else if (todo.assignedUserIds.length > 1) {
+      // Multiple users - create gradient with assigned users' colors
+      const assignedUsers = allUsers.filter((u) => todo.assignedUserIds.includes(u.id));
+      const colors = assignedUsers.map((u) => u.color).join(", ");
+      return `linear-gradient(135deg, ${colors})`;
+    }
+    return todo.creator.color;
+  };
+
+  const backgroundStyle = todo.assignedUserIds.length > 1
+    ? { background: getBackgroundColor() }
+    : { backgroundColor: getBackgroundColor() };
+
+  const textColor = todo.assignedUserIds.length > 1
+    ? getTextColorForGradient(allUsers.filter((u) => todo.assignedUserIds.includes(u.id)).map((u) => u.color))
+    : getContrastTextColor(todo.creator.color);
 
   const handleMouseEnter = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -83,14 +121,14 @@ export default function TodoItem({
     URGENT: "bg-red-700 text-red-200",
   };
 
-  const statusColors = {
-    TODO: "bg-gray-800 border-gray-600",
-    IN_PROGRESS: "bg-blue-900 border-blue-600",
-    DONE: "bg-green-900 border-green-600",
-  };
-
   const handleSave = () => {
-    onUpdate(todo.id, { title, description });
+    onUpdate(todo.id, { 
+      title, 
+      description,
+      priority,
+      dueDate: dueDate || null,
+      assignedUserIds,
+    });
     setIsEditing(false);
   };
 
@@ -139,22 +177,76 @@ export default function TodoItem({
           el.addEventListener('mouseleave', checkChild, true);
         }
       }}
-      className={`${isSubTodo ? 'p-1.5' : 'p-2'} rounded-lg border-2 ${statusColors[todo.status]} transition-all cursor-move hover:shadow-lg ${isEditing ? 'cursor-default' : ''} ${isSubTodo ? 'bg-gray-900 border-opacity-50' : 'parent-todo'}`}
+      style={{ ...backgroundStyle, color: textColor }}
+      className={`${isSubTodo ? 'p-1.5' : 'p-2'} rounded-lg border-2 border-gray-700 transition-all cursor-move hover:shadow-lg ${isEditing ? 'cursor-default' : ''} ${isSubTodo ? 'bg-opacity-80 border-opacity-50' : 'parent-todo'}`}
     >
       {isEditing ? (
-        <div className="space-y-2">
-          <input
-            type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-          <textarea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-            rows={3}
-          />
+        <div className="space-y-3">
+          <div>
+            <label className="block text-xs font-medium text-gray-300 mb-1">Title *</label>
+            <input
+              type="text"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          <div>
+            <label className="block text-xs font-medium text-gray-300 mb-1">Description</label>
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              rows={3}
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block text-xs font-medium text-gray-300 mb-1">Priority</label>
+              <select
+                value={priority}
+                onChange={(e) => setPriority(e.target.value as any)}
+                className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="LOW">Low</option>
+                <option value="MEDIUM">Medium</option>
+                <option value="HIGH">High</option>
+                <option value="URGENT">Urgent</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-gray-300 mb-1">Due Date</label>
+              <input
+                type="date"
+                value={dueDate}
+                onChange={(e) => setDueDate(e.target.value)}
+                className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-xs font-medium text-gray-300 mb-1">Assigned To</label>
+            <div className="flex flex-wrap gap-2">
+              {allUsers.map((user) => (
+                <button
+                  key={user.id}
+                  type="button"
+                  onClick={() => toggleAssignedUser(user.id)}
+                  className={`px-2 py-1 rounded text-xs font-medium transition-colors ${
+                    assignedUserIds.includes(user.id)
+                      ? ""
+                      : "bg-gray-700 text-gray-300 hover:bg-gray-600"
+                  }`}
+                  style={{
+                    backgroundColor: assignedUserIds.includes(user.id) ? user.color : undefined,
+                    color: assignedUserIds.includes(user.id) ? getContrastTextColor(user.color) : undefined,
+                  }}
+                >
+                  {user.name}
+                </button>
+              ))}
+            </div>
+          </div>
           <div className="flex gap-2">
             <button
               onClick={handleSave}
@@ -177,7 +269,7 @@ export default function TodoItem({
             <h3 
               draggable={false}
               onMouseDown={(e) => e.stopPropagation()}
-              className={`flex-1 font-semibold text-white select-text cursor-text ${isSubTodo ? 'text-xs' : 'text-base'}`}
+              className={`flex-1 font-semibold select-text cursor-text ${isSubTodo ? 'text-xs' : 'text-base'}`}
             >{todo.title}</h3>
             <div className="flex items-center gap-2 flex-shrink-0 self-end sm:self-auto">
               <div className={`flex items-center gap-2 transition-opacity ${shouldShowButtons ? 'opacity-100' : 'opacity-0'}`}>
@@ -221,12 +313,13 @@ export default function TodoItem({
             <p 
               draggable={false}
               onMouseDown={(e) => e.stopPropagation()}
-              className="text-gray-300 select-text cursor-text"
+              className="select-text cursor-text"
+              style={{ opacity: 0.9 }}
             >{todo.description}</p>
           )}
           
           {/* Row 3: Dates */}
-          <div className="flex items-center gap-3 text-xs text-gray-400 select-text">
+          <div className="flex items-center gap-3 text-xs select-text" style={{ opacity: 0.8 }}>
             <span title={`Created: ${new Date(todo.createdAt).toLocaleString()}`}>📅 {getDateDisplay(todo.createdAt)}</span>
             {todo.dueDate && (
               <span title={`Due: ${new Date(todo.dueDate).toLocaleString()}`}>🎯 {getDateDisplay(todo.dueDate)}</span>
@@ -239,7 +332,8 @@ export default function TodoItem({
               <div className="flex items-center justify-between mb-2">
                 <button
                   onClick={() => setShowSubTodos(!showSubTodos)}
-                  className="text-sm font-medium text-gray-400 hover:text-white flex items-center gap-1"
+                  className="text-sm font-medium flex items-center gap-1"
+                  style={{ opacity: 0.8 }}
                 >
                   {showSubTodos ? "▼" : "▶"} Sub-tasks ({subTodos.length})
                 </button>
@@ -290,6 +384,7 @@ export default function TodoItem({
                       onDelete={onDelete}
                       onAddSubTodo={onAddSubTodo}
                       currentUserId={currentUserId}
+                      allUsers={allUsers}
                       isSubTodo={true}
                     />
                   ))}

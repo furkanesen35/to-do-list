@@ -8,18 +8,34 @@ export async function GET() {
         parentId: null, // Only get parent todos, not sub-todos
       },
       include: {
-        user: {
+        listOwner: {
           select: {
             id: true,
             name: true,
+            color: true,
+          },
+        },
+        creator: {
+          select: {
+            id: true,
+            name: true,
+            color: true,
           },
         },
         subTodos: {
           include: {
-            user: {
+            listOwner: {
               select: {
                 id: true,
                 name: true,
+                color: true,
+              },
+            },
+            creator: {
+              select: {
+                id: true,
+                name: true,
+                color: true,
               },
             },
             _count: {
@@ -54,11 +70,11 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { title, description, userId, priority, dueDate, parentId } = body;
+    const { title, description, listOwnerId, createdById, assignedUserIds, priority, dueDate, parentId } = body;
 
-    if (!title || !userId) {
+    if (!title || !listOwnerId || !createdById) {
       return NextResponse.json(
-        { error: "Title and userId are required" },
+        { error: "Title, listOwnerId, and createdById are required" },
         { status: 400 }
       );
     }
@@ -67,16 +83,26 @@ export async function POST(request: Request) {
       data: {
         title,
         description,
-        userId,
+        listOwnerId,
+        createdById,
+        assignedUserIds: assignedUserIds || [],
         priority: priority || "MEDIUM",
         dueDate: dueDate ? new Date(dueDate) : null,
         parentId: parentId || null,
       },
       include: {
-        user: {
+        listOwner: {
           select: {
             id: true,
             name: true,
+            color: true,
+          },
+        },
+        creator: {
+          select: {
+            id: true,
+            name: true,
+            color: true,
           },
         },
         subTodos: true,

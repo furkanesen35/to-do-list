@@ -3,7 +3,9 @@
 import { useEffect, useState } from "react";
 import TodoItem from "./TodoItem";
 import TodoForm from "./TodoForm";
-import UserTabs from "./UserTabs";
+import TaskTable from "./TaskTable";
+import ProfileSwitcher from "./ProfileSwitcher";
+import WelcomeModal from "./WelcomeModal";
 
 export type Todo = {
   id: string;
@@ -14,37 +16,82 @@ export type Todo = {
   dueDate: string | null;
   createdAt: string;
   updatedAt: string;
-  userId: string;
-  user: {
+  listOwnerId: string;
+  createdById: string;
+  assignedUserIds: string[];
+  listOwner: {
     id: string;
     name: string;
-    email: string;
+    color: string;
+  };
+  creator: {
+    id: string;
+    name: string;
+    color: string;
   };
 };
 
 export type User = {
   id: string;
   name: string;
+  color: string;
 };
 
 export default function TodoList() {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null); // Who you are (auth)
+  const [selectedUserId, setSelectedUserId] = useState<string | null>(null); // Whose list you're viewing
+  const [showWelcomeModal, setShowWelcomeModal] = useState(false);
   const [dateFilter, setDateFilter] = useState<"ALL" | "TODAY" | "YESTERDAY" | "LAST_WEEK">("ALL");
   const [draggedTodoId, setDraggedTodoId] = useState<string | null>(null);
 
   useEffect(() => {
     fetchTodos();
     fetchUsers();
+    
+    // Check if user has logged in before
+    const savedUserId = localStorage.getItem("currentUserId");
+    if (savedUserId) {
+      setCurrentUserId(savedUserId);
+    }
   }, []);
 
   useEffect(() => {
+    // Show welcome modal if no user logged in
+    if (!currentUserId && users.length >= 0 && !loading) {
+      setShowWelcomeModal(true);
+    }
+  }, [currentUserId, users, loading]);
+
+  useEffect(() => {
+    // Auto-select first user's list to view
     if (users.length > 0 && !selectedUserId) {
       setSelectedUserId(users[0].id);
     }
   }, [users, selectedUserId]);
+
+  const handleSelectCurrentUser = (userId: string) => {
+    setCurrentUserId(userId);
+    localStorage.setItem("currentUserId", userId);
+    setShowWelcomeModal(false);
+  };
+
+  const handleCreateUser = async (name: string, color: string) => {
+    try {
+      const response = await fetch("/api/users", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, color }),
+      });
+      const newUser = await response.json();
+      setUsers([...users, newUser]);
+      handleSelectCurrentUser(newUser.id);
+    } catch (error) {
+      console.error("Failed to create user:", error);
+    }
+  };
 
   const fetchTodos = async () => {
     try {
@@ -80,12 +127,12 @@ export default function TodoList() {
     }
   };
 
-  const handleAddUser = async (name: string) => {
+  const handleAddUser = async (name: string, color: string) => {
     try {
       const response = await fetch("/api/users", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name }),
+        body: JSON.stringify({ name, color }),
       });
       const newUser = await response.json();
       setUsers([...users, newUser]);
@@ -106,27 +153,34 @@ export default function TodoList() {
       if (selectedUserId === userId) {
         setSelectedUserId(remainingUsers.length > 0 ? remainingUsers[0].id : null);
       }
-      setTodos(todos.filter((t) => t.userId !== userId));
+      setTodos(todos.filter((t) => t.listOwnerId !== userId));
     } catch (error) {
       console.error("Failed to delete user:", error);
     }
   };
 
-  const handleUpdateUser = async (userId: string, name: string) => {
+  const handleUpdateUser = async (userId: string, name: string, color: string) => {
     try {
       const response = await fetch(`/api/users/${userId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name }),
+        body: JSON.stringify({ name, color }),
       });
       const updatedUser = await response.json();
       setUsers(users.map((u) => (u.id === userId ? updatedUser : u)));
+      
+      // Update todos to reflect the new user name/color
+      setTodos(todos.map((todo) => ({
+        ...todo,
+        listOwner: todo.listOwner.id === userId ? { ...todo.listOwner, name, color } : todo.listOwner,
+        creator: todo.creator.id === userId ? { ...todo.creator, name, color } : todo.creator,
+      })));
     } catch (error) {
       console.error("Failed to update user:", error);
     }
   };
 
-  const handleAddTodo = async (todo: Omit<Todo, "id" | "createdAt" | "updatedAt" | "user">) => {
+  const handleAddTodo = async (todo: Omit<Todo, "id" | "createdAt" | "updatedAt" | "listOwner" | "creator">) => {
     try {
       const response = await fetch("/api/todos", {
         method: "POST",
@@ -182,7 +236,7 @@ export default function TodoList() {
   };
 
   const handleAddSubTodo = async (parentId: string, title: string) => {
-    if (!selectedUserId) return;
+    if (!selectedUserId || !currentUserId) return;
     
     try {
       const response = await fetch("/api/todos", {
@@ -190,7 +244,9 @@ export default function TodoList() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           title,
-          userId: selectedUserId,
+          listOwnerId: selectedUserId,
+          createdById: currentUserId,
+          assignedUserIds: [currentUserId],
           parentId,
           status: "TODO",
           priority: "MEDIUM",
@@ -206,7 +262,7 @@ export default function TodoList() {
   };
 
   const userTodos = selectedUserId
-    ? todos.filter((todo) => todo.userId === selectedUserId)
+    ? todos.filter((todo) => todo.listOwnerId === selectedUserId)
     : [];
 
   const getFilteredByDate = (todos: Todo[]) => {
@@ -252,7 +308,13 @@ export default function TodoList() {
 
   return (
     <div className="space-y-6">
-      <UserTabs
+      <ProfileSwitcher
+        users={users}
+        currentUserId={currentUserId}
+        onSelectUser={handleSelectCurrentUser}
+      />
+
+      <TaskTable
         users={users}
         selectedUserId={selectedUserId}
         onSelectUser={setSelectedUserId}
@@ -261,10 +323,22 @@ export default function TodoList() {
         onUpdateUser={handleUpdateUser}
       />
 
-      {selectedUser && (
+      <WelcomeModal
+        show={showWelcomeModal}
+        users={users}
+        onSelectUser={handleSelectCurrentUser}
+        onCreateUser={handleCreateUser}
+      />
+
+      {selectedUser && currentUserId && (
         <>
           <div className="flex items-center gap-3 flex-wrap">
-            <TodoForm userId={selectedUser.id} onAdd={handleAddTodo} />
+            <TodoForm 
+              currentUserId={currentUserId}
+              selectedUserId={selectedUser.id}
+              allUsers={users}
+              onAdd={handleAddTodo}
+            />
             
             <div className="flex gap-2 flex-wrap">
               {["ALL", "TODAY", "YESTERDAY", "LAST_WEEK"].map((date) => (
@@ -305,7 +379,8 @@ export default function TodoList() {
                       onUpdate={handleUpdateTodo}
                       onDelete={handleDeleteTodo}
                       onAddSubTodo={handleAddSubTodo}
-                      currentUserId={selectedUserId || ""}
+                      currentUserId={currentUserId || ""}
+                      allUsers={users}
                       onDragStart={handleDragStart}
                       onDragOver={handleDragOver}
                       onDrop={handleDrop}
@@ -336,7 +411,8 @@ export default function TodoList() {
                       onUpdate={handleUpdateTodo}
                       onDelete={handleDeleteTodo}
                       onAddSubTodo={handleAddSubTodo}
-                      currentUserId={selectedUserId || ""}
+                      currentUserId={currentUserId || ""}
+                      allUsers={users}
                       onDragStart={handleDragStart}
                       onDragOver={handleDragOver}
                       onDrop={handleDrop}
@@ -367,7 +443,8 @@ export default function TodoList() {
                       onUpdate={handleUpdateTodo}
                       onDelete={handleDeleteTodo}
                       onAddSubTodo={handleAddSubTodo}
-                      currentUserId={selectedUserId || ""}
+                      currentUserId={currentUserId || ""}
+                      allUsers={users}
                       onDragStart={handleDragStart}
                       onDragOver={handleDragOver}
                       onDrop={handleDrop}
