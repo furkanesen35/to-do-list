@@ -3,13 +3,23 @@
 import { useState } from "react";
 import type { Todo, User } from "./TodoList";
 import CommentSection from "./CommentSection";
-import { getContrastTextColor, getTextColorForGradient } from "@/lib/colorUtils";
+import {
+  getContrastTextColor,
+  getTextColorForGradient,
+} from "@/lib/colorUtils";
 
 type TodoItemProps = {
   todo: Todo;
   onUpdate: (id: string, updates: Partial<Todo>) => void;
   onDelete: (id: string) => void;
-  onAddSubTodo?: (parentId: string, title: string) => void;
+  onAddSubTodo?: (
+    parentId: string,
+    title: string,
+    description: string,
+    priority: string,
+    dueDate: string,
+    assignedUserIds: string[]
+  ) => void;
   currentUserId: string;
   allUsers: User[];
   onDragStart?: (e: React.DragEvent, todoId: string) => void;
@@ -18,30 +28,56 @@ type TodoItemProps = {
   isSubTodo?: boolean;
 };
 
-export default function TodoItem({ 
-  todo, 
-  onUpdate, 
-  onDelete, 
+export default function TodoItem({
+  todo,
+  onUpdate,
+  onDelete,
   onAddSubTodo,
   currentUserId,
   allUsers,
-  onDragStart, 
-  onDragOver, 
+  onDragStart,
+  onDragOver,
   onDrop,
-  isSubTodo = false 
+  isSubTodo = false,
 }: TodoItemProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [title, setTitle] = useState(todo.title);
   const [description, setDescription] = useState(todo.description || "");
-  const [priority, setPriority] = useState<"LOW" | "MEDIUM" | "HIGH" | "URGENT">(todo.priority);
-  const [dueDate, setDueDate] = useState(todo.dueDate ? new Date(todo.dueDate).toISOString().split('T')[0] : "");
-  const [assignedUserIds, setAssignedUserIds] = useState<string[]>(todo.assignedUserIds);
+  const [priority, setPriority] = useState<
+    "LOW" | "MEDIUM" | "HIGH" | "URGENT"
+  >(todo.priority);
+  const [dueDate, setDueDate] = useState(
+    todo.dueDate ? new Date(todo.dueDate).toISOString().split("T")[0] : ""
+  );
+  const [assignedUserIds, setAssignedUserIds] = useState<string[]>(
+    todo.assignedUserIds
+  );
   const [showComments, setShowComments] = useState(false);
   const [showSubTodos, setShowSubTodos] = useState(true);
   const [isAddingSubTodo, setIsAddingSubTodo] = useState(false);
   const [newSubTodoTitle, setNewSubTodoTitle] = useState("");
+  const [newSubTodoDescription, setNewSubTodoDescription] = useState("");
+  const [newSubTodoPriority, setNewSubTodoPriority] = useState<
+    "LOW" | "MEDIUM" | "HIGH" | "URGENT"
+  >("MEDIUM");
+  const [newSubTodoDueDate, setNewSubTodoDueDate] = useState("");
+  const [newSubTodoAssignedUserIds, setNewSubTodoAssignedUserIds] = useState<
+    string[]
+  >([currentUserId]);
   const [isHovered, setIsHovered] = useState(false);
   const [isChildHovered, setIsChildHovered] = useState(false);
+
+  const toggleSubTodoAssignedUser = (userId: string) => {
+    if (newSubTodoAssignedUserIds.includes(userId)) {
+      if (newSubTodoAssignedUserIds.length > 1) {
+        setNewSubTodoAssignedUserIds(
+          newSubTodoAssignedUserIds.filter((id) => id !== userId)
+        );
+      }
+    } else {
+      setNewSubTodoAssignedUserIds([...newSubTodoAssignedUserIds, userId]);
+    }
+  };
 
   const toggleAssignedUser = (userId: string) => {
     if (assignedUserIds.includes(userId)) {
@@ -55,31 +91,55 @@ export default function TodoItem({
   };
 
   const getBackgroundColor = () => {
+    // Fallback color if creator doesn't exist
+    const fallbackColor = "#1E3A8A";
+    
+    // Debug logging
+    if (isSubTodo) {
+      console.log(`[SUBTASK COLOR] ${todo.title}:`, {
+        creatorExists: !!todo.creator,
+        creatorColor: todo.creator?.color,
+        assignedUserIds: todo.assignedUserIds,
+        willUseColor: todo.creator?.color || fallbackColor
+      });
+    }
+
     if (todo.assignedUserIds.length === 1) {
       // Single user - use creator's color
-      return todo.creator.color;
+      return todo.creator?.color || fallbackColor;
     } else if (todo.assignedUserIds.length > 1) {
       // Multiple users - create gradient with assigned users' colors
-      const assignedUsers = allUsers.filter((u) => todo.assignedUserIds.includes(u.id));
+      const assignedUsers = allUsers.filter((u) =>
+        todo.assignedUserIds.includes(u.id)
+      );
+      if (assignedUsers.length === 0) return fallbackColor;
       const colors = assignedUsers.map((u) => u.color).join(", ");
       return `linear-gradient(135deg, ${colors})`;
     }
-    return todo.creator.color;
+    return todo.creator?.color || fallbackColor;
   };
 
-  const backgroundStyle = todo.assignedUserIds.length > 1
-    ? { background: getBackgroundColor() }
-    : { backgroundColor: getBackgroundColor() };
+  const backgroundStyle =
+    todo.assignedUserIds.length > 1
+      ? { background: getBackgroundColor() }
+      : { backgroundColor: getBackgroundColor() };
 
-  const textColor = todo.assignedUserIds.length > 1
-    ? getTextColorForGradient(allUsers.filter((u) => todo.assignedUserIds.includes(u.id)).map((u) => u.color))
-    : getContrastTextColor(todo.creator.color);
+  const textColor =
+    todo.assignedUserIds.length > 1
+      ? getTextColorForGradient(
+          allUsers
+            .filter((u) => todo.assignedUserIds.includes(u.id))
+            .map((u) => u.color)
+        )
+      : getContrastTextColor(todo.creator?.color || "#1E3A8A");
 
   const handleMouseEnter = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (isSubTodo) {
       // Notify parent that a child is hovered
-      const parentDiv = (e.currentTarget as HTMLElement).parentElement?.closest('.parent-todo');
+      const parentDiv = (e.currentTarget as HTMLElement).parentElement?.closest(
+        ".parent-todo"
+      );
       if (parentDiv) {
         (parentDiv as any).__childHovered = true;
       }
@@ -90,7 +150,9 @@ export default function TodoItem({
   const handleMouseLeave = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (isSubTodo) {
-      const parentDiv = (e.currentTarget as HTMLElement).parentElement?.closest('.parent-todo');
+      const parentDiv = (e.currentTarget as HTMLElement).parentElement?.closest(
+        ".parent-todo"
+      );
       if (parentDiv) {
         (parentDiv as any).__childHovered = false;
       }
@@ -122,8 +184,8 @@ export default function TodoItem({
   };
 
   const handleSave = () => {
-    onUpdate(todo.id, { 
-      title, 
+    onUpdate(todo.id, {
+      title,
       description,
       priority,
       dueDate: dueDate || null,
@@ -134,18 +196,33 @@ export default function TodoItem({
 
   const handleAddSubTodo = () => {
     if (newSubTodoTitle.trim() && onAddSubTodo) {
-      onAddSubTodo(todo.id, newSubTodoTitle);
+      onAddSubTodo(
+        todo.id,
+        newSubTodoTitle,
+        newSubTodoDescription,
+        newSubTodoPriority,
+        newSubTodoDueDate,
+        newSubTodoAssignedUserIds
+      );
       setNewSubTodoTitle("");
+      setNewSubTodoDescription("");
+      setNewSubTodoPriority("MEDIUM");
+      setNewSubTodoDueDate("");
+      setNewSubTodoAssignedUserIds([currentUserId]);
       setIsAddingSubTodo(false);
     }
   };
 
   const commentsCount = (todo as any)._count?.comments || 0;
   const subTodos = (todo as any).subTodos || [];
-  
+
   // Debug: log comment count for subtasks
   if (isSubTodo) {
-    console.log(`[SUBTODO] ${todo.title} - _count:`, (todo as any)._count, `commentsCount: ${commentsCount}`);
+    console.log(
+      `[SUBTODO] ${todo.title} - _count:`,
+      (todo as any)._count,
+      `commentsCount: ${commentsCount}`
+    );
   }
 
   const handleStatusChange = (status: Todo["status"]) => {
@@ -154,36 +231,89 @@ export default function TodoItem({
 
   const shouldShowButtons = isHovered && !isChildHovered;
 
+  const [isDragging, setIsDragging] = useState(false);
+  const [isDropTarget, setIsDropTarget] = useState(false);
+
+  const handleDragHandleStart = (e: React.DragEvent) => {
+    console.log("🟢 Drag started for todo:", todo.id, todo.title);
+    e.stopPropagation();
+    setIsDragging(true);
+    onDragStart?.(e, todo.id);
+    e.dataTransfer.effectAllowed = "move";
+    e.dataTransfer.setData("todoId", todo.id);
+    e.dataTransfer.setData("currentParentId", todo.parentId || "");
+  };
+
+  const handleDragHandleEnd = () => {
+    console.log("🔴 Drag ended for todo:", todo.id, todo.title);
+    setIsDragging(false);
+  };
+
+  const handleDragEnter = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const draggedId = e.dataTransfer.getData("todoId");
+    if (draggedId !== todo.id) {
+      setIsDropTarget(true);
+    }
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDropTarget(false);
+  };
+
+  const handleDropOnTask = async (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDropTarget(false);
+
+    const draggedId = e.dataTransfer.getData("todoId");
+    console.log("⬇️ Drop on task:", todo.id, "draggedId:", draggedId);
+    if (draggedId && draggedId !== todo.id) {
+      console.log("🔄 Making", draggedId, "a subtask of", todo.id);
+      // Make dragged task a subtask of this task
+      await onUpdate(draggedId, { parentId: todo.id });
+    }
+  };
+
   return (
     <div
-      onDragStart={(e) => {
-        // Prevent drag if text is selected
-        const selection = window.getSelection();
-        if (selection && selection.toString().length > 0) {
-          e.preventDefault();
-          return;
-        }
-        onDragStart?.(e, todo.id);
-      }}
-      draggable={!isEditing}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
+      onDragEnter={handleDragEnter}
+      onDragLeave={handleDragLeave}
+      onDragOver={(e) => e.preventDefault()}
+      onDrop={handleDropOnTask}
       ref={(el) => {
         if (el && !isSubTodo) {
           const checkChild = () => {
             setIsChildHovered(!!(el as any).__childHovered);
           };
-          el.addEventListener('mouseenter', checkChild, true);
-          el.addEventListener('mouseleave', checkChild, true);
+          el.addEventListener("mouseenter", checkChild, true);
+          el.addEventListener("mouseleave", checkChild, true);
         }
       }}
       style={{ ...backgroundStyle, color: textColor }}
-      className={`${isSubTodo ? 'p-1.5' : 'p-2'} rounded-lg border-2 border-gray-700 transition-all cursor-move hover:shadow-lg ${isEditing ? 'cursor-default' : ''} ${isSubTodo ? 'bg-opacity-80 border-opacity-50' : 'parent-todo'}`}
+      className={`${
+        isSubTodo ? "p-1.5" : "p-2"
+      } rounded-lg border-2 transition-all ${
+        isEditing ? "cursor-default" : ""
+      } ${isSubTodo ? "bg-opacity-80 border-opacity-50" : "parent-todo"} ${
+        isDragging ? "opacity-50 scale-95" : ""
+      } ${
+        isDropTarget
+          ? "border-yellow-400 border-4 shadow-xl"
+          : "border-gray-700"
+      }`}
     >
       {isEditing ? (
         <div className="space-y-3">
           <div>
-            <label className="block text-xs font-medium text-gray-300 mb-1">Title *</label>
+            <label className="block text-xs font-medium text-gray-300 mb-1">
+              Title *
+            </label>
             <input
               type="text"
               value={title}
@@ -192,7 +322,9 @@ export default function TodoItem({
             />
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-300 mb-1">Description</label>
+            <label className="block text-xs font-medium text-gray-300 mb-1">
+              Description
+            </label>
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
@@ -202,7 +334,9 @@ export default function TodoItem({
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-medium text-gray-300 mb-1">Priority</label>
+              <label className="block text-xs font-medium text-gray-300 mb-1">
+                Priority
+              </label>
               <select
                 value={priority}
                 onChange={(e) => setPriority(e.target.value as any)}
@@ -215,7 +349,9 @@ export default function TodoItem({
               </select>
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-300 mb-1">Due Date</label>
+              <label className="block text-xs font-medium text-gray-300 mb-1">
+                Due Date
+              </label>
               <input
                 type="date"
                 value={dueDate}
@@ -225,7 +361,9 @@ export default function TodoItem({
             </div>
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-300 mb-1">Assigned To</label>
+            <label className="block text-xs font-medium text-gray-300 mb-1">
+              Assigned To
+            </label>
             <div className="flex flex-wrap gap-2">
               {allUsers.map((user) => (
                 <button
@@ -238,8 +376,12 @@ export default function TodoItem({
                       : "bg-gray-700 text-gray-300 hover:bg-gray-600"
                   }`}
                   style={{
-                    backgroundColor: assignedUserIds.includes(user.id) ? user.color : undefined,
-                    color: assignedUserIds.includes(user.id) ? getContrastTextColor(user.color) : undefined,
+                    backgroundColor: assignedUserIds.includes(user.id)
+                      ? user.color
+                      : undefined,
+                    color: assignedUserIds.includes(user.id)
+                      ? getContrastTextColor(user.color)
+                      : undefined,
                   }}
                 >
                   {user.name}
@@ -266,13 +408,43 @@ export default function TodoItem({
         <div className="space-y-2">
           {/* Row 1: Title, Buttons, and Priority */}
           <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-1 sm:gap-2">
-            <h3 
-              draggable={false}
-              onMouseDown={(e) => e.stopPropagation()}
-              className={`flex-1 font-semibold select-text cursor-text ${isSubTodo ? 'text-xs' : 'text-base'}`}
-            >{todo.title}</h3>
+            <h3
+              className={`flex-1 font-semibold select-text cursor-text ${
+                isSubTodo ? "text-xs" : "text-base"
+              }`}
+            >
+              {todo.title}
+            </h3>
             <div className="flex items-center gap-2 flex-shrink-0 self-end sm:self-auto">
-              <div className={`flex items-center gap-2 transition-opacity ${shouldShowButtons ? 'opacity-100' : 'opacity-0'}`}>
+              <div
+                className={`flex items-center gap-1 transition-opacity ${
+                  shouldShowButtons ? "opacity-100" : "opacity-0"
+                }`}
+              >
+                <div
+                  draggable
+                  onDragStart={handleDragHandleStart}
+                  onDragEnd={handleDragHandleEnd}
+                  className="w-6 h-6 flex items-center justify-center bg-gray-600 hover:bg-gray-500 rounded transition-colors cursor-grab active:cursor-grabbing"
+                  title="Drag to move or nest task"
+                >
+                  <span className="text-xs leading-none">⋮⋮</span>
+                </div>
+                {todo.parentId && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      console.log("🟢 Promote button clicked for:", todo.id, todo.title);
+                      console.log("   - Current parentId:", todo.parentId);
+                      console.log("   - Setting parentId to null");
+                      onUpdate(todo.id, { parentId: null });
+                    }}
+                    className="w-6 h-6 flex items-center justify-center bg-green-600 hover:bg-green-700 text-white rounded transition-colors text-xs pointer-events-auto"
+                    title="Promote to independent task"
+                  >
+                    ⬆️
+                  </button>
+                )}
                 <button
                   onClick={() => setIsEditing(true)}
                   className="w-6 h-6 flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white rounded transition-colors text-xs"
@@ -301,28 +473,36 @@ export default function TodoItem({
                 )}
               </button>
               <span
-                className={`px-2 py-1 text-xs rounded-full ${priorityColors[todo.priority]}`}
+                className={`px-2 py-1 text-xs rounded-full ${
+                  priorityColors[todo.priority]
+                }`}
               >
                 {todo.priority}
               </span>
             </div>
           </div>
-          
+
           {/* Row 2: Description */}
           {todo.description && (
-            <p 
-              draggable={false}
-              onMouseDown={(e) => e.stopPropagation()}
-              className="select-text cursor-text"
-              style={{ opacity: 0.9 }}
-            >{todo.description}</p>
+            <p className="select-text cursor-text" style={{ opacity: 0.9 }}>
+              {todo.description}
+            </p>
           )}
-          
+
           {/* Row 3: Dates */}
-          <div className="flex items-center gap-3 text-xs select-text" style={{ opacity: 0.8 }}>
-            <span title={`Created: ${new Date(todo.createdAt).toLocaleString()}`}>📅 {getDateDisplay(todo.createdAt)}</span>
+          <div
+            className="flex items-center gap-3 text-xs select-text"
+            style={{ opacity: 0.8 }}
+          >
+            <span
+              title={`Created: ${new Date(todo.createdAt).toLocaleString()}`}
+            >
+              📅 {getDateDisplay(todo.createdAt)}
+            </span>
             {todo.dueDate && (
-              <span title={`Due: ${new Date(todo.dueDate).toLocaleString()}`}>🎯 {getDateDisplay(todo.dueDate)}</span>
+              <span title={`Due: ${new Date(todo.dueDate).toLocaleString()}`}>
+                🎯 {getDateDisplay(todo.dueDate)}
+              </span>
             )}
           </div>
 
@@ -348,31 +528,119 @@ export default function TodoItem({
               {showSubTodos && (
                 <div className="space-y-1">
                   {isAddingSubTodo && (
-                    <div className="flex gap-2 mb-2">
-                      <input
-                        type="text"
-                        value={newSubTodoTitle}
-                        onChange={(e) => setNewSubTodoTitle(e.target.value)}
-                        placeholder="Sub-task title..."
-                        className="flex-1 px-2 py-1 text-sm bg-gray-900 border border-gray-600 rounded text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        onKeyPress={(e) => e.key === "Enter" && handleAddSubTodo()}
-                        autoFocus
-                      />
-                      <button
-                        onClick={handleAddSubTodo}
-                        className="px-2 py-1 text-xs bg-green-600 hover:bg-green-700 text-white rounded"
-                      >
-                        ✓
-                      </button>
-                      <button
-                        onClick={() => {
-                          setIsAddingSubTodo(false);
-                          setNewSubTodoTitle("");
-                        }}
-                        className="px-2 py-1 text-xs bg-gray-600 hover:bg-gray-700 text-white rounded"
-                      >
-                        ✕
-                      </button>
+                    <div className="p-3 mb-2 bg-gray-900 rounded-lg border border-gray-600 space-y-2">
+                      <div>
+                        <label className="block text-xs font-medium text-gray-300 mb-1">
+                          Title *
+                        </label>
+                        <input
+                          type="text"
+                          value={newSubTodoTitle}
+                          onChange={(e) => setNewSubTodoTitle(e.target.value)}
+                          placeholder="Sub-task title..."
+                          className="w-full px-2 py-1 text-sm bg-gray-800 border border-gray-600 rounded text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          autoFocus
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-medium text-gray-300 mb-1">
+                          Description
+                        </label>
+                        <textarea
+                          value={newSubTodoDescription}
+                          onChange={(e) =>
+                            setNewSubTodoDescription(e.target.value)
+                          }
+                          placeholder="Description..."
+                          className="w-full px-2 py-1 text-sm bg-gray-800 border border-gray-600 rounded text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          rows={2}
+                        />
+                      </div>
+                      <div className="grid grid-cols-2 gap-2">
+                        <div>
+                          <label className="block text-xs font-medium text-gray-300 mb-1">
+                            Priority
+                          </label>
+                          <select
+                            value={newSubTodoPriority}
+                            onChange={(e) =>
+                              setNewSubTodoPriority(e.target.value as any)
+                            }
+                            className="w-full px-2 py-1 text-sm bg-gray-800 border border-gray-600 rounded text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          >
+                            <option value="LOW">Low</option>
+                            <option value="MEDIUM">Medium</option>
+                            <option value="HIGH">High</option>
+                            <option value="URGENT">Urgent</option>
+                          </select>
+                        </div>
+                        <div>
+                          <label className="block text-xs font-medium text-gray-300 mb-1">
+                            Due Date
+                          </label>
+                          <input
+                            type="date"
+                            value={newSubTodoDueDate}
+                            onChange={(e) =>
+                              setNewSubTodoDueDate(e.target.value)
+                            }
+                            className="w-full px-2 py-1 text-sm bg-gray-800 border border-gray-600 rounded text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <label className="block text-xs font-medium text-gray-300 mb-1">
+                          Assign To
+                        </label>
+                        <div className="flex flex-wrap gap-1">
+                          {allUsers.map((user) => (
+                            <button
+                              key={user.id}
+                              type="button"
+                              onClick={() => toggleSubTodoAssignedUser(user.id)}
+                              className={`px-2 py-1 rounded text-xs font-medium transition-colors ${
+                                newSubTodoAssignedUserIds.includes(user.id)
+                                  ? ""
+                                  : "bg-gray-700 text-gray-300 hover:bg-gray-600"
+                              }`}
+                              style={{
+                                backgroundColor:
+                                  newSubTodoAssignedUserIds.includes(user.id)
+                                    ? user.color
+                                    : undefined,
+                                color: newSubTodoAssignedUserIds.includes(
+                                  user.id
+                                )
+                                  ? getContrastTextColor(user.color)
+                                  : undefined,
+                              }}
+                            >
+                              {user.name}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                      <div className="flex gap-2">
+                        <button
+                          onClick={handleAddSubTodo}
+                          className="px-3 py-1 text-xs bg-green-600 hover:bg-green-700 text-white rounded transition-colors"
+                        >
+                          Add Sub-task
+                        </button>
+                        <button
+                          onClick={() => {
+                            setIsAddingSubTodo(false);
+                            setNewSubTodoTitle("");
+                            setNewSubTodoDescription("");
+                            setNewSubTodoPriority("MEDIUM");
+                            setNewSubTodoDueDate("");
+                            setNewSubTodoAssignedUserIds([currentUserId]);
+                          }}
+                          className="px-3 py-1 text-xs bg-gray-600 hover:bg-gray-700 text-white rounded transition-colors"
+                        >
+                          Cancel
+                        </button>
+                      </div>
                     </div>
                   )}
 
@@ -385,6 +653,9 @@ export default function TodoItem({
                       onAddSubTodo={onAddSubTodo}
                       currentUserId={currentUserId}
                       allUsers={allUsers}
+                      onDragStart={onDragStart}
+                      onDragOver={onDragOver}
+                      onDrop={onDrop}
                       isSubTodo={true}
                     />
                   ))}

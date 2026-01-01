@@ -53,6 +53,8 @@ export default function TodoList() {
     
     // Check if user has logged in before
     const savedUserId = localStorage.getItem("currentUserId");
+    console.log("========== INITIAL LOAD ==========");
+    console.log("Saved user ID from localStorage:", savedUserId);
     if (savedUserId) {
       setCurrentUserId(savedUserId);
     }
@@ -115,8 +117,11 @@ export default function TodoList() {
     try {
       const response = await fetch("/api/users");
       const data = await response.json();
+      console.log("========== FETCHED USERS ==========");
+      console.log("Users in database:", data);
       if (Array.isArray(data)) {
         setUsers(data);
+        console.log("User IDs:", data.map(u => `${u.name}: ${u.id}`));
       } else {
         console.error("Invalid users data:", data);
         setUsers([]);
@@ -202,7 +207,12 @@ export default function TodoList() {
         body: JSON.stringify(updates),
       });
       const updatedTodo = await response.json();
-      setTodos(todos.map((todo) => (todo.id === id ? updatedTodo : todo)));
+      console.log("✅ PATCH response for todo:", id, updatedTodo);
+      console.log("  - Has creator?", !!updatedTodo.creator);
+      console.log("  - Creator color:", updatedTodo.creator?.color);
+      
+      // Refetch all todos to ensure parent todos reflect subtask changes
+      await fetchTodos();
     } catch (error) {
       console.error("Failed to update todo:", error);
     }
@@ -235,29 +245,60 @@ export default function TodoList() {
     }
   };
 
-  const handleAddSubTodo = async (parentId: string, title: string) => {
-    if (!selectedUserId || !currentUserId) return;
+  const handleAddSubTodo = async (parentId: string, title: string, description: string, priority: string, dueDate: string, assignedUserIds: string[]) => {
+    if (!selectedUserId || !currentUserId) {
+      console.error("Cannot add subtask: selectedUserId =", selectedUserId, "currentUserId =", currentUserId);
+      alert("Please select a user from the dropdown first");
+      return;
+    }
+    
+    // Validate that currentUserId exists in users list
+    const userExists = users.find(u => u.id === currentUserId);
+    if (!userExists) {
+      console.error("Current user ID does not exist in database:", currentUserId);
+      alert("Your user account no longer exists. Please select a different user from the dropdown.");
+      localStorage.removeItem("currentUserId");
+      setCurrentUserId(null);
+      setShowWelcomeModal(true);
+      return;
+    }
+    
+    const payload = {
+      title,
+      description: description || null,
+      listOwnerId: selectedUserId,
+      createdById: currentUserId,
+      assignedUserIds,
+      parentId,
+      status: "TODO",
+      priority,
+      dueDate: dueDate || null,
+    };
+    
+    console.log("Creating subtask with payload:", payload);
     
     try {
       const response = await fetch("/api/todos", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          title,
-          listOwnerId: selectedUserId,
-          createdById: currentUserId,
-          assignedUserIds: [currentUserId],
-          parentId,
-          status: "TODO",
-          priority: "MEDIUM",
-        }),
+        body: JSON.stringify(payload),
       });
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("Server error:", errorData);
+        alert(`Failed to create subtask: ${errorData.error || 'Unknown error'}`);
+        return;
+      }
+      
       const newSubTodo = await response.json();
+      console.log("Subtask created successfully:", newSubTodo);
       
       // Refresh todos to get updated parent with sub-todos
       await fetchTodos();
     } catch (error) {
       console.error("Failed to add sub-todo:", error);
+      alert("Failed to add subtask. Check console for details.");
     }
   };
 
