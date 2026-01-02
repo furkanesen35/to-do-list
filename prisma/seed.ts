@@ -43,7 +43,9 @@ async function main() {
         description: "Finalize and submit the Q1 project proposal",
         status: "IN_PROGRESS",
         priority: "HIGH",
-        userId: users[0].id,
+        listOwnerId: users[0].id,
+        createdById: users[0].id,
+        assignedUserIds: [users[0].id],
         dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days from now
       },
     }),
@@ -53,7 +55,9 @@ async function main() {
         description: "Review pull requests for the new feature",
         status: "TODO",
         priority: "MEDIUM",
-        userId: users[1].id,
+        listOwnerId: users[1].id,
+        createdById: users[1].id,
+        assignedUserIds: [users[1].id],
       },
     }),
     prisma.todo.create({
@@ -62,7 +66,9 @@ async function main() {
         description: "Update API documentation with new endpoints",
         status: "DONE",
         priority: "LOW",
-        userId: users[2].id,
+        listOwnerId: users[2].id,
+        createdById: users[2].id,
+        assignedUserIds: [users[2].id],
       },
     }),
   ]);
