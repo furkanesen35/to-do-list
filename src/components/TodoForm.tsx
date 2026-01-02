@@ -41,6 +41,7 @@ export default function TodoForm({ currentUserId, selectedUserId, allUsers, onAd
       createdById: currentUserId,
       assignedUserIds,
       dueDate: dueDate || null,
+      parentId: null,
     });
 
     // Reset form

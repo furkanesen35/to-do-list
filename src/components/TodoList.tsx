@@ -19,6 +19,7 @@ export type Todo = {
   listOwnerId: string;
   createdById: string;
   assignedUserIds: string[];
+  parentId: string | null;
   listOwner: {
     id: string;
     name: string;
