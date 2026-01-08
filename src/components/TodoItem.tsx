@@ -63,7 +63,7 @@ export default function TodoItem({
   const [newSubTodoDueDate, setNewSubTodoDueDate] = useState("");
   const [newSubTodoAssignedUserIds, setNewSubTodoAssignedUserIds] = useState<
     string[]
-  >([currentUserId]);
+  >(currentUserId ? [currentUserId] : []);
   const [isHovered, setIsHovered] = useState(false);
   const [isChildHovered, setIsChildHovered] = useState(false);
 
@@ -195,20 +195,25 @@ export default function TodoItem({
   };
 
   const handleAddSubTodo = () => {
-    if (newSubTodoTitle.trim() && onAddSubTodo) {
+    if (newSubTodoTitle.trim() && onAddSubTodo && currentUserId) {
+      // Filter out any invalid user IDs
+      const validAssignedUserIds = newSubTodoAssignedUserIds.filter(id => id && id !== "undefined");
+      
+      if (validAssignedUserIds.length === 0) return;
+      
       onAddSubTodo(
         todo.id,
         newSubTodoTitle,
         newSubTodoDescription,
         newSubTodoPriority,
         newSubTodoDueDate,
-        newSubTodoAssignedUserIds
+        validAssignedUserIds
       );
       setNewSubTodoTitle("");
       setNewSubTodoDescription("");
       setNewSubTodoPriority("MEDIUM");
       setNewSubTodoDueDate("");
-      setNewSubTodoAssignedUserIds([currentUserId]);
+      setNewSubTodoAssignedUserIds(currentUserId ? [currentUserId] : []);
       setIsAddingSubTodo(false);
     }
   };

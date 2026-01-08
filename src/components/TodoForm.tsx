@@ -17,7 +17,7 @@ export default function TodoForm({ currentUserId, selectedUserId, allUsers, onAd
   const [description, setDescription] = useState("");
   const [priority, setPriority] = useState<"LOW" | "MEDIUM" | "HIGH" | "URGENT">("MEDIUM");
   const [dueDate, setDueDate] = useState("");
-  const [assignedUserIds, setAssignedUserIds] = useState<string[]>([currentUserId]);
+  const [assignedUserIds, setAssignedUserIds] = useState<string[]>(currentUserId ? [currentUserId] : []);
 
   const toggleAssignedUser = (userId: string) => {
     if (assignedUserIds.includes(userId)) {
@@ -30,7 +30,12 @@ export default function TodoForm({ currentUserId, selectedUserId, allUsers, onAd
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!title.trim() || assignedUserIds.length === 0) return;
+    if (!title.trim() || assignedUserIds.length === 0 || !currentUserId) return;
+
+    // Filter out any invalid user IDs
+    const validAssignedUserIds = assignedUserIds.filter(id => id && id !== "undefined");
+    
+    if (validAssignedUserIds.length === 0) return;
 
     onAdd({
       title,
@@ -39,7 +44,7 @@ export default function TodoForm({ currentUserId, selectedUserId, allUsers, onAd
       priority,
       listOwnerId: selectedUserId,
       createdById: currentUserId,
-      assignedUserIds,
+      assignedUserIds: validAssignedUserIds,
       dueDate: dueDate || null,
       parentId: null,
     });
@@ -49,7 +54,7 @@ export default function TodoForm({ currentUserId, selectedUserId, allUsers, onAd
     setDescription("");
     setPriority("MEDIUM");
     setDueDate("");
-    setAssignedUserIds([currentUserId]);
+    setAssignedUserIds(currentUserId ? [currentUserId] : []);
     setIsOpen(false);
   };
 

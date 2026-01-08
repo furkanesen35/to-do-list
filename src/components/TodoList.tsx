@@ -51,15 +51,29 @@ export default function TodoList() {
   useEffect(() => {
     fetchTodos();
     fetchUsers();
-    
-    // Check if user has logged in before
-    const savedUserId = localStorage.getItem("currentUserId");
-    console.log("========== INITIAL LOAD ==========");
-    console.log("Saved user ID from localStorage:", savedUserId);
-    if (savedUserId) {
-      setCurrentUserId(savedUserId);
-    }
   }, []);
+
+  useEffect(() => {
+    // Validate saved user ID once users are loaded
+    if (users.length > 0 && !currentUserId) {
+      const savedUserId = localStorage.getItem("currentUserId");
+      console.log("========== VALIDATING USER ==========");
+      console.log("Saved user ID from localStorage:", savedUserId);
+      console.log("Available users:", users.map(u => `${u.name} (${u.id})`));
+      
+      if (savedUserId) {
+        // Check if the saved user still exists
+        const userExists = users.some(u => u.id === savedUserId);
+        if (userExists) {
+          console.log("✅ User found, setting current user");
+          setCurrentUserId(savedUserId);
+        } else {
+          console.log("❌ Saved user no longer exists, clearing localStorage");
+          localStorage.removeItem("currentUserId");
+        }
+      }
+    }
+  }, [users, currentUserId]);
 
   useEffect(() => {
     // Show welcome modal if no user logged in
