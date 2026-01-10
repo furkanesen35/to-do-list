@@ -104,3 +104,539 @@
 2026-01-10 17:27:27 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
 2026-01-10 17:27:27 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
 2026-01-10 17:27:27 +01:00: prisma:query SELECT "public"."Todo"."id", "public"."Todo"."title", "public"."Todo"."description", "public"."Todo"."status"::text, "public"."Todo"."priority"::text, "public"."Todo"."dueDate", "public"."Todo"."createdAt", "public"."Todo"."updatedAt", "public"."Todo"."listOwnerId", "public"."Todo"."createdById", "public"."Todo"."assignedUserIds", "public"."Todo"."parentId", COALESCE("aggr_selection_0_Comment"."_aggr_count_comments", 0) AS "_aggr_count_comments" FROM "public"."Todo" LEFT JOIN (SELECT "public"."Comment"."todoId", COUNT(*) AS "_aggr_count_comments" FROM "public"."Comment" WHERE 1=1 GROUP BY "public"."Comment"."todoId") AS "aggr_selection_0_Comment" ON ("public"."Todo"."id" = "aggr_selection_0_Comment"."todoId") WHERE "public"."Todo"."parentId" IN ($1) ORDER BY "public"."Todo"."createdAt" ASC OFFSET $2
+2026-01-10 17:29:02 +01:00: prisma:query SELECT 1
+2026-01-10 17:29:02 +01:00: prisma:query SELECT 1
+2026-01-10 17:29:02 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color", COALESCE("aggr_selection_0_Todo"."_aggr_count_ownedTodos", 0) AS "_aggr_count_ownedTodos" FROM "public"."User" LEFT JOIN (SELECT "public"."Todo"."listOwnerId", COUNT(*) AS "_aggr_count_ownedTodos" FROM "public"."Todo" WHERE 1=1 GROUP BY "public"."Todo"."listOwnerId") AS "aggr_selection_0_Todo" ON ("public"."User"."id" = "aggr_selection_0_Todo"."listOwnerId") WHERE 1=1 ORDER BY "public"."User"."name" ASC OFFSET $1
+2026-01-10 17:29:02 +01:00: prisma:query SELECT "public"."Todo"."id", "public"."Todo"."title", "public"."Todo"."description", "public"."Todo"."status"::text, "public"."Todo"."priority"::text, "public"."Todo"."dueDate", "public"."Todo"."createdAt", "public"."Todo"."updatedAt", "public"."Todo"."listOwnerId", "public"."Todo"."createdById", "public"."Todo"."assignedUserIds", "public"."Todo"."parentId", COALESCE("aggr_selection_0_Comment"."_aggr_count_comments", 0) AS "_aggr_count_comments" FROM "public"."Todo" LEFT JOIN (SELECT "public"."Comment"."todoId", COUNT(*) AS "_aggr_count_comments" FROM "public"."Comment" WHERE 1=1 GROUP BY "public"."Comment"."todoId") AS "aggr_selection_0_Comment" ON ("public"."Todo"."id" = "aggr_selection_0_Comment"."todoId") WHERE "public"."Todo"."parentId" IS NULL ORDER BY "public"."Todo"."createdAt" DESC OFFSET $1
+2026-01-10 17:29:02 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+2026-01-10 17:29:02 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+2026-01-10 17:29:02 +01:00: prisma:query SELECT "public"."Todo"."id", "public"."Todo"."title", "public"."Todo"."description", "public"."Todo"."status"::text, "public"."Todo"."priority"::text, "public"."Todo"."dueDate", "public"."Todo"."createdAt", "public"."Todo"."updatedAt", "public"."Todo"."listOwnerId", "public"."Todo"."createdById", "public"."Todo"."assignedUserIds", "public"."Todo"."parentId", COALESCE("aggr_selection_0_Comment"."_aggr_count_comments", 0) AS "_aggr_count_comments" FROM "public"."Todo" LEFT JOIN (SELECT "public"."Comment"."todoId", COUNT(*) AS "_aggr_count_comments" FROM "public"."Comment" WHERE 1=1 GROUP BY "public"."Comment"."todoId") AS "aggr_selection_0_Comment" ON ("public"."Todo"."id" = "aggr_selection_0_Comment"."todoId") WHERE "public"."Todo"."parentId" IN ($1) ORDER BY "public"."Todo"."createdAt" ASC OFFSET $2
+2026-01-10 17:33:54 +01:00: prisma:query SELECT "public"."Todo"."id", "public"."Todo"."title", "public"."Todo"."description", "public"."Todo"."status"::text, "public"."Todo"."priority"::text, "public"."Todo"."dueDate", "public"."Todo"."createdAt", "public"."Todo"."updatedAt", "public"."Todo"."listOwnerId", "public"."Todo"."createdById", "public"."Todo"."assignedUserIds", "public"."Todo"."parentId", COALESCE("aggr_selection_0_Comment"."_aggr_count_comments", 0) AS "_aggr_count_comments" FROM "public"."Todo" LEFT JOIN (SELECT "public"."Comment"."todoId", COUNT(*) AS "_aggr_count_comments" FROM "public"."Comment" WHERE 1=1 GROUP BY "public"."Comment"."todoId") AS "aggr_selection_0_Comment" ON ("public"."Todo"."id" = "aggr_selection_0_Comment"."todoId") WHERE "public"."Todo"."parentId" IS NULL ORDER BY "public"."Todo"."createdAt" DESC OFFSET $1
+2026-01-10 17:33:54 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+2026-01-10 17:33:54 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+2026-01-10 17:33:54 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color", COALESCE("aggr_selection_0_Todo"."_aggr_count_ownedTodos", 0) AS "_aggr_count_ownedTodos" FROM "public"."User" LEFT JOIN (SELECT "public"."Todo"."listOwnerId", COUNT(*) AS "_aggr_count_ownedTodos" FROM "public"."Todo" WHERE 1=1 GROUP BY "public"."Todo"."listOwnerId") AS "aggr_selection_0_Todo" ON ("public"."User"."id" = "aggr_selection_0_Todo"."listOwnerId") WHERE 1=1 ORDER BY "public"."User"."name" ASC OFFSET $1
+2026-01-10 17:33:54 +01:00: prisma:query SELECT "public"."Todo"."id", "public"."Todo"."title", "public"."Todo"."description", "public"."Todo"."status"::text, "public"."Todo"."priority"::text, "public"."Todo"."dueDate", "public"."Todo"."createdAt", "public"."Todo"."updatedAt", "public"."Todo"."listOwnerId", "public"."Todo"."createdById", "public"."Todo"."assignedUserIds", "public"."Todo"."parentId", COALESCE("aggr_selection_0_Comment"."_aggr_count_comments", 0) AS "_aggr_count_comments" FROM "public"."Todo" LEFT JOIN (SELECT "public"."Comment"."todoId", COUNT(*) AS "_aggr_count_comments" FROM "public"."Comment" WHERE 1=1 GROUP BY "public"."Comment"."todoId") AS "aggr_selection_0_Comment" ON ("public"."Todo"."id" = "aggr_selection_0_Comment"."todoId") WHERE "public"."Todo"."parentId" IN ($1) ORDER BY "public"."Todo"."createdAt" ASC OFFSET $2
+2026-01-10 17:34:16 +01:00: prisma:query SELECT 1
+2026-01-10 17:34:16 +01:00: prisma:query SELECT "public"."Todo"."id", "public"."Todo"."title", "public"."Todo"."description", "public"."Todo"."status"::text, "public"."Todo"."priority"::text, "public"."Todo"."dueDate", "public"."Todo"."createdAt", "public"."Todo"."updatedAt", "public"."Todo"."listOwnerId", "public"."Todo"."createdById", "public"."Todo"."assignedUserIds", "public"."Todo"."parentId", COALESCE("aggr_selection_0_Comment"."_aggr_count_comments", 0) AS "_aggr_count_comments" FROM "public"."Todo" LEFT JOIN (SELECT "public"."Comment"."todoId", COUNT(*) AS "_aggr_count_comments" FROM "public"."Comment" WHERE 1=1 GROUP BY "public"."Comment"."todoId") AS "aggr_selection_0_Comment" ON ("public"."Todo"."id" = "aggr_selection_0_Comment"."todoId") WHERE "public"."Todo"."parentId" IS NULL ORDER BY "public"."Todo"."createdAt" DESC OFFSET $1
+2026-01-10 17:34:16 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+2026-01-10 17:34:16 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+2026-01-10 17:34:16 +01:00: prisma:query SELECT "public"."Todo"."id", "public"."Todo"."title", "public"."Todo"."description", "public"."Todo"."status"::text, "public"."Todo"."priority"::text, "public"."Todo"."dueDate", "public"."Todo"."createdAt", "public"."Todo"."updatedAt", "public"."Todo"."listOwnerId", "public"."Todo"."createdById", "public"."Todo"."assignedUserIds", "public"."Todo"."parentId", COALESCE("aggr_selection_0_Comment"."_aggr_count_comments", 0) AS "_aggr_count_comments" FROM "public"."Todo" LEFT JOIN (SELECT "public"."Comment"."todoId", COUNT(*) AS "_aggr_count_comments" FROM "public"."Comment" WHERE 1=1 GROUP BY "public"."Comment"."todoId") AS "aggr_selection_0_Comment" ON ("public"."Todo"."id" = "aggr_selection_0_Comment"."todoId") WHERE "public"."Todo"."parentId" IN ($1) ORDER BY "public"."Todo"."createdAt" ASC OFFSET $2
+2026-01-10 17:34:16 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color", COALESCE("aggr_selection_0_Todo"."_aggr_count_ownedTodos", 0) AS "_aggr_count_ownedTodos" FROM "public"."User" LEFT JOIN (SELECT "public"."Todo"."listOwnerId", COUNT(*) AS "_aggr_count_ownedTodos" FROM "public"."Todo" WHERE 1=1 GROUP BY "public"."Todo"."listOwnerId") AS "aggr_selection_0_Todo" ON ("public"."User"."id" = "aggr_selection_0_Todo"."listOwnerId") WHERE 1=1 ORDER BY "public"."User"."name" ASC OFFSET $1
+2026-01-10 17:38:36 +01:00: ========== POST /api/todos ==========
+2026-01-10 17:38:36 +01:00: Received body: {
+  "title": "asd",
+  "description": "asd",
+  "status": "TODO",
+  "priority": "MEDIUM",
+  "listOwnerId": "cmk8fqkrm0000nekevt38vglm",
+  "createdById": "cmk8fqkrm0000nekevt38vglm",
+  "assignedUserIds": [
+    "cmk8hjb3x00002los26i8pfds"
+  ],
+  "dueDate": "2026-05-30",
+  "parentId": null
+}
+2026-01-10 17:38:36 +01:00: Extracted values:
+2026-01-10 17:38:36 +01:00:   title: asd
+2026-01-10 17:38:36 +01:00:   listOwnerId: cmk8fqkrm0000nekevt38vglm
+2026-01-10 17:38:36 +01:00:   createdById: cmk8fqkrm0000nekevt38vglm
+2026-01-10 17:38:36 +01:00:   assignedUserIds: [ 'cmk8hjb3x00002los26i8pfds' ]
+2026-01-10 17:38:36 +01:00:   parentId: null
+2026-01-10 17:38:36 +01:00: prisma:query SELECT 1
+2026-01-10 17:38:36 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color", "public"."User"."createdAt", "public"."User"."updatedAt" FROM "public"."User" WHERE ("public"."User"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3
+2026-01-10 17:38:36 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color", "public"."User"."createdAt", "public"."User"."updatedAt" FROM "public"."User" WHERE ("public"."User"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3
+2026-01-10 17:38:36 +01:00: User validation:
+2026-01-10 17:38:36 +01:00:   listOwner exists: true furkan
+2026-01-10 17:38:36 +01:00:   creator exists: true furkan
+2026-01-10 17:38:36 +01:00: prisma:query BEGIN
+2026-01-10 17:38:36 +01:00: prisma:query INSERT INTO "public"."Todo" ("id","title","description","status","priority","dueDate","createdAt","updatedAt","listOwnerId","createdById","assignedUserIds","parentId") VALUES ($1,$2,$3,CAST($4::text AS "public"."Status"),CAST($5::text AS "public"."Priority"),$6,$7,$8,$9,$10,$11,$12) RETURNING "public"."Todo"."id"
+2026-01-10 17:38:36 +01:00: prisma:query SELECT "public"."Todo"."id", "public"."Todo"."title", "public"."Todo"."description", "public"."Todo"."status"::text, "public"."Todo"."priority"::text, "public"."Todo"."dueDate", "public"."Todo"."createdAt", "public"."Todo"."updatedAt", "public"."Todo"."listOwnerId", "public"."Todo"."createdById", "public"."Todo"."assignedUserIds", "public"."Todo"."parentId", COALESCE("aggr_selection_0_Comment"."_aggr_count_comments", 0) AS "_aggr_count_comments" FROM "public"."Todo" LEFT JOIN (SELECT "public"."Comment"."todoId", COUNT(*) AS "_aggr_count_comments" FROM "public"."Comment" WHERE 1=1 GROUP BY "public"."Comment"."todoId") AS "aggr_selection_0_Comment" ON ("public"."Todo"."id" = "aggr_selection_0_Comment"."todoId") WHERE "public"."Todo"."id" = $1 LIMIT $2 OFFSET $3
+2026-01-10 17:38:36 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+2026-01-10 17:38:36 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+2026-01-10 17:38:36 +01:00: prisma:query SELECT "public"."Todo"."id", "public"."Todo"."title", "public"."Todo"."description", "public"."Todo"."status"::text, "public"."Todo"."priority"::text, "public"."Todo"."dueDate", "public"."Todo"."createdAt", "public"."Todo"."updatedAt", "public"."Todo"."listOwnerId", "public"."Todo"."createdById", "public"."Todo"."assignedUserIds", "public"."Todo"."parentId" FROM "public"."Todo" WHERE "public"."Todo"."parentId" IN ($1) OFFSET $2
+2026-01-10 17:38:36 +01:00: prisma:query COMMIT
+2026-01-10 17:38:36 +01:00: ✅ Todo created successfully: cmk8j4nyy00017fsujzij4mga
+2026-01-10 17:38:57 +01:00: ========== POST /api/todos ==========
+2026-01-10 17:38:57 +01:00: Received body: {
+  "title": "qwe",
+  "description": "qwe",
+  "status": "TODO",
+  "priority": "MEDIUM",
+  "listOwnerId": "cmk8fqkrm0000nekevt38vglm",
+  "createdById": "cmk8fqkrm0000nekevt38vglm",
+  "assignedUserIds": [
+    "cmk8hjb3x00002los26i8pfds"
+  ],
+  "dueDate": "2026-05-30",
+  "parentId": null
+}
+2026-01-10 17:38:57 +01:00: Extracted values:
+2026-01-10 17:38:57 +01:00:   title: qwe
+2026-01-10 17:38:57 +01:00:   listOwnerId: cmk8fqkrm0000nekevt38vglm
+2026-01-10 17:38:57 +01:00:   createdById: cmk8fqkrm0000nekevt38vglm
+2026-01-10 17:38:57 +01:00:   assignedUserIds: [ 'cmk8hjb3x00002los26i8pfds' ]
+2026-01-10 17:38:57 +01:00:   parentId: null
+2026-01-10 17:38:57 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color", "public"."User"."createdAt", "public"."User"."updatedAt" FROM "public"."User" WHERE ("public"."User"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3
+2026-01-10 17:38:57 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color", "public"."User"."createdAt", "public"."User"."updatedAt" FROM "public"."User" WHERE ("public"."User"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3
+2026-01-10 17:38:57 +01:00: User validation:
+2026-01-10 17:38:57 +01:00:   listOwner exists: true furkan
+2026-01-10 17:38:57 +01:00:   creator exists: true furkan
+2026-01-10 17:38:57 +01:00: prisma:query BEGIN
+2026-01-10 17:38:57 +01:00: prisma:query INSERT INTO "public"."Todo" ("id","title","description","status","priority","dueDate","createdAt","updatedAt","listOwnerId","createdById","assignedUserIds","parentId") VALUES ($1,$2,$3,CAST($4::text AS "public"."Status"),CAST($5::text AS "public"."Priority"),$6,$7,$8,$9,$10,$11,$12) RETURNING "public"."Todo"."id"
+2026-01-10 17:38:57 +01:00: prisma:query SELECT "public"."Todo"."id", "public"."Todo"."title", "public"."Todo"."description", "public"."Todo"."status"::text, "public"."Todo"."priority"::text, "public"."Todo"."dueDate", "public"."Todo"."createdAt", "public"."Todo"."updatedAt", "public"."Todo"."listOwnerId", "public"."Todo"."createdById", "public"."Todo"."assignedUserIds", "public"."Todo"."parentId", COALESCE("aggr_selection_0_Comment"."_aggr_count_comments", 0) AS "_aggr_count_comments" FROM "public"."Todo" LEFT JOIN (SELECT "public"."Comment"."todoId", COUNT(*) AS "_aggr_count_comments" FROM "public"."Comment" WHERE 1=1 GROUP BY "public"."Comment"."todoId") AS "aggr_selection_0_Comment" ON ("public"."Todo"."id" = "aggr_selection_0_Comment"."todoId") WHERE "public"."Todo"."id" = $1 LIMIT $2 OFFSET $3
+2026-01-10 17:38:57 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+2026-01-10 17:38:57 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+2026-01-10 17:38:57 +01:00: prisma:query SELECT "public"."Todo"."id", "public"."Todo"."title", "public"."Todo"."description", "public"."Todo"."status"::text, "public"."Todo"."priority"::text, "public"."Todo"."dueDate", "public"."Todo"."createdAt", "public"."Todo"."updatedAt", "public"."Todo"."listOwnerId", "public"."Todo"."createdById", "public"."Todo"."assignedUserIds", "public"."Todo"."parentId" FROM "public"."Todo" WHERE "public"."Todo"."parentId" IN ($1) OFFSET $2
+2026-01-10 17:38:57 +01:00: prisma:query COMMIT
+2026-01-10 17:38:57 +01:00: ✅ Todo created successfully: cmk8j54fx00037fsucuh8cblr
+2026-01-10 17:39:55 +01:00: prisma:query SELECT 1
+2026-01-10 17:39:55 +01:00: prisma:query BEGIN
+2026-01-10 17:39:55 +01:00: prisma:query UPDATE "public"."Todo" SET "parentId" = $1, "updatedAt" = $2 WHERE ("public"."Todo"."id" = $3 AND 1=1) RETURNING "public"."Todo"."id", "public"."Todo"."title", "public"."Todo"."description", "public"."Todo"."status"::text, "public"."Todo"."priority"::text, "public"."Todo"."dueDate", "public"."Todo"."createdAt", "public"."Todo"."updatedAt", "public"."Todo"."listOwnerId", "public"."Todo"."createdById", "public"."Todo"."assignedUserIds", "public"."Todo"."parentId"
+2026-01-10 17:39:55 +01:00: prisma:query SELECT "public"."Todo"."id", "public"."Todo"."title", "public"."Todo"."description", "public"."Todo"."status"::text, "public"."Todo"."priority"::text, "public"."Todo"."dueDate", "public"."Todo"."createdAt", "public"."Todo"."updatedAt", "public"."Todo"."listOwnerId", "public"."Todo"."createdById", "public"."Todo"."assignedUserIds", "public"."Todo"."parentId", COALESCE("aggr_selection_0_Comment"."_aggr_count_comments", 0) AS "_aggr_count_comments" FROM "public"."Todo" LEFT JOIN (SELECT "public"."Comment"."todoId", COUNT(*) AS "_aggr_count_comments" FROM "public"."Comment" WHERE 1=1 GROUP BY "public"."Comment"."todoId") AS "aggr_selection_0_Comment" ON ("public"."Todo"."id" = "aggr_selection_0_Comment"."todoId") WHERE "public"."Todo"."id" = $1 LIMIT $2 OFFSET $3
+2026-01-10 17:39:55 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+2026-01-10 17:39:55 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+2026-01-10 17:39:55 +01:00: prisma:query SELECT "public"."Todo"."id", "public"."Todo"."title", "public"."Todo"."description", "public"."Todo"."status"::text, "public"."Todo"."priority"::text, "public"."Todo"."dueDate", "public"."Todo"."createdAt", "public"."Todo"."updatedAt", "public"."Todo"."listOwnerId", "public"."Todo"."createdById", "public"."Todo"."assignedUserIds", "public"."Todo"."parentId", COALESCE("aggr_selection_0_Comment"."_aggr_count_comments", 0) AS "_aggr_count_comments" FROM "public"."Todo" LEFT JOIN (SELECT "public"."Comment"."todoId", COUNT(*) AS "_aggr_count_comments" FROM "public"."Comment" WHERE 1=1 GROUP BY "public"."Comment"."todoId") AS "aggr_selection_0_Comment" ON ("public"."Todo"."id" = "aggr_selection_0_Comment"."todoId") WHERE "public"."Todo"."parentId" IN ($1) OFFSET $2
+2026-01-10 17:39:55 +01:00: prisma:query COMMIT
+2026-01-10 17:39:55 +01:00: prisma:query SELECT "public"."Todo"."id", "public"."Todo"."title", "public"."Todo"."description", "public"."Todo"."status"::text, "public"."Todo"."priority"::text, "public"."Todo"."dueDate", "public"."Todo"."createdAt", "public"."Todo"."updatedAt", "public"."Todo"."listOwnerId", "public"."Todo"."createdById", "public"."Todo"."assignedUserIds", "public"."Todo"."parentId", COALESCE("aggr_selection_0_Comment"."_aggr_count_comments", 0) AS "_aggr_count_comments" FROM "public"."Todo" LEFT JOIN (SELECT "public"."Comment"."todoId", COUNT(*) AS "_aggr_count_comments" FROM "public"."Comment" WHERE 1=1 GROUP BY "public"."Comment"."todoId") AS "aggr_selection_0_Comment" ON ("public"."Todo"."id" = "aggr_selection_0_Comment"."todoId") WHERE "public"."Todo"."parentId" IS NULL ORDER BY "public"."Todo"."createdAt" DESC OFFSET $1
+2026-01-10 17:39:55 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+2026-01-10 17:39:55 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+2026-01-10 17:39:55 +01:00: prisma:query SELECT "public"."Todo"."id", "public"."Todo"."title", "public"."Todo"."description", "public"."Todo"."status"::text, "public"."Todo"."priority"::text, "public"."Todo"."dueDate", "public"."Todo"."createdAt", "public"."Todo"."updatedAt", "public"."Todo"."listOwnerId", "public"."Todo"."createdById", "public"."Todo"."assignedUserIds", "public"."Todo"."parentId", COALESCE("aggr_selection_0_Comment"."_aggr_count_comments", 0) AS "_aggr_count_comments" FROM "public"."Todo" LEFT JOIN (SELECT "public"."Comment"."todoId", COUNT(*) AS "_aggr_count_comments" FROM "public"."Comment" WHERE 1=1 GROUP BY "public"."Comment"."todoId") AS "aggr_selection_0_Comment" ON ("public"."Todo"."id" = "aggr_selection_0_Comment"."todoId") WHERE "public"."Todo"."parentId" IN ($1,$2) ORDER BY "public"."Todo"."createdAt" ASC OFFSET $3
+2026-01-10 17:39:55 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+2026-01-10 17:39:55 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+2026-01-10 17:40:07 +01:00: prisma:query BEGIN
+2026-01-10 17:40:07 +01:00: prisma:query UPDATE "public"."Todo" SET "parentId" = $1, "updatedAt" = $2 WHERE ("public"."Todo"."id" = $3 AND 1=1) RETURNING "public"."Todo"."id", "public"."Todo"."title", "public"."Todo"."description", "public"."Todo"."status"::text, "public"."Todo"."priority"::text, "public"."Todo"."dueDate", "public"."Todo"."createdAt", "public"."Todo"."updatedAt", "public"."Todo"."listOwnerId", "public"."Todo"."createdById", "public"."Todo"."assignedUserIds", "public"."Todo"."parentId"
+2026-01-10 17:40:07 +01:00: prisma:query SELECT "public"."Todo"."id", "public"."Todo"."title", "public"."Todo"."description", "public"."Todo"."status"::text, "public"."Todo"."priority"::text, "public"."Todo"."dueDate", "public"."Todo"."createdAt", "public"."Todo"."updatedAt", "public"."Todo"."listOwnerId", "public"."Todo"."createdById", "public"."Todo"."assignedUserIds", "public"."Todo"."parentId", COALESCE("aggr_selection_0_Comment"."_aggr_count_comments", 0) AS "_aggr_count_comments" FROM "public"."Todo" LEFT JOIN (SELECT "public"."Comment"."todoId", COUNT(*) AS "_aggr_count_comments" FROM "public"."Comment" WHERE 1=1 GROUP BY "public"."Comment"."todoId") AS "aggr_selection_0_Comment" ON ("public"."Todo"."id" = "aggr_selection_0_Comment"."todoId") WHERE "public"."Todo"."id" = $1 LIMIT $2 OFFSET $3
+2026-01-10 17:40:07 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+2026-01-10 17:40:07 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+2026-01-10 17:40:07 +01:00: prisma:query SELECT "public"."Todo"."id", "public"."Todo"."title", "public"."Todo"."description", "public"."Todo"."status"::text, "public"."Todo"."priority"::text, "public"."Todo"."dueDate", "public"."Todo"."createdAt", "public"."Todo"."updatedAt", "public"."Todo"."listOwnerId", "public"."Todo"."createdById", "public"."Todo"."assignedUserIds", "public"."Todo"."parentId", COALESCE("aggr_selection_0_Comment"."_aggr_count_comments", 0) AS "_aggr_count_comments" FROM "public"."Todo" LEFT JOIN (SELECT "public"."Comment"."todoId", COUNT(*) AS "_aggr_count_comments" FROM "public"."Comment" WHERE 1=1 GROUP BY "public"."Comment"."todoId") AS "aggr_selection_0_Comment" ON ("public"."Todo"."id" = "aggr_selection_0_Comment"."todoId") WHERE "public"."Todo"."parentId" IN ($1) OFFSET $2
+2026-01-10 17:40:07 +01:00: prisma:query COMMIT
+2026-01-10 17:40:07 +01:00: prisma:query SELECT "public"."Todo"."id", "public"."Todo"."title", "public"."Todo"."description", "public"."Todo"."status"::text, "public"."Todo"."priority"::text, "public"."Todo"."dueDate", "public"."Todo"."createdAt", "public"."Todo"."updatedAt", "public"."Todo"."listOwnerId", "public"."Todo"."createdById", "public"."Todo"."assignedUserIds", "public"."Todo"."parentId", COALESCE("aggr_selection_0_Comment"."_aggr_count_comments", 0) AS "_aggr_count_comments" FROM "public"."Todo" LEFT JOIN (SELECT "public"."Comment"."todoId", COUNT(*) AS "_aggr_count_comments" FROM "public"."Comment" WHERE 1=1 GROUP BY "public"."Comment"."todoId") AS "aggr_selection_0_Comment" ON ("public"."Todo"."id" = "aggr_selection_0_Comment"."todoId") WHERE "public"."Todo"."parentId" IS NULL ORDER BY "public"."Todo"."createdAt" DESC OFFSET $1
+2026-01-10 17:40:07 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+2026-01-10 17:40:07 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+2026-01-10 17:40:07 +01:00: prisma:query SELECT "public"."Todo"."id", "public"."Todo"."title", "public"."Todo"."description", "public"."Todo"."status"::text, "public"."Todo"."priority"::text, "public"."Todo"."dueDate", "public"."Todo"."createdAt", "public"."Todo"."updatedAt", "public"."Todo"."listOwnerId", "public"."Todo"."createdById", "public"."Todo"."assignedUserIds", "public"."Todo"."parentId", COALESCE("aggr_selection_0_Comment"."_aggr_count_comments", 0) AS "_aggr_count_comments" FROM "public"."Todo" LEFT JOIN (SELECT "public"."Comment"."todoId", COUNT(*) AS "_aggr_count_comments" FROM "public"."Comment" WHERE 1=1 GROUP BY "public"."Comment"."todoId") AS "aggr_selection_0_Comment" ON ("public"."Todo"."id" = "aggr_selection_0_Comment"."todoId") WHERE "public"."Todo"."parentId" IN ($1,$2,$3) ORDER BY "public"."Todo"."createdAt" ASC OFFSET $4
+2026-01-10 17:40:46 +01:00: prisma:query SELECT 1
+2026-01-10 17:40:46 +01:00: prisma:query DELETE FROM "public"."Todo" WHERE ("public"."Todo"."id" = $1 AND 1=1) RETURNING "public"."Todo"."id", "public"."Todo"."title", "public"."Todo"."description", "public"."Todo"."status"::text, "public"."Todo"."priority"::text, "public"."Todo"."dueDate", "public"."Todo"."createdAt", "public"."Todo"."updatedAt", "public"."Todo"."listOwnerId", "public"."Todo"."createdById", "public"."Todo"."assignedUserIds", "public"."Todo"."parentId"
+2026-01-10 17:40:47 +01:00: prisma:query DELETE FROM "public"."Todo" WHERE ("public"."Todo"."id" = $1 AND 1=1) RETURNING "public"."Todo"."id", "public"."Todo"."title", "public"."Todo"."description", "public"."Todo"."status"::text, "public"."Todo"."priority"::text, "public"."Todo"."dueDate", "public"."Todo"."createdAt", "public"."Todo"."updatedAt", "public"."Todo"."listOwnerId", "public"."Todo"."createdById", "public"."Todo"."assignedUserIds", "public"."Todo"."parentId"
+2026-01-10 17:49:54 +01:00:   ▲ Next.js 14.2.35
+2026-01-10 17:49:54 +01:00:   - Local:        http://localhost:3000
+2026-01-10 17:49:54 +01:00: 
+2026-01-10 17:49:54 +01:00:  ✓ Starting...
+2026-01-10 17:49:54 +01:00:  ✓ Ready in 187ms
+2026-01-10 17:50:11 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color", COALESCE("aggr_selection_0_Todo"."_aggr_count_ownedTodos", 0) AS "_aggr_count_ownedTodos" FROM "public"."User" LEFT JOIN (SELECT "public"."Todo"."listOwnerId", COUNT(*) AS "_aggr_count_ownedTodos" FROM "public"."Todo" WHERE 1=1 GROUP BY "public"."Todo"."listOwnerId") AS "aggr_selection_0_Todo" ON ("public"."User"."id" = "aggr_selection_0_Todo"."listOwnerId") WHERE 1=1 ORDER BY "public"."User"."name" ASC OFFSET $1
+2026-01-10 17:50:11 +01:00: prisma:query SELECT "public"."Todo"."id", "public"."Todo"."title", "public"."Todo"."description", "public"."Todo"."status"::text, "public"."Todo"."priority"::text, "public"."Todo"."dueDate", "public"."Todo"."createdAt", "public"."Todo"."updatedAt", "public"."Todo"."listOwnerId", "public"."Todo"."createdById", "public"."Todo"."assignedUserIds", "public"."Todo"."parentId", COALESCE("aggr_selection_0_Comment"."_aggr_count_comments", 0) AS "_aggr_count_comments" FROM "public"."Todo" LEFT JOIN (SELECT "public"."Comment"."todoId", COUNT(*) AS "_aggr_count_comments" FROM "public"."Comment" WHERE 1=1 GROUP BY "public"."Comment"."todoId") AS "aggr_selection_0_Comment" ON ("public"."Todo"."id" = "aggr_selection_0_Comment"."todoId") WHERE "public"."Todo"."parentId" IS NULL ORDER BY "public"."Todo"."createdAt" DESC OFFSET $1
+2026-01-10 17:50:11 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+2026-01-10 17:50:11 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+2026-01-10 17:50:11 +01:00: prisma:query SELECT "public"."Todo"."id", "public"."Todo"."title", "public"."Todo"."description", "public"."Todo"."status"::text, "public"."Todo"."priority"::text, "public"."Todo"."dueDate", "public"."Todo"."createdAt", "public"."Todo"."updatedAt", "public"."Todo"."listOwnerId", "public"."Todo"."createdById", "public"."Todo"."assignedUserIds", "public"."Todo"."parentId", COALESCE("aggr_selection_0_Comment"."_aggr_count_comments", 0) AS "_aggr_count_comments" FROM "public"."Todo" LEFT JOIN (SELECT "public"."Comment"."todoId", COUNT(*) AS "_aggr_count_comments" FROM "public"."Comment" WHERE 1=1 GROUP BY "public"."Comment"."todoId") AS "aggr_selection_0_Comment" ON ("public"."Todo"."id" = "aggr_selection_0_Comment"."todoId") WHERE "public"."Todo"."parentId" IN ($1) ORDER BY "public"."Todo"."createdAt" ASC OFFSET $2
+2026-01-10 17:50:16 +01:00: prisma:query SELECT "public"."Todo"."id", "public"."Todo"."title", "public"."Todo"."description", "public"."Todo"."status"::text, "public"."Todo"."priority"::text, "public"."Todo"."dueDate", "public"."Todo"."createdAt", "public"."Todo"."updatedAt", "public"."Todo"."listOwnerId", "public"."Todo"."createdById", "public"."Todo"."assignedUserIds", "public"."Todo"."parentId", COALESCE("aggr_selection_0_Comment"."_aggr_count_comments", 0) AS "_aggr_count_comments" FROM "public"."Todo" LEFT JOIN (SELECT "public"."Comment"."todoId", COUNT(*) AS "_aggr_count_comments" FROM "public"."Comment" WHERE 1=1 GROUP BY "public"."Comment"."todoId") AS "aggr_selection_0_Comment" ON ("public"."Todo"."id" = "aggr_selection_0_Comment"."todoId") WHERE "public"."Todo"."parentId" IS NULL ORDER BY "public"."Todo"."createdAt" DESC OFFSET $1
+2026-01-10 17:50:16 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+2026-01-10 17:50:16 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+2026-01-10 17:50:16 +01:00: prisma:query SELECT "public"."Todo"."id", "public"."Todo"."title", "public"."Todo"."description", "public"."Todo"."status"::text, "public"."Todo"."priority"::text, "public"."Todo"."dueDate", "public"."Todo"."createdAt", "public"."Todo"."updatedAt", "public"."Todo"."listOwnerId", "public"."Todo"."createdById", "public"."Todo"."assignedUserIds", "public"."Todo"."parentId", COALESCE("aggr_selection_0_Comment"."_aggr_count_comments", 0) AS "_aggr_count_comments" FROM "public"."Todo" LEFT JOIN (SELECT "public"."Comment"."todoId", COUNT(*) AS "_aggr_count_comments" FROM "public"."Comment" WHERE 1=1 GROUP BY "public"."Comment"."todoId") AS "aggr_selection_0_Comment" ON ("public"."Todo"."id" = "aggr_selection_0_Comment"."todoId") WHERE "public"."Todo"."parentId" IN ($1) ORDER BY "public"."Todo"."createdAt" ASC OFFSET $2
+2026-01-10 17:50:16 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color", COALESCE("aggr_selection_0_Todo"."_aggr_count_ownedTodos", 0) AS "_aggr_count_ownedTodos" FROM "public"."User" LEFT JOIN (SELECT "public"."Todo"."listOwnerId", COUNT(*) AS "_aggr_count_ownedTodos" FROM "public"."Todo" WHERE 1=1 GROUP BY "public"."Todo"."listOwnerId") AS "aggr_selection_0_Todo" ON ("public"."User"."id" = "aggr_selection_0_Todo"."listOwnerId") WHERE 1=1 ORDER BY "public"."User"."name" ASC OFFSET $1
+2026-01-10 17:50:30 +01:00: ========== POST /api/todos ==========
+2026-01-10 17:50:30 +01:00: Received body: {
+  "title": "asd",
+  "description": "asd",
+  "status": "TODO",
+  "priority": "MEDIUM",
+  "listOwnerId": "cmk8fqkrm0000nekevt38vglm",
+  "createdById": "cmk8fqkrm0000nekevt38vglm",
+  "assignedUserIds": [
+    "cmk8hjb3x00002los26i8pfds"
+  ],
+  "dueDate": "2026-05-30",
+  "parentId": null
+}
+2026-01-10 17:50:30 +01:00: Extracted values:
+2026-01-10 17:50:30 +01:00:   title: asd
+2026-01-10 17:50:30 +01:00:   listOwnerId: cmk8fqkrm0000nekevt38vglm
+2026-01-10 17:50:30 +01:00:   createdById: cmk8fqkrm0000nekevt38vglm
+2026-01-10 17:50:30 +01:00:   assignedUserIds: [ 'cmk8hjb3x00002los26i8pfds' ]
+2026-01-10 17:50:30 +01:00:   parentId: null
+2026-01-10 17:50:30 +01:00: prisma:query SELECT 1
+2026-01-10 17:50:30 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color", "public"."User"."createdAt", "public"."User"."updatedAt" FROM "public"."User" WHERE ("public"."User"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3
+2026-01-10 17:50:30 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color", "public"."User"."createdAt", "public"."User"."updatedAt" FROM "public"."User" WHERE ("public"."User"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3
+2026-01-10 17:50:30 +01:00: User validation:
+2026-01-10 17:50:30 +01:00:   listOwner exists: true furkan
+2026-01-10 17:50:30 +01:00:   creator exists: true furkan
+2026-01-10 17:50:30 +01:00: prisma:query BEGIN
+2026-01-10 17:50:30 +01:00: prisma:query INSERT INTO "public"."Todo" ("id","title","description","status","priority","dueDate","createdAt","updatedAt","listOwnerId","createdById","assignedUserIds","parentId") VALUES ($1,$2,$3,CAST($4::text AS "public"."Status"),CAST($5::text AS "public"."Priority"),$6,$7,$8,$9,$10,$11,$12) RETURNING "public"."Todo"."id"
+2026-01-10 17:50:30 +01:00: prisma:query SELECT "public"."Todo"."id", "public"."Todo"."title", "public"."Todo"."description", "public"."Todo"."status"::text, "public"."Todo"."priority"::text, "public"."Todo"."dueDate", "public"."Todo"."createdAt", "public"."Todo"."updatedAt", "public"."Todo"."listOwnerId", "public"."Todo"."createdById", "public"."Todo"."assignedUserIds", "public"."Todo"."parentId", COALESCE("aggr_selection_0_Comment"."_aggr_count_comments", 0) AS "_aggr_count_comments" FROM "public"."Todo" LEFT JOIN (SELECT "public"."Comment"."todoId", COUNT(*) AS "_aggr_count_comments" FROM "public"."Comment" WHERE 1=1 GROUP BY "public"."Comment"."todoId") AS "aggr_selection_0_Comment" ON ("public"."Todo"."id" = "aggr_selection_0_Comment"."todoId") WHERE "public"."Todo"."id" = $1 LIMIT $2 OFFSET $3
+2026-01-10 17:50:30 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+2026-01-10 17:50:30 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+2026-01-10 17:50:30 +01:00: prisma:query SELECT "public"."Todo"."id", "public"."Todo"."title", "public"."Todo"."description", "public"."Todo"."status"::text, "public"."Todo"."priority"::text, "public"."Todo"."dueDate", "public"."Todo"."createdAt", "public"."Todo"."updatedAt", "public"."Todo"."listOwnerId", "public"."Todo"."createdById", "public"."Todo"."assignedUserIds", "public"."Todo"."parentId" FROM "public"."Todo" WHERE "public"."Todo"."parentId" IN ($1) OFFSET $2
+2026-01-10 17:50:30 +01:00: prisma:query COMMIT
+2026-01-10 17:50:30 +01:00: ✅ Todo created successfully: cmk8jjyy60001102dsc4gwpzg
+2026-01-10 17:50:58 +01:00: ========== POST /api/todos ==========
+2026-01-10 17:50:58 +01:00: Received body: {
+  "title": "qwe",
+  "description": "qwe",
+  "status": "TODO",
+  "priority": "MEDIUM",
+  "listOwnerId": "cmk8fqkrm0000nekevt38vglm",
+  "createdById": "cmk8hjb3x00002los26i8pfds",
+  "assignedUserIds": [
+    "cmk8fqkrm0000nekevt38vglm"
+  ],
+  "dueDate": "2026-05-30",
+  "parentId": null
+}
+2026-01-10 17:50:58 +01:00: Extracted values:
+2026-01-10 17:50:58 +01:00:   title: qwe
+2026-01-10 17:50:58 +01:00:   listOwnerId: cmk8fqkrm0000nekevt38vglm
+2026-01-10 17:50:58 +01:00:   createdById: cmk8hjb3x00002los26i8pfds
+2026-01-10 17:50:58 +01:00:   assignedUserIds: [ 'cmk8fqkrm0000nekevt38vglm' ]
+2026-01-10 17:50:58 +01:00:   parentId: null
+2026-01-10 17:50:58 +01:00: prisma:query SELECT 1
+2026-01-10 17:50:58 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color", "public"."User"."createdAt", "public"."User"."updatedAt" FROM "public"."User" WHERE ("public"."User"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3
+2026-01-10 17:50:58 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color", "public"."User"."createdAt", "public"."User"."updatedAt" FROM "public"."User" WHERE ("public"."User"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3
+2026-01-10 17:50:58 +01:00: User validation:
+2026-01-10 17:50:58 +01:00:   listOwner exists: true furkan
+2026-01-10 17:50:58 +01:00:   creator exists: true hayati
+2026-01-10 17:50:58 +01:00: prisma:query BEGIN
+2026-01-10 17:50:58 +01:00: prisma:query INSERT INTO "public"."Todo" ("id","title","description","status","priority","dueDate","createdAt","updatedAt","listOwnerId","createdById","assignedUserIds","parentId") VALUES ($1,$2,$3,CAST($4::text AS "public"."Status"),CAST($5::text AS "public"."Priority"),$6,$7,$8,$9,$10,$11,$12) RETURNING "public"."Todo"."id"
+2026-01-10 17:50:58 +01:00: prisma:query SELECT "public"."Todo"."id", "public"."Todo"."title", "public"."Todo"."description", "public"."Todo"."status"::text, "public"."Todo"."priority"::text, "public"."Todo"."dueDate", "public"."Todo"."createdAt", "public"."Todo"."updatedAt", "public"."Todo"."listOwnerId", "public"."Todo"."createdById", "public"."Todo"."assignedUserIds", "public"."Todo"."parentId", COALESCE("aggr_selection_0_Comment"."_aggr_count_comments", 0) AS "_aggr_count_comments" FROM "public"."Todo" LEFT JOIN (SELECT "public"."Comment"."todoId", COUNT(*) AS "_aggr_count_comments" FROM "public"."Comment" WHERE 1=1 GROUP BY "public"."Comment"."todoId") AS "aggr_selection_0_Comment" ON ("public"."Todo"."id" = "aggr_selection_0_Comment"."todoId") WHERE "public"."Todo"."id" = $1 LIMIT $2 OFFSET $3
+2026-01-10 17:50:58 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+2026-01-10 17:50:58 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+2026-01-10 17:50:58 +01:00: prisma:query SELECT "public"."Todo"."id", "public"."Todo"."title", "public"."Todo"."description", "public"."Todo"."status"::text, "public"."Todo"."priority"::text, "public"."Todo"."dueDate", "public"."Todo"."createdAt", "public"."Todo"."updatedAt", "public"."Todo"."listOwnerId", "public"."Todo"."createdById", "public"."Todo"."assignedUserIds", "public"."Todo"."parentId" FROM "public"."Todo" WHERE "public"."Todo"."parentId" IN ($1) OFFSET $2
+2026-01-10 17:50:58 +01:00: prisma:query COMMIT
+2026-01-10 17:50:58 +01:00: ✅ Todo created successfully: cmk8jkkec0003102dxawqq04o
+2026-01-10 17:51:04 +01:00: prisma:query BEGIN
+2026-01-10 17:51:04 +01:00: prisma:query UPDATE "public"."Todo" SET "status" = CAST($1::text AS "public"."Status"), "updatedAt" = $2 WHERE ("public"."Todo"."id" = $3 AND 1=1) RETURNING "public"."Todo"."id", "public"."Todo"."title", "public"."Todo"."description", "public"."Todo"."status"::text, "public"."Todo"."priority"::text, "public"."Todo"."dueDate", "public"."Todo"."createdAt", "public"."Todo"."updatedAt", "public"."Todo"."listOwnerId", "public"."Todo"."createdById", "public"."Todo"."assignedUserIds", "public"."Todo"."parentId"
+2026-01-10 17:51:04 +01:00: prisma:query SELECT "public"."Todo"."id", "public"."Todo"."title", "public"."Todo"."description", "public"."Todo"."status"::text, "public"."Todo"."priority"::text, "public"."Todo"."dueDate", "public"."Todo"."createdAt", "public"."Todo"."updatedAt", "public"."Todo"."listOwnerId", "public"."Todo"."createdById", "public"."Todo"."assignedUserIds", "public"."Todo"."parentId", COALESCE("aggr_selection_0_Comment"."_aggr_count_comments", 0) AS "_aggr_count_comments" FROM "public"."Todo" LEFT JOIN (SELECT "public"."Comment"."todoId", COUNT(*) AS "_aggr_count_comments" FROM "public"."Comment" WHERE 1=1 GROUP BY "public"."Comment"."todoId") AS "aggr_selection_0_Comment" ON ("public"."Todo"."id" = "aggr_selection_0_Comment"."todoId") WHERE "public"."Todo"."id" = $1 LIMIT $2 OFFSET $3
+2026-01-10 17:51:04 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+2026-01-10 17:51:04 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+2026-01-10 17:51:04 +01:00: prisma:query SELECT "public"."Todo"."id", "public"."Todo"."title", "public"."Todo"."description", "public"."Todo"."status"::text, "public"."Todo"."priority"::text, "public"."Todo"."dueDate", "public"."Todo"."createdAt", "public"."Todo"."updatedAt", "public"."Todo"."listOwnerId", "public"."Todo"."createdById", "public"."Todo"."assignedUserIds", "public"."Todo"."parentId", COALESCE("aggr_selection_0_Comment"."_aggr_count_comments", 0) AS "_aggr_count_comments" FROM "public"."Todo" LEFT JOIN (SELECT "public"."Comment"."todoId", COUNT(*) AS "_aggr_count_comments" FROM "public"."Comment" WHERE 1=1 GROUP BY "public"."Comment"."todoId") AS "aggr_selection_0_Comment" ON ("public"."Todo"."id" = "aggr_selection_0_Comment"."todoId") WHERE "public"."Todo"."parentId" IN ($1) OFFSET $2
+2026-01-10 17:51:04 +01:00: prisma:query COMMIT
+2026-01-10 17:51:04 +01:00: prisma:query SELECT "public"."Todo"."id", "public"."Todo"."title", "public"."Todo"."description", "public"."Todo"."status"::text, "public"."Todo"."priority"::text, "public"."Todo"."dueDate", "public"."Todo"."createdAt", "public"."Todo"."updatedAt", "public"."Todo"."listOwnerId", "public"."Todo"."createdById", "public"."Todo"."assignedUserIds", "public"."Todo"."parentId", COALESCE("aggr_selection_0_Comment"."_aggr_count_comments", 0) AS "_aggr_count_comments" FROM "public"."Todo" LEFT JOIN (SELECT "public"."Comment"."todoId", COUNT(*) AS "_aggr_count_comments" FROM "public"."Comment" WHERE 1=1 GROUP BY "public"."Comment"."todoId") AS "aggr_selection_0_Comment" ON ("public"."Todo"."id" = "aggr_selection_0_Comment"."todoId") WHERE "public"."Todo"."parentId" IS NULL ORDER BY "public"."Todo"."createdAt" DESC OFFSET $1
+2026-01-10 17:51:04 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+2026-01-10 17:51:04 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color" FROM "public"."User" WHERE "public"."User"."id" IN ($1,$2) OFFSET $3
+2026-01-10 17:51:04 +01:00: prisma:query SELECT "public"."Todo"."id", "public"."Todo"."title", "public"."Todo"."description", "public"."Todo"."status"::text, "public"."Todo"."priority"::text, "public"."Todo"."dueDate", "public"."Todo"."createdAt", "public"."Todo"."updatedAt", "public"."Todo"."listOwnerId", "public"."Todo"."createdById", "public"."Todo"."assignedUserIds", "public"."Todo"."parentId", COALESCE("aggr_selection_0_Comment"."_aggr_count_comments", 0) AS "_aggr_count_comments" FROM "public"."Todo" LEFT JOIN (SELECT "public"."Comment"."todoId", COUNT(*) AS "_aggr_count_comments" FROM "public"."Comment" WHERE 1=1 GROUP BY "public"."Comment"."todoId") AS "aggr_selection_0_Comment" ON ("public"."Todo"."id" = "aggr_selection_0_Comment"."todoId") WHERE "public"."Todo"."parentId" IN ($1,$2,$3) ORDER BY "public"."Todo"."createdAt" ASC OFFSET $4
+2026-01-10 17:51:07 +01:00: prisma:query DELETE FROM "public"."Todo" WHERE ("public"."Todo"."id" = $1 AND 1=1) RETURNING "public"."Todo"."id", "public"."Todo"."title", "public"."Todo"."description", "public"."Todo"."status"::text, "public"."Todo"."priority"::text, "public"."Todo"."dueDate", "public"."Todo"."createdAt", "public"."Todo"."updatedAt", "public"."Todo"."listOwnerId", "public"."Todo"."createdById", "public"."Todo"."assignedUserIds", "public"."Todo"."parentId"
+2026-01-10 17:51:11 +01:00: prisma:query DELETE FROM "public"."Todo" WHERE ("public"."Todo"."id" = $1 AND 1=1) RETURNING "public"."Todo"."id", "public"."Todo"."title", "public"."Todo"."description", "public"."Todo"."status"::text, "public"."Todo"."priority"::text, "public"."Todo"."dueDate", "public"."Todo"."createdAt", "public"."Todo"."updatedAt", "public"."Todo"."listOwnerId", "public"."Todo"."createdById", "public"."Todo"."assignedUserIds", "public"."Todo"."parentId"
+2026-01-10 17:59:13 +01:00:   ▲ Next.js 14.2.35
+2026-01-10 17:59:13 +01:00:   - Local:        http://localhost:3000
+2026-01-10 17:59:13 +01:00: 
+2026-01-10 17:59:13 +01:00:  ✓ Starting...
+2026-01-10 17:59:13 +01:00:   ▲ Next.js 14.2.35
+2026-01-10 17:59:13 +01:00:   - Local:        http://localhost:3000
+2026-01-10 17:59:13 +01:00: 
+2026-01-10 17:59:13 +01:00:  ✓ Starting...
+2026-01-10 17:59:14 +01:00:   ▲ Next.js 14.2.35
+2026-01-10 17:59:14 +01:00:   - Local:        http://localhost:3000
+2026-01-10 17:59:14 +01:00: 
+2026-01-10 17:59:14 +01:00:  ✓ Starting...
+2026-01-10 17:59:14 +01:00:   ▲ Next.js 14.2.35
+2026-01-10 17:59:14 +01:00:   - Local:        http://localhost:3000
+2026-01-10 17:59:14 +01:00: 
+2026-01-10 17:59:14 +01:00:  ✓ Starting...
+2026-01-10 17:59:14 +01:00:   ▲ Next.js 14.2.35
+2026-01-10 17:59:14 +01:00:   - Local:        http://localhost:3000
+2026-01-10 17:59:14 +01:00: 
+2026-01-10 17:59:14 +01:00:  ✓ Starting...
+2026-01-10 17:59:14 +01:00:   ▲ Next.js 14.2.35
+2026-01-10 17:59:14 +01:00:   - Local:        http://localhost:3000
+2026-01-10 17:59:14 +01:00: 
+2026-01-10 17:59:14 +01:00:  ✓ Starting...
+2026-01-10 17:59:15 +01:00:   ▲ Next.js 14.2.35
+2026-01-10 17:59:15 +01:00:   - Local:        http://localhost:3000
+2026-01-10 17:59:15 +01:00: 
+2026-01-10 17:59:15 +01:00:  ✓ Starting...
+2026-01-10 17:59:15 +01:00:   ▲ Next.js 14.2.35
+2026-01-10 17:59:15 +01:00:   - Local:        http://localhost:3000
+2026-01-10 17:59:15 +01:00: 
+2026-01-10 17:59:15 +01:00:  ✓ Starting...
+2026-01-10 17:59:15 +01:00:   ▲ Next.js 14.2.35
+2026-01-10 17:59:15 +01:00:   - Local:        http://localhost:3000
+2026-01-10 17:59:15 +01:00: 
+2026-01-10 17:59:15 +01:00:  ✓ Starting...
+2026-01-10 17:59:15 +01:00:   ▲ Next.js 14.2.35
+2026-01-10 17:59:15 +01:00:   - Local:        http://localhost:3000
+2026-01-10 17:59:15 +01:00: 
+2026-01-10 17:59:15 +01:00:  ✓ Starting...
+2026-01-10 17:59:16 +01:00:   ▲ Next.js 14.2.35
+2026-01-10 17:59:16 +01:00:   - Local:        http://localhost:3000
+2026-01-10 17:59:16 +01:00: 
+2026-01-10 17:59:16 +01:00:  ✓ Starting...
+2026-01-10 17:59:16 +01:00:   ▲ Next.js 14.2.35
+2026-01-10 17:59:16 +01:00:   - Local:        http://localhost:3000
+2026-01-10 17:59:16 +01:00: 
+2026-01-10 17:59:16 +01:00:  ✓ Starting...
+2026-01-10 17:59:16 +01:00:   ▲ Next.js 14.2.35
+2026-01-10 17:59:16 +01:00:   - Local:        http://localhost:3000
+2026-01-10 17:59:16 +01:00: 
+2026-01-10 17:59:16 +01:00:  ✓ Starting...
+2026-01-10 17:59:17 +01:00:   ▲ Next.js 14.2.35
+2026-01-10 17:59:17 +01:00:   - Local:        http://localhost:3000
+2026-01-10 17:59:17 +01:00: 
+2026-01-10 17:59:17 +01:00:  ✓ Starting...
+2026-01-10 17:59:17 +01:00:   ▲ Next.js 14.2.35
+2026-01-10 17:59:17 +01:00:   - Local:        http://localhost:3000
+2026-01-10 17:59:17 +01:00: 
+2026-01-10 17:59:17 +01:00:  ✓ Starting...
+2026-01-10 17:59:17 +01:00:   ▲ Next.js 14.2.35
+2026-01-10 17:59:17 +01:00:   - Local:        http://localhost:3000
+2026-01-10 17:59:17 +01:00: 
+2026-01-10 17:59:17 +01:00:  ✓ Starting...
+2026-01-10 17:59:35 +01:00:   ▲ Next.js 14.2.35
+2026-01-10 17:59:35 +01:00:   - Local:        http://localhost:3000
+2026-01-10 17:59:35 +01:00: 
+2026-01-10 17:59:35 +01:00:  ✓ Starting...
+2026-01-10 17:59:35 +01:00:  ✓ Ready in 186ms
+2026-01-10 17:59:48 +01:00: prisma:query SELECT "public"."Todo"."id", "public"."Todo"."title", "public"."Todo"."description", "public"."Todo"."status"::text, "public"."Todo"."priority"::text, "public"."Todo"."dueDate", "public"."Todo"."createdAt", "public"."Todo"."updatedAt", "public"."Todo"."listOwnerId", "public"."Todo"."createdById", "public"."Todo"."assignedUserIds", "public"."Todo"."parentId", COALESCE("aggr_selection_0_Comment"."_aggr_count_comments", 0) AS "_aggr_count_comments" FROM "public"."Todo" LEFT JOIN (SELECT "public"."Comment"."todoId", COUNT(*) AS "_aggr_count_comments" FROM "public"."Comment" WHERE 1=1 GROUP BY "public"."Comment"."todoId") AS "aggr_selection_0_Comment" ON ("public"."Todo"."id" = "aggr_selection_0_Comment"."todoId") WHERE "public"."Todo"."parentId" IS NULL ORDER BY "public"."Todo"."createdAt" DESC OFFSET $1
+2026-01-10 17:59:48 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+2026-01-10 17:59:48 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+2026-01-10 17:59:48 +01:00: prisma:query SELECT "public"."Todo"."id", "public"."Todo"."title", "public"."Todo"."description", "public"."Todo"."status"::text, "public"."Todo"."priority"::text, "public"."Todo"."dueDate", "public"."Todo"."createdAt", "public"."Todo"."updatedAt", "public"."Todo"."listOwnerId", "public"."Todo"."createdById", "public"."Todo"."assignedUserIds", "public"."Todo"."parentId", COALESCE("aggr_selection_0_Comment"."_aggr_count_comments", 0) AS "_aggr_count_comments" FROM "public"."Todo" LEFT JOIN (SELECT "public"."Comment"."todoId", COUNT(*) AS "_aggr_count_comments" FROM "public"."Comment" WHERE 1=1 GROUP BY "public"."Comment"."todoId") AS "aggr_selection_0_Comment" ON ("public"."Todo"."id" = "aggr_selection_0_Comment"."todoId") WHERE "public"."Todo"."parentId" IN ($1) ORDER BY "public"."Todo"."createdAt" ASC OFFSET $2
+2026-01-10 17:59:48 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color", COALESCE("aggr_selection_0_Todo"."_aggr_count_ownedTodos", 0) AS "_aggr_count_ownedTodos" FROM "public"."User" LEFT JOIN (SELECT "public"."Todo"."listOwnerId", COUNT(*) AS "_aggr_count_ownedTodos" FROM "public"."Todo" WHERE 1=1 GROUP BY "public"."Todo"."listOwnerId") AS "aggr_selection_0_Todo" ON ("public"."User"."id" = "aggr_selection_0_Todo"."listOwnerId") WHERE 1=1 ORDER BY "public"."User"."name" ASC OFFSET $1
+2026-01-10 18:01:14 +01:00: ========== POST /api/todos ==========
+2026-01-10 18:01:14 +01:00: Received body: {
+  "title": "asd",
+  "description": "asd",
+  "status": "TODO",
+  "priority": "MEDIUM",
+  "listOwnerId": "cmk8fqkrm0000nekevt38vglm",
+  "createdById": "cmk8fqkrm0000nekevt38vglm",
+  "assignedUserIds": [
+    "cmk8fqkrm0000nekevt38vglm",
+    "cmk8hjb3x00002los26i8pfds",
+    "cmk8hu0yj00032los07nuabon"
+  ],
+  "dueDate": "2026-05-30",
+  "parentId": null
+}
+2026-01-10 18:01:14 +01:00: Extracted values:
+2026-01-10 18:01:14 +01:00:   title: asd
+2026-01-10 18:01:14 +01:00:   listOwnerId: cmk8fqkrm0000nekevt38vglm
+2026-01-10 18:01:14 +01:00:   createdById: cmk8fqkrm0000nekevt38vglm
+2026-01-10 18:01:14 +01:00:   assignedUserIds: [
+  'cmk8fqkrm0000nekevt38vglm',
+  'cmk8hjb3x00002los26i8pfds',
+  'cmk8hu0yj00032los07nuabon'
+]
+2026-01-10 18:01:14 +01:00:   parentId: null
+2026-01-10 18:01:14 +01:00: prisma:query SELECT 1
+2026-01-10 18:01:14 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color", "public"."User"."createdAt", "public"."User"."updatedAt" FROM "public"."User" WHERE ("public"."User"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3
+2026-01-10 18:01:14 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color", "public"."User"."createdAt", "public"."User"."updatedAt" FROM "public"."User" WHERE ("public"."User"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3
+2026-01-10 18:01:14 +01:00: User validation:
+2026-01-10 18:01:14 +01:00:   listOwner exists: true furkan
+2026-01-10 18:01:14 +01:00:   creator exists: true furkan
+2026-01-10 18:01:14 +01:00: prisma:query BEGIN
+2026-01-10 18:01:14 +01:00: prisma:query INSERT INTO "public"."Todo" ("id","title","description","status","priority","dueDate","createdAt","updatedAt","listOwnerId","createdById","assignedUserIds","parentId") VALUES ($1,$2,$3,CAST($4::text AS "public"."Status"),CAST($5::text AS "public"."Priority"),$6,$7,$8,$9,$10,$11,$12) RETURNING "public"."Todo"."id"
+2026-01-10 18:01:14 +01:00: prisma:query SELECT "public"."Todo"."id", "public"."Todo"."title", "public"."Todo"."description", "public"."Todo"."status"::text, "public"."Todo"."priority"::text, "public"."Todo"."dueDate", "public"."Todo"."createdAt", "public"."Todo"."updatedAt", "public"."Todo"."listOwnerId", "public"."Todo"."createdById", "public"."Todo"."assignedUserIds", "public"."Todo"."parentId", COALESCE("aggr_selection_0_Comment"."_aggr_count_comments", 0) AS "_aggr_count_comments" FROM "public"."Todo" LEFT JOIN (SELECT "public"."Comment"."todoId", COUNT(*) AS "_aggr_count_comments" FROM "public"."Comment" WHERE 1=1 GROUP BY "public"."Comment"."todoId") AS "aggr_selection_0_Comment" ON ("public"."Todo"."id" = "aggr_selection_0_Comment"."todoId") WHERE "public"."Todo"."id" = $1 LIMIT $2 OFFSET $3
+2026-01-10 18:01:14 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+2026-01-10 18:01:14 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+2026-01-10 18:01:14 +01:00: prisma:query SELECT "public"."Todo"."id", "public"."Todo"."title", "public"."Todo"."description", "public"."Todo"."status"::text, "public"."Todo"."priority"::text, "public"."Todo"."dueDate", "public"."Todo"."createdAt", "public"."Todo"."updatedAt", "public"."Todo"."listOwnerId", "public"."Todo"."createdById", "public"."Todo"."assignedUserIds", "public"."Todo"."parentId" FROM "public"."Todo" WHERE "public"."Todo"."parentId" IN ($1) OFFSET $2
+2026-01-10 18:01:14 +01:00: prisma:query COMMIT
+2026-01-10 18:01:14 +01:00: ✅ Todo created successfully: cmk8jxs0b0001lfsvfy424csl
+2026-01-10 18:01:38 +01:00: prisma:query SELECT 1
+2026-01-10 18:01:38 +01:00: prisma:query BEGIN
+2026-01-10 18:01:38 +01:00: prisma:query UPDATE "public"."Todo" SET "title" = $1, "description" = $2, "priority" = CAST($3::text AS "public"."Priority"), "dueDate" = $4, "assignedUserIds" = $5, "updatedAt" = $6 WHERE ("public"."Todo"."id" = $7 AND 1=1) RETURNING "public"."Todo"."id", "public"."Todo"."title", "public"."Todo"."description", "public"."Todo"."status"::text, "public"."Todo"."priority"::text, "public"."Todo"."dueDate", "public"."Todo"."createdAt", "public"."Todo"."updatedAt", "public"."Todo"."listOwnerId", "public"."Todo"."createdById", "public"."Todo"."assignedUserIds", "public"."Todo"."parentId"
+2026-01-10 18:01:38 +01:00: prisma:query SELECT "public"."Todo"."id", "public"."Todo"."title", "public"."Todo"."description", "public"."Todo"."status"::text, "public"."Todo"."priority"::text, "public"."Todo"."dueDate", "public"."Todo"."createdAt", "public"."Todo"."updatedAt", "public"."Todo"."listOwnerId", "public"."Todo"."createdById", "public"."Todo"."assignedUserIds", "public"."Todo"."parentId", COALESCE("aggr_selection_0_Comment"."_aggr_count_comments", 0) AS "_aggr_count_comments" FROM "public"."Todo" LEFT JOIN (SELECT "public"."Comment"."todoId", COUNT(*) AS "_aggr_count_comments" FROM "public"."Comment" WHERE 1=1 GROUP BY "public"."Comment"."todoId") AS "aggr_selection_0_Comment" ON ("public"."Todo"."id" = "aggr_selection_0_Comment"."todoId") WHERE "public"."Todo"."id" = $1 LIMIT $2 OFFSET $3
+2026-01-10 18:01:38 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+2026-01-10 18:01:38 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+2026-01-10 18:01:38 +01:00: prisma:query SELECT "public"."Todo"."id", "public"."Todo"."title", "public"."Todo"."description", "public"."Todo"."status"::text, "public"."Todo"."priority"::text, "public"."Todo"."dueDate", "public"."Todo"."createdAt", "public"."Todo"."updatedAt", "public"."Todo"."listOwnerId", "public"."Todo"."createdById", "public"."Todo"."assignedUserIds", "public"."Todo"."parentId", COALESCE("aggr_selection_0_Comment"."_aggr_count_comments", 0) AS "_aggr_count_comments" FROM "public"."Todo" LEFT JOIN (SELECT "public"."Comment"."todoId", COUNT(*) AS "_aggr_count_comments" FROM "public"."Comment" WHERE 1=1 GROUP BY "public"."Comment"."todoId") AS "aggr_selection_0_Comment" ON ("public"."Todo"."id" = "aggr_selection_0_Comment"."todoId") WHERE "public"."Todo"."parentId" IN ($1) OFFSET $2
+2026-01-10 18:01:38 +01:00: prisma:query COMMIT
+2026-01-10 18:01:38 +01:00: prisma:query SELECT "public"."Todo"."id", "public"."Todo"."title", "public"."Todo"."description", "public"."Todo"."status"::text, "public"."Todo"."priority"::text, "public"."Todo"."dueDate", "public"."Todo"."createdAt", "public"."Todo"."updatedAt", "public"."Todo"."listOwnerId", "public"."Todo"."createdById", "public"."Todo"."assignedUserIds", "public"."Todo"."parentId", COALESCE("aggr_selection_0_Comment"."_aggr_count_comments", 0) AS "_aggr_count_comments" FROM "public"."Todo" LEFT JOIN (SELECT "public"."Comment"."todoId", COUNT(*) AS "_aggr_count_comments" FROM "public"."Comment" WHERE 1=1 GROUP BY "public"."Comment"."todoId") AS "aggr_selection_0_Comment" ON ("public"."Todo"."id" = "aggr_selection_0_Comment"."todoId") WHERE "public"."Todo"."parentId" IS NULL ORDER BY "public"."Todo"."createdAt" DESC OFFSET $1
+2026-01-10 18:01:38 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+2026-01-10 18:01:38 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+2026-01-10 18:01:38 +01:00: prisma:query SELECT "public"."Todo"."id", "public"."Todo"."title", "public"."Todo"."description", "public"."Todo"."status"::text, "public"."Todo"."priority"::text, "public"."Todo"."dueDate", "public"."Todo"."createdAt", "public"."Todo"."updatedAt", "public"."Todo"."listOwnerId", "public"."Todo"."createdById", "public"."Todo"."assignedUserIds", "public"."Todo"."parentId", COALESCE("aggr_selection_0_Comment"."_aggr_count_comments", 0) AS "_aggr_count_comments" FROM "public"."Todo" LEFT JOIN (SELECT "public"."Comment"."todoId", COUNT(*) AS "_aggr_count_comments" FROM "public"."Comment" WHERE 1=1 GROUP BY "public"."Comment"."todoId") AS "aggr_selection_0_Comment" ON ("public"."Todo"."id" = "aggr_selection_0_Comment"."todoId") WHERE "public"."Todo"."parentId" IN ($1,$2) ORDER BY "public"."Todo"."createdAt" ASC OFFSET $3
+2026-01-10 18:02:14 +01:00: prisma:query SELECT 1
+2026-01-10 18:02:14 +01:00: prisma:query DELETE FROM "public"."Todo" WHERE ("public"."Todo"."id" = $1 AND 1=1) RETURNING "public"."Todo"."id", "public"."Todo"."title", "public"."Todo"."description", "public"."Todo"."status"::text, "public"."Todo"."priority"::text, "public"."Todo"."dueDate", "public"."Todo"."createdAt", "public"."Todo"."updatedAt", "public"."Todo"."listOwnerId", "public"."Todo"."createdById", "public"."Todo"."assignedUserIds", "public"."Todo"."parentId"
+2026-01-10 18:02:25 +01:00: ========== POST /api/todos ==========
+2026-01-10 18:02:25 +01:00: Received body: {
+  "title": "qwe",
+  "description": "qwe",
+  "status": "TODO",
+  "priority": "MEDIUM",
+  "listOwnerId": "cmk8fqkrm0000nekevt38vglm",
+  "createdById": "cmk8fqkrm0000nekevt38vglm",
+  "assignedUserIds": [
+    "cmk8fqkrm0000nekevt38vglm"
+  ],
+  "dueDate": "2026-05-30",
+  "parentId": null
+}
+2026-01-10 18:02:25 +01:00: Extracted values:
+2026-01-10 18:02:25 +01:00:   title: qwe
+2026-01-10 18:02:25 +01:00:   listOwnerId: cmk8fqkrm0000nekevt38vglm
+2026-01-10 18:02:25 +01:00:   createdById: cmk8fqkrm0000nekevt38vglm
+2026-01-10 18:02:25 +01:00:   assignedUserIds: [ 'cmk8fqkrm0000nekevt38vglm' ]
+2026-01-10 18:02:25 +01:00:   parentId: null
+2026-01-10 18:02:25 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color", "public"."User"."createdAt", "public"."User"."updatedAt" FROM "public"."User" WHERE ("public"."User"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3
+2026-01-10 18:02:25 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color", "public"."User"."createdAt", "public"."User"."updatedAt" FROM "public"."User" WHERE ("public"."User"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3
+2026-01-10 18:02:25 +01:00: User validation:
+2026-01-10 18:02:25 +01:00:   listOwner exists: true furkan
+2026-01-10 18:02:25 +01:00:   creator exists: true furkan
+2026-01-10 18:02:25 +01:00: prisma:query BEGIN
+2026-01-10 18:02:25 +01:00: prisma:query INSERT INTO "public"."Todo" ("id","title","description","status","priority","dueDate","createdAt","updatedAt","listOwnerId","createdById","assignedUserIds","parentId") VALUES ($1,$2,$3,CAST($4::text AS "public"."Status"),CAST($5::text AS "public"."Priority"),$6,$7,$8,$9,$10,$11,$12) RETURNING "public"."Todo"."id"
+2026-01-10 18:02:25 +01:00: prisma:query SELECT "public"."Todo"."id", "public"."Todo"."title", "public"."Todo"."description", "public"."Todo"."status"::text, "public"."Todo"."priority"::text, "public"."Todo"."dueDate", "public"."Todo"."createdAt", "public"."Todo"."updatedAt", "public"."Todo"."listOwnerId", "public"."Todo"."createdById", "public"."Todo"."assignedUserIds", "public"."Todo"."parentId", COALESCE("aggr_selection_0_Comment"."_aggr_count_comments", 0) AS "_aggr_count_comments" FROM "public"."Todo" LEFT JOIN (SELECT "public"."Comment"."todoId", COUNT(*) AS "_aggr_count_comments" FROM "public"."Comment" WHERE 1=1 GROUP BY "public"."Comment"."todoId") AS "aggr_selection_0_Comment" ON ("public"."Todo"."id" = "aggr_selection_0_Comment"."todoId") WHERE "public"."Todo"."id" = $1 LIMIT $2 OFFSET $3
+2026-01-10 18:02:25 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+2026-01-10 18:02:25 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+2026-01-10 18:02:25 +01:00: prisma:query SELECT "public"."Todo"."id", "public"."Todo"."title", "public"."Todo"."description", "public"."Todo"."status"::text, "public"."Todo"."priority"::text, "public"."Todo"."dueDate", "public"."Todo"."createdAt", "public"."Todo"."updatedAt", "public"."Todo"."listOwnerId", "public"."Todo"."createdById", "public"."Todo"."assignedUserIds", "public"."Todo"."parentId" FROM "public"."Todo" WHERE "public"."Todo"."parentId" IN ($1) OFFSET $2
+2026-01-10 18:02:25 +01:00: prisma:query COMMIT
+2026-01-10 18:02:25 +01:00: ✅ Todo created successfully: cmk8jzatz0003lfsvnuggpl7j
+2026-01-10 18:02:46 +01:00: prisma:query SELECT 1
+2026-01-10 18:02:46 +01:00: prisma:query DELETE FROM "public"."Todo" WHERE ("public"."Todo"."id" = $1 AND 1=1) RETURNING "public"."Todo"."id", "public"."Todo"."title", "public"."Todo"."description", "public"."Todo"."status"::text, "public"."Todo"."priority"::text, "public"."Todo"."dueDate", "public"."Todo"."createdAt", "public"."Todo"."updatedAt", "public"."Todo"."listOwnerId", "public"."Todo"."createdById", "public"."Todo"."assignedUserIds", "public"."Todo"."parentId"
+2026-01-10 18:03:09 +01:00: ========== POST /api/todos ==========
+2026-01-10 18:03:09 +01:00: Received body: {
+  "title": "migrations",
+  "description": "migrations from wsl to ubuntu",
+  "status": "TODO",
+  "priority": "MEDIUM",
+  "listOwnerId": "cmk8fqkrm0000nekevt38vglm",
+  "createdById": "cmk8fqkrm0000nekevt38vglm",
+  "assignedUserIds": [
+    "cmk8fqkrm0000nekevt38vglm"
+  ],
+  "dueDate": "2026-01-10",
+  "parentId": null
+}
+2026-01-10 18:03:09 +01:00: Extracted values:
+2026-01-10 18:03:09 +01:00:   title: migrations
+2026-01-10 18:03:09 +01:00:   listOwnerId: cmk8fqkrm0000nekevt38vglm
+2026-01-10 18:03:09 +01:00:   createdById: cmk8fqkrm0000nekevt38vglm
+2026-01-10 18:03:09 +01:00:   assignedUserIds: [ 'cmk8fqkrm0000nekevt38vglm' ]
+2026-01-10 18:03:09 +01:00:   parentId: null
+2026-01-10 18:03:09 +01:00: prisma:query SELECT 1
+2026-01-10 18:03:09 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color", "public"."User"."createdAt", "public"."User"."updatedAt" FROM "public"."User" WHERE ("public"."User"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3
+2026-01-10 18:03:09 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color", "public"."User"."createdAt", "public"."User"."updatedAt" FROM "public"."User" WHERE ("public"."User"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3
+2026-01-10 18:03:09 +01:00: User validation:
+2026-01-10 18:03:09 +01:00:   listOwner exists: true furkan
+2026-01-10 18:03:09 +01:00:   creator exists: true furkan
+2026-01-10 18:03:09 +01:00: prisma:query BEGIN
+2026-01-10 18:03:09 +01:00: prisma:query INSERT INTO "public"."Todo" ("id","title","description","status","priority","dueDate","createdAt","updatedAt","listOwnerId","createdById","assignedUserIds","parentId") VALUES ($1,$2,$3,CAST($4::text AS "public"."Status"),CAST($5::text AS "public"."Priority"),$6,$7,$8,$9,$10,$11,$12) RETURNING "public"."Todo"."id"
+2026-01-10 18:03:09 +01:00: prisma:query SELECT "public"."Todo"."id", "public"."Todo"."title", "public"."Todo"."description", "public"."Todo"."status"::text, "public"."Todo"."priority"::text, "public"."Todo"."dueDate", "public"."Todo"."createdAt", "public"."Todo"."updatedAt", "public"."Todo"."listOwnerId", "public"."Todo"."createdById", "public"."Todo"."assignedUserIds", "public"."Todo"."parentId", COALESCE("aggr_selection_0_Comment"."_aggr_count_comments", 0) AS "_aggr_count_comments" FROM "public"."Todo" LEFT JOIN (SELECT "public"."Comment"."todoId", COUNT(*) AS "_aggr_count_comments" FROM "public"."Comment" WHERE 1=1 GROUP BY "public"."Comment"."todoId") AS "aggr_selection_0_Comment" ON ("public"."Todo"."id" = "aggr_selection_0_Comment"."todoId") WHERE "public"."Todo"."id" = $1 LIMIT $2 OFFSET $3
+2026-01-10 18:03:09 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+2026-01-10 18:03:09 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+2026-01-10 18:03:09 +01:00: prisma:query SELECT "public"."Todo"."id", "public"."Todo"."title", "public"."Todo"."description", "public"."Todo"."status"::text, "public"."Todo"."priority"::text, "public"."Todo"."dueDate", "public"."Todo"."createdAt", "public"."Todo"."updatedAt", "public"."Todo"."listOwnerId", "public"."Todo"."createdById", "public"."Todo"."assignedUserIds", "public"."Todo"."parentId" FROM "public"."Todo" WHERE "public"."Todo"."parentId" IN ($1) OFFSET $2
+2026-01-10 18:03:09 +01:00: prisma:query COMMIT
+2026-01-10 18:03:09 +01:00: ✅ Todo created successfully: cmk8k089g0005lfsvx1hkmfvn
+2026-01-10 18:03:14 +01:00: prisma:query BEGIN
+2026-01-10 18:03:14 +01:00: prisma:query UPDATE "public"."Todo" SET "status" = CAST($1::text AS "public"."Status"), "updatedAt" = $2 WHERE ("public"."Todo"."id" = $3 AND 1=1) RETURNING "public"."Todo"."id", "public"."Todo"."title", "public"."Todo"."description", "public"."Todo"."status"::text, "public"."Todo"."priority"::text, "public"."Todo"."dueDate", "public"."Todo"."createdAt", "public"."Todo"."updatedAt", "public"."Todo"."listOwnerId", "public"."Todo"."createdById", "public"."Todo"."assignedUserIds", "public"."Todo"."parentId"
+2026-01-10 18:03:14 +01:00: prisma:query SELECT "public"."Todo"."id", "public"."Todo"."title", "public"."Todo"."description", "public"."Todo"."status"::text, "public"."Todo"."priority"::text, "public"."Todo"."dueDate", "public"."Todo"."createdAt", "public"."Todo"."updatedAt", "public"."Todo"."listOwnerId", "public"."Todo"."createdById", "public"."Todo"."assignedUserIds", "public"."Todo"."parentId", COALESCE("aggr_selection_0_Comment"."_aggr_count_comments", 0) AS "_aggr_count_comments" FROM "public"."Todo" LEFT JOIN (SELECT "public"."Comment"."todoId", COUNT(*) AS "_aggr_count_comments" FROM "public"."Comment" WHERE 1=1 GROUP BY "public"."Comment"."todoId") AS "aggr_selection_0_Comment" ON ("public"."Todo"."id" = "aggr_selection_0_Comment"."todoId") WHERE "public"."Todo"."id" = $1 LIMIT $2 OFFSET $3
+2026-01-10 18:03:14 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+2026-01-10 18:03:14 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+2026-01-10 18:03:14 +01:00: prisma:query SELECT "public"."Todo"."id", "public"."Todo"."title", "public"."Todo"."description", "public"."Todo"."status"::text, "public"."Todo"."priority"::text, "public"."Todo"."dueDate", "public"."Todo"."createdAt", "public"."Todo"."updatedAt", "public"."Todo"."listOwnerId", "public"."Todo"."createdById", "public"."Todo"."assignedUserIds", "public"."Todo"."parentId", COALESCE("aggr_selection_0_Comment"."_aggr_count_comments", 0) AS "_aggr_count_comments" FROM "public"."Todo" LEFT JOIN (SELECT "public"."Comment"."todoId", COUNT(*) AS "_aggr_count_comments" FROM "public"."Comment" WHERE 1=1 GROUP BY "public"."Comment"."todoId") AS "aggr_selection_0_Comment" ON ("public"."Todo"."id" = "aggr_selection_0_Comment"."todoId") WHERE "public"."Todo"."parentId" IN ($1) OFFSET $2
+2026-01-10 18:03:14 +01:00: prisma:query COMMIT
+2026-01-10 18:03:14 +01:00: prisma:query SELECT "public"."Todo"."id", "public"."Todo"."title", "public"."Todo"."description", "public"."Todo"."status"::text, "public"."Todo"."priority"::text, "public"."Todo"."dueDate", "public"."Todo"."createdAt", "public"."Todo"."updatedAt", "public"."Todo"."listOwnerId", "public"."Todo"."createdById", "public"."Todo"."assignedUserIds", "public"."Todo"."parentId", COALESCE("aggr_selection_0_Comment"."_aggr_count_comments", 0) AS "_aggr_count_comments" FROM "public"."Todo" LEFT JOIN (SELECT "public"."Comment"."todoId", COUNT(*) AS "_aggr_count_comments" FROM "public"."Comment" WHERE 1=1 GROUP BY "public"."Comment"."todoId") AS "aggr_selection_0_Comment" ON ("public"."Todo"."id" = "aggr_selection_0_Comment"."todoId") WHERE "public"."Todo"."parentId" IS NULL ORDER BY "public"."Todo"."createdAt" DESC OFFSET $1
+2026-01-10 18:03:14 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+2026-01-10 18:03:14 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+2026-01-10 18:03:14 +01:00: prisma:query SELECT "public"."Todo"."id", "public"."Todo"."title", "public"."Todo"."description", "public"."Todo"."status"::text, "public"."Todo"."priority"::text, "public"."Todo"."dueDate", "public"."Todo"."createdAt", "public"."Todo"."updatedAt", "public"."Todo"."listOwnerId", "public"."Todo"."createdById", "public"."Todo"."assignedUserIds", "public"."Todo"."parentId", COALESCE("aggr_selection_0_Comment"."_aggr_count_comments", 0) AS "_aggr_count_comments" FROM "public"."Todo" LEFT JOIN (SELECT "public"."Comment"."todoId", COUNT(*) AS "_aggr_count_comments" FROM "public"."Comment" WHERE 1=1 GROUP BY "public"."Comment"."todoId") AS "aggr_selection_0_Comment" ON ("public"."Todo"."id" = "aggr_selection_0_Comment"."todoId") WHERE "public"."Todo"."parentId" IN ($1,$2) ORDER BY "public"."Todo"."createdAt" ASC OFFSET $3
+2026-01-10 18:03:41 +01:00: ========== POST /api/todos ==========
+2026-01-10 18:03:41 +01:00: Received body: {
+  "title": "todo list",
+  "description": null,
+  "listOwnerId": "cmk8fqkrm0000nekevt38vglm",
+  "createdById": "cmk8fqkrm0000nekevt38vglm",
+  "assignedUserIds": [
+    "cmk8fqkrm0000nekevt38vglm"
+  ],
+  "parentId": "cmk8k089g0005lfsvx1hkmfvn",
+  "status": "TODO",
+  "priority": "MEDIUM",
+  "dueDate": "2026-01-10"
+}
+2026-01-10 18:03:41 +01:00: Extracted values:
+2026-01-10 18:03:41 +01:00:   title: todo list
+2026-01-10 18:03:41 +01:00:   listOwnerId: cmk8fqkrm0000nekevt38vglm
+2026-01-10 18:03:41 +01:00:   createdById: cmk8fqkrm0000nekevt38vglm
+2026-01-10 18:03:41 +01:00:   assignedUserIds: [ 'cmk8fqkrm0000nekevt38vglm' ]
+2026-01-10 18:03:41 +01:00:   parentId: cmk8k089g0005lfsvx1hkmfvn
+2026-01-10 18:03:41 +01:00: prisma:query SELECT 1
+2026-01-10 18:03:41 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color", "public"."User"."createdAt", "public"."User"."updatedAt" FROM "public"."User" WHERE ("public"."User"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3
+2026-01-10 18:03:41 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color", "public"."User"."createdAt", "public"."User"."updatedAt" FROM "public"."User" WHERE ("public"."User"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3
+2026-01-10 18:03:41 +01:00: User validation:
+2026-01-10 18:03:41 +01:00:   listOwner exists: true furkan
+2026-01-10 18:03:41 +01:00:   creator exists: true furkan
+2026-01-10 18:03:41 +01:00: prisma:query BEGIN
+2026-01-10 18:03:41 +01:00: prisma:query INSERT INTO "public"."Todo" ("id","title","description","status","priority","dueDate","createdAt","updatedAt","listOwnerId","createdById","assignedUserIds","parentId") VALUES ($1,$2,$3,CAST($4::text AS "public"."Status"),CAST($5::text AS "public"."Priority"),$6,$7,$8,$9,$10,$11,$12) RETURNING "public"."Todo"."id"
+2026-01-10 18:03:41 +01:00: prisma:query SELECT "public"."Todo"."id", "public"."Todo"."title", "public"."Todo"."description", "public"."Todo"."status"::text, "public"."Todo"."priority"::text, "public"."Todo"."dueDate", "public"."Todo"."createdAt", "public"."Todo"."updatedAt", "public"."Todo"."listOwnerId", "public"."Todo"."createdById", "public"."Todo"."assignedUserIds", "public"."Todo"."parentId", COALESCE("aggr_selection_0_Comment"."_aggr_count_comments", 0) AS "_aggr_count_comments" FROM "public"."Todo" LEFT JOIN (SELECT "public"."Comment"."todoId", COUNT(*) AS "_aggr_count_comments" FROM "public"."Comment" WHERE 1=1 GROUP BY "public"."Comment"."todoId") AS "aggr_selection_0_Comment" ON ("public"."Todo"."id" = "aggr_selection_0_Comment"."todoId") WHERE "public"."Todo"."id" = $1 LIMIT $2 OFFSET $3
+2026-01-10 18:03:41 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+2026-01-10 18:03:41 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+2026-01-10 18:03:41 +01:00: prisma:query SELECT "public"."Todo"."id", "public"."Todo"."title", "public"."Todo"."description", "public"."Todo"."status"::text, "public"."Todo"."priority"::text, "public"."Todo"."dueDate", "public"."Todo"."createdAt", "public"."Todo"."updatedAt", "public"."Todo"."listOwnerId", "public"."Todo"."createdById", "public"."Todo"."assignedUserIds", "public"."Todo"."parentId" FROM "public"."Todo" WHERE "public"."Todo"."parentId" IN ($1) OFFSET $2
+2026-01-10 18:03:41 +01:00: prisma:query COMMIT
+2026-01-10 18:03:41 +01:00: ✅ Todo created successfully: cmk8k0x800007lfsvptpy09bw
+2026-01-10 18:03:41 +01:00: prisma:query SELECT "public"."Todo"."id", "public"."Todo"."title", "public"."Todo"."description", "public"."Todo"."status"::text, "public"."Todo"."priority"::text, "public"."Todo"."dueDate", "public"."Todo"."createdAt", "public"."Todo"."updatedAt", "public"."Todo"."listOwnerId", "public"."Todo"."createdById", "public"."Todo"."assignedUserIds", "public"."Todo"."parentId", COALESCE("aggr_selection_0_Comment"."_aggr_count_comments", 0) AS "_aggr_count_comments" FROM "public"."Todo" LEFT JOIN (SELECT "public"."Comment"."todoId", COUNT(*) AS "_aggr_count_comments" FROM "public"."Comment" WHERE 1=1 GROUP BY "public"."Comment"."todoId") AS "aggr_selection_0_Comment" ON ("public"."Todo"."id" = "aggr_selection_0_Comment"."todoId") WHERE "public"."Todo"."parentId" IS NULL ORDER BY "public"."Todo"."createdAt" DESC OFFSET $1
+2026-01-10 18:03:41 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+2026-01-10 18:03:41 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+2026-01-10 18:03:41 +01:00: prisma:query SELECT "public"."Todo"."id", "public"."Todo"."title", "public"."Todo"."description", "public"."Todo"."status"::text, "public"."Todo"."priority"::text, "public"."Todo"."dueDate", "public"."Todo"."createdAt", "public"."Todo"."updatedAt", "public"."Todo"."listOwnerId", "public"."Todo"."createdById", "public"."Todo"."assignedUserIds", "public"."Todo"."parentId", COALESCE("aggr_selection_0_Comment"."_aggr_count_comments", 0) AS "_aggr_count_comments" FROM "public"."Todo" LEFT JOIN (SELECT "public"."Comment"."todoId", COUNT(*) AS "_aggr_count_comments" FROM "public"."Comment" WHERE 1=1 GROUP BY "public"."Comment"."todoId") AS "aggr_selection_0_Comment" ON ("public"."Todo"."id" = "aggr_selection_0_Comment"."todoId") WHERE "public"."Todo"."parentId" IN ($1,$2) ORDER BY "public"."Todo"."createdAt" ASC OFFSET $3
+2026-01-10 18:03:41 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+2026-01-10 18:03:41 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+2026-01-10 18:04:02 +01:00: ========== POST /api/todos ==========
+2026-01-10 18:04:02 +01:00: Received body: {
+  "title": "baux wiki",
+  "description": null,
+  "listOwnerId": "cmk8fqkrm0000nekevt38vglm",
+  "createdById": "cmk8fqkrm0000nekevt38vglm",
+  "assignedUserIds": [
+    "cmk8fqkrm0000nekevt38vglm"
+  ],
+  "parentId": "cmk8k089g0005lfsvx1hkmfvn",
+  "status": "TODO",
+  "priority": "MEDIUM",
+  "dueDate": "2026-01-10"
+}
+2026-01-10 18:04:02 +01:00: Extracted values:
+2026-01-10 18:04:02 +01:00:   title: baux wiki
+2026-01-10 18:04:02 +01:00:   listOwnerId: cmk8fqkrm0000nekevt38vglm
+2026-01-10 18:04:02 +01:00:   createdById: cmk8fqkrm0000nekevt38vglm
+2026-01-10 18:04:02 +01:00:   assignedUserIds: [ 'cmk8fqkrm0000nekevt38vglm' ]
+2026-01-10 18:04:02 +01:00:   parentId: cmk8k089g0005lfsvx1hkmfvn
+2026-01-10 18:04:02 +01:00: prisma:query SELECT 1
+2026-01-10 18:04:02 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color", "public"."User"."createdAt", "public"."User"."updatedAt" FROM "public"."User" WHERE ("public"."User"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3
+2026-01-10 18:04:02 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color", "public"."User"."createdAt", "public"."User"."updatedAt" FROM "public"."User" WHERE ("public"."User"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3
+2026-01-10 18:04:02 +01:00: User validation:
+2026-01-10 18:04:02 +01:00:   listOwner exists: true furkan
+2026-01-10 18:04:02 +01:00:   creator exists: true furkan
+2026-01-10 18:04:02 +01:00: prisma:query BEGIN
+2026-01-10 18:04:02 +01:00: prisma:query INSERT INTO "public"."Todo" ("id","title","description","status","priority","dueDate","createdAt","updatedAt","listOwnerId","createdById","assignedUserIds","parentId") VALUES ($1,$2,$3,CAST($4::text AS "public"."Status"),CAST($5::text AS "public"."Priority"),$6,$7,$8,$9,$10,$11,$12) RETURNING "public"."Todo"."id"
+2026-01-10 18:04:02 +01:00: prisma:query SELECT "public"."Todo"."id", "public"."Todo"."title", "public"."Todo"."description", "public"."Todo"."status"::text, "public"."Todo"."priority"::text, "public"."Todo"."dueDate", "public"."Todo"."createdAt", "public"."Todo"."updatedAt", "public"."Todo"."listOwnerId", "public"."Todo"."createdById", "public"."Todo"."assignedUserIds", "public"."Todo"."parentId", COALESCE("aggr_selection_0_Comment"."_aggr_count_comments", 0) AS "_aggr_count_comments" FROM "public"."Todo" LEFT JOIN (SELECT "public"."Comment"."todoId", COUNT(*) AS "_aggr_count_comments" FROM "public"."Comment" WHERE 1=1 GROUP BY "public"."Comment"."todoId") AS "aggr_selection_0_Comment" ON ("public"."Todo"."id" = "aggr_selection_0_Comment"."todoId") WHERE "public"."Todo"."id" = $1 LIMIT $2 OFFSET $3
+2026-01-10 18:04:02 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+2026-01-10 18:04:02 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+2026-01-10 18:04:02 +01:00: prisma:query SELECT "public"."Todo"."id", "public"."Todo"."title", "public"."Todo"."description", "public"."Todo"."status"::text, "public"."Todo"."priority"::text, "public"."Todo"."dueDate", "public"."Todo"."createdAt", "public"."Todo"."updatedAt", "public"."Todo"."listOwnerId", "public"."Todo"."createdById", "public"."Todo"."assignedUserIds", "public"."Todo"."parentId" FROM "public"."Todo" WHERE "public"."Todo"."parentId" IN ($1) OFFSET $2
+2026-01-10 18:04:02 +01:00: prisma:query COMMIT
+2026-01-10 18:04:02 +01:00: ✅ Todo created successfully: cmk8k1d4o0009lfsvci9jqpmp
+2026-01-10 18:04:02 +01:00: prisma:query SELECT "public"."Todo"."id", "public"."Todo"."title", "public"."Todo"."description", "public"."Todo"."status"::text, "public"."Todo"."priority"::text, "public"."Todo"."dueDate", "public"."Todo"."createdAt", "public"."Todo"."updatedAt", "public"."Todo"."listOwnerId", "public"."Todo"."createdById", "public"."Todo"."assignedUserIds", "public"."Todo"."parentId", COALESCE("aggr_selection_0_Comment"."_aggr_count_comments", 0) AS "_aggr_count_comments" FROM "public"."Todo" LEFT JOIN (SELECT "public"."Comment"."todoId", COUNT(*) AS "_aggr_count_comments" FROM "public"."Comment" WHERE 1=1 GROUP BY "public"."Comment"."todoId") AS "aggr_selection_0_Comment" ON ("public"."Todo"."id" = "aggr_selection_0_Comment"."todoId") WHERE "public"."Todo"."parentId" IS NULL ORDER BY "public"."Todo"."createdAt" DESC OFFSET $1
+2026-01-10 18:04:02 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+2026-01-10 18:04:02 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+2026-01-10 18:04:02 +01:00: prisma:query SELECT "public"."Todo"."id", "public"."Todo"."title", "public"."Todo"."description", "public"."Todo"."status"::text, "public"."Todo"."priority"::text, "public"."Todo"."dueDate", "public"."Todo"."createdAt", "public"."Todo"."updatedAt", "public"."Todo"."listOwnerId", "public"."Todo"."createdById", "public"."Todo"."assignedUserIds", "public"."Todo"."parentId", COALESCE("aggr_selection_0_Comment"."_aggr_count_comments", 0) AS "_aggr_count_comments" FROM "public"."Todo" LEFT JOIN (SELECT "public"."Comment"."todoId", COUNT(*) AS "_aggr_count_comments" FROM "public"."Comment" WHERE 1=1 GROUP BY "public"."Comment"."todoId") AS "aggr_selection_0_Comment" ON ("public"."Todo"."id" = "aggr_selection_0_Comment"."todoId") WHERE "public"."Todo"."parentId" IN ($1,$2) ORDER BY "public"."Todo"."createdAt" ASC OFFSET $3
+2026-01-10 18:04:02 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+2026-01-10 18:04:02 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+2026-01-10 18:04:15 +01:00: ========== POST /api/todos ==========
+2026-01-10 18:04:15 +01:00: Received body: {
+  "title": "baux",
+  "description": null,
+  "listOwnerId": "cmk8fqkrm0000nekevt38vglm",
+  "createdById": "cmk8fqkrm0000nekevt38vglm",
+  "assignedUserIds": [
+    "cmk8fqkrm0000nekevt38vglm"
+  ],
+  "parentId": "cmk8k089g0005lfsvx1hkmfvn",
+  "status": "TODO",
+  "priority": "MEDIUM",
+  "dueDate": "2026-01-10"
+}
+2026-01-10 18:04:15 +01:00: Extracted values:
+2026-01-10 18:04:15 +01:00:   title: baux
+2026-01-10 18:04:15 +01:00:   listOwnerId: cmk8fqkrm0000nekevt38vglm
+2026-01-10 18:04:15 +01:00:   createdById: cmk8fqkrm0000nekevt38vglm
+2026-01-10 18:04:15 +01:00:   assignedUserIds: [ 'cmk8fqkrm0000nekevt38vglm' ]
+2026-01-10 18:04:15 +01:00:   parentId: cmk8k089g0005lfsvx1hkmfvn
+2026-01-10 18:04:15 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color", "public"."User"."createdAt", "public"."User"."updatedAt" FROM "public"."User" WHERE ("public"."User"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3
+2026-01-10 18:04:15 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color", "public"."User"."createdAt", "public"."User"."updatedAt" FROM "public"."User" WHERE ("public"."User"."id" = $1 AND 1=1) LIMIT $2 OFFSET $3
+2026-01-10 18:04:15 +01:00: User validation:
+2026-01-10 18:04:15 +01:00:   listOwner exists: true furkan
+2026-01-10 18:04:15 +01:00:   creator exists: true furkan
+2026-01-10 18:04:15 +01:00: prisma:query BEGIN
+2026-01-10 18:04:15 +01:00: prisma:query INSERT INTO "public"."Todo" ("id","title","description","status","priority","dueDate","createdAt","updatedAt","listOwnerId","createdById","assignedUserIds","parentId") VALUES ($1,$2,$3,CAST($4::text AS "public"."Status"),CAST($5::text AS "public"."Priority"),$6,$7,$8,$9,$10,$11,$12) RETURNING "public"."Todo"."id"
+2026-01-10 18:04:15 +01:00: prisma:query SELECT "public"."Todo"."id", "public"."Todo"."title", "public"."Todo"."description", "public"."Todo"."status"::text, "public"."Todo"."priority"::text, "public"."Todo"."dueDate", "public"."Todo"."createdAt", "public"."Todo"."updatedAt", "public"."Todo"."listOwnerId", "public"."Todo"."createdById", "public"."Todo"."assignedUserIds", "public"."Todo"."parentId", COALESCE("aggr_selection_0_Comment"."_aggr_count_comments", 0) AS "_aggr_count_comments" FROM "public"."Todo" LEFT JOIN (SELECT "public"."Comment"."todoId", COUNT(*) AS "_aggr_count_comments" FROM "public"."Comment" WHERE 1=1 GROUP BY "public"."Comment"."todoId") AS "aggr_selection_0_Comment" ON ("public"."Todo"."id" = "aggr_selection_0_Comment"."todoId") WHERE "public"."Todo"."id" = $1 LIMIT $2 OFFSET $3
+2026-01-10 18:04:15 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+2026-01-10 18:04:15 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+2026-01-10 18:04:15 +01:00: prisma:query SELECT "public"."Todo"."id", "public"."Todo"."title", "public"."Todo"."description", "public"."Todo"."status"::text, "public"."Todo"."priority"::text, "public"."Todo"."dueDate", "public"."Todo"."createdAt", "public"."Todo"."updatedAt", "public"."Todo"."listOwnerId", "public"."Todo"."createdById", "public"."Todo"."assignedUserIds", "public"."Todo"."parentId" FROM "public"."Todo" WHERE "public"."Todo"."parentId" IN ($1) OFFSET $2
+2026-01-10 18:04:15 +01:00: prisma:query COMMIT
+2026-01-10 18:04:15 +01:00: ✅ Todo created successfully: cmk8k1nps000blfsvjjqb8w0s
+2026-01-10 18:04:15 +01:00: prisma:query SELECT "public"."Todo"."id", "public"."Todo"."title", "public"."Todo"."description", "public"."Todo"."status"::text, "public"."Todo"."priority"::text, "public"."Todo"."dueDate", "public"."Todo"."createdAt", "public"."Todo"."updatedAt", "public"."Todo"."listOwnerId", "public"."Todo"."createdById", "public"."Todo"."assignedUserIds", "public"."Todo"."parentId", COALESCE("aggr_selection_0_Comment"."_aggr_count_comments", 0) AS "_aggr_count_comments" FROM "public"."Todo" LEFT JOIN (SELECT "public"."Comment"."todoId", COUNT(*) AS "_aggr_count_comments" FROM "public"."Comment" WHERE 1=1 GROUP BY "public"."Comment"."todoId") AS "aggr_selection_0_Comment" ON ("public"."Todo"."id" = "aggr_selection_0_Comment"."todoId") WHERE "public"."Todo"."parentId" IS NULL ORDER BY "public"."Todo"."createdAt" DESC OFFSET $1
+2026-01-10 18:04:15 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+2026-01-10 18:04:15 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+2026-01-10 18:04:15 +01:00: prisma:query SELECT "public"."Todo"."id", "public"."Todo"."title", "public"."Todo"."description", "public"."Todo"."status"::text, "public"."Todo"."priority"::text, "public"."Todo"."dueDate", "public"."Todo"."createdAt", "public"."Todo"."updatedAt", "public"."Todo"."listOwnerId", "public"."Todo"."createdById", "public"."Todo"."assignedUserIds", "public"."Todo"."parentId", COALESCE("aggr_selection_0_Comment"."_aggr_count_comments", 0) AS "_aggr_count_comments" FROM "public"."Todo" LEFT JOIN (SELECT "public"."Comment"."todoId", COUNT(*) AS "_aggr_count_comments" FROM "public"."Comment" WHERE 1=1 GROUP BY "public"."Comment"."todoId") AS "aggr_selection_0_Comment" ON ("public"."Todo"."id" = "aggr_selection_0_Comment"."todoId") WHERE "public"."Todo"."parentId" IN ($1,$2) ORDER BY "public"."Todo"."createdAt" ASC OFFSET $3
+2026-01-10 18:04:15 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2
+2026-01-10 18:04:15 +01:00: prisma:query SELECT "public"."User"."id", "public"."User"."name", "public"."User"."color" FROM "public"."User" WHERE "public"."User"."id" IN ($1) OFFSET $2

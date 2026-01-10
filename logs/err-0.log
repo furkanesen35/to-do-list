@@ -1,0 +1,64 @@
+2026-01-10 17:59:13 +01:00: Error: Could not find a production build in the '.next' directory. Try building your app with 'next build' before starting the production server. https://nextjs.org/docs/messages/production-start-no-build-id
+    at setupFsCheck (C:\Users\furkan\Desktop\projects\to-do-list\node_modules\next\src\server\lib\router-utils\filesystem.ts:157:13)
+    at initialize (C:\Users\furkan\Desktop\projects\to-do-list\node_modules\next\src\server\lib\router-server.ts:96:21)
+    at Server.<anonymous> (C:\Users\furkan\Desktop\projects\to-do-list\node_modules\next\src\server\lib\start-server.ts:293:28)
+2026-01-10 17:59:13 +01:00: Error: Could not find a production build in the '.next' directory. Try building your app with 'next build' before starting the production server. https://nextjs.org/docs/messages/production-start-no-build-id
+    at setupFsCheck (C:\Users\furkan\Desktop\projects\to-do-list\node_modules\next\src\server\lib\router-utils\filesystem.ts:157:13)
+    at initialize (C:\Users\furkan\Desktop\projects\to-do-list\node_modules\next\src\server\lib\router-server.ts:96:21)
+    at Server.<anonymous> (C:\Users\furkan\Desktop\projects\to-do-list\node_modules\next\src\server\lib\start-server.ts:293:28)
+2026-01-10 17:59:14 +01:00: Error: Could not find a production build in the '.next' directory. Try building your app with 'next build' before starting the production server. https://nextjs.org/docs/messages/production-start-no-build-id
+    at setupFsCheck (C:\Users\furkan\Desktop\projects\to-do-list\node_modules\next\src\server\lib\router-utils\filesystem.ts:157:13)
+    at initialize (C:\Users\furkan\Desktop\projects\to-do-list\node_modules\next\src\server\lib\router-server.ts:96:21)
+    at Server.<anonymous> (C:\Users\furkan\Desktop\projects\to-do-list\node_modules\next\src\server\lib\start-server.ts:293:28)
+2026-01-10 17:59:14 +01:00: Error: Could not find a production build in the '.next' directory. Try building your app with 'next build' before starting the production server. https://nextjs.org/docs/messages/production-start-no-build-id
+    at setupFsCheck (C:\Users\furkan\Desktop\projects\to-do-list\node_modules\next\src\server\lib\router-utils\filesystem.ts:157:13)
+    at initialize (C:\Users\furkan\Desktop\projects\to-do-list\node_modules\next\src\server\lib\router-server.ts:96:21)
+    at Server.<anonymous> (C:\Users\furkan\Desktop\projects\to-do-list\node_modules\next\src\server\lib\start-server.ts:293:28)
+2026-01-10 17:59:14 +01:00: Error: Could not find a production build in the '.next' directory. Try building your app with 'next build' before starting the production server. https://nextjs.org/docs/messages/production-start-no-build-id
+    at setupFsCheck (C:\Users\furkan\Desktop\projects\to-do-list\node_modules\next\src\server\lib\router-utils\filesystem.ts:157:13)
+    at initialize (C:\Users\furkan\Desktop\projects\to-do-list\node_modules\next\src\server\lib\router-server.ts:96:21)
+    at Server.<anonymous> (C:\Users\furkan\Desktop\projects\to-do-list\node_modules\next\src\server\lib\start-server.ts:293:28)
+2026-01-10 17:59:14 +01:00: Error: Could not find a production build in the '.next' directory. Try building your app with 'next build' before starting the production server. https://nextjs.org/docs/messages/production-start-no-build-id
+    at setupFsCheck (C:\Users\furkan\Desktop\projects\to-do-list\node_modules\next\src\server\lib\router-utils\filesystem.ts:157:13)
+    at initialize (C:\Users\furkan\Desktop\projects\to-do-list\node_modules\next\src\server\lib\router-server.ts:96:21)
+    at Server.<anonymous> (C:\Users\furkan\Desktop\projects\to-do-list\node_modules\next\src\server\lib\start-server.ts:293:28)
+2026-01-10 17:59:15 +01:00: Error: Could not find a production build in the '.next' directory. Try building your app with 'next build' before starting the production server. https://nextjs.org/docs/messages/production-start-no-build-id
+    at setupFsCheck (C:\Users\furkan\Desktop\projects\to-do-list\node_modules\next\src\server\lib\router-utils\filesystem.ts:157:13)
+    at initialize (C:\Users\furkan\Desktop\projects\to-do-list\node_modules\next\src\server\lib\router-server.ts:96:21)
+    at Server.<anonymous> (C:\Users\furkan\Desktop\projects\to-do-list\node_modules\next\src\server\lib\start-server.ts:293:28)
+2026-01-10 17:59:15 +01:00: Error: Could not find a production build in the '.next' directory. Try building your app with 'next build' before starting the production server. https://nextjs.org/docs/messages/production-start-no-build-id
+    at setupFsCheck (C:\Users\furkan\Desktop\projects\to-do-list\node_modules\next\src\server\lib\router-utils\filesystem.ts:157:13)
+    at initialize (C:\Users\furkan\Desktop\projects\to-do-list\node_modules\next\src\server\lib\router-server.ts:96:21)
+    at Server.<anonymous> (C:\Users\furkan\Desktop\projects\to-do-list\node_modules\next\src\server\lib\start-server.ts:293:28)
+2026-01-10 17:59:15 +01:00: Error: Could not find a production build in the '.next' directory. Try building your app with 'next build' before starting the production server. https://nextjs.org/docs/messages/production-start-no-build-id
+    at setupFsCheck (C:\Users\furkan\Desktop\projects\to-do-list\node_modules\next\src\server\lib\router-utils\filesystem.ts:157:13)
+    at initialize (C:\Users\furkan\Desktop\projects\to-do-list\node_modules\next\src\server\lib\router-server.ts:96:21)
+    at Server.<anonymous> (C:\Users\furkan\Desktop\projects\to-do-list\node_modules\next\src\server\lib\start-server.ts:293:28)
+2026-01-10 17:59:15 +01:00: Error: Could not find a production build in the '.next' directory. Try building your app with 'next build' before starting the production server. https://nextjs.org/docs/messages/production-start-no-build-id
+    at setupFsCheck (C:\Users\furkan\Desktop\projects\to-do-list\node_modules\next\src\server\lib\router-utils\filesystem.ts:157:13)
+    at initialize (C:\Users\furkan\Desktop\projects\to-do-list\node_modules\next\src\server\lib\router-server.ts:96:21)
+    at Server.<anonymous> (C:\Users\furkan\Desktop\projects\to-do-list\node_modules\next\src\server\lib\start-server.ts:293:28)
+2026-01-10 17:59:16 +01:00: Error: Could not find a production build in the '.next' directory. Try building your app with 'next build' before starting the production server. https://nextjs.org/docs/messages/production-start-no-build-id
+    at setupFsCheck (C:\Users\furkan\Desktop\projects\to-do-list\node_modules\next\src\server\lib\router-utils\filesystem.ts:157:13)
+    at initialize (C:\Users\furkan\Desktop\projects\to-do-list\node_modules\next\src\server\lib\router-server.ts:96:21)
+    at Server.<anonymous> (C:\Users\furkan\Desktop\projects\to-do-list\node_modules\next\src\server\lib\start-server.ts:293:28)
+2026-01-10 17:59:16 +01:00: Error: Could not find a production build in the '.next' directory. Try building your app with 'next build' before starting the production server. https://nextjs.org/docs/messages/production-start-no-build-id
+    at setupFsCheck (C:\Users\furkan\Desktop\projects\to-do-list\node_modules\next\src\server\lib\router-utils\filesystem.ts:157:13)
+    at initialize (C:\Users\furkan\Desktop\projects\to-do-list\node_modules\next\src\server\lib\router-server.ts:96:21)
+    at Server.<anonymous> (C:\Users\furkan\Desktop\projects\to-do-list\node_modules\next\src\server\lib\start-server.ts:293:28)
+2026-01-10 17:59:16 +01:00: Error: Could not find a production build in the '.next' directory. Try building your app with 'next build' before starting the production server. https://nextjs.org/docs/messages/production-start-no-build-id
+    at setupFsCheck (C:\Users\furkan\Desktop\projects\to-do-list\node_modules\next\src\server\lib\router-utils\filesystem.ts:157:13)
+    at initialize (C:\Users\furkan\Desktop\projects\to-do-list\node_modules\next\src\server\lib\router-server.ts:96:21)
+    at Server.<anonymous> (C:\Users\furkan\Desktop\projects\to-do-list\node_modules\next\src\server\lib\start-server.ts:293:28)
+2026-01-10 17:59:17 +01:00: Error: Could not find a production build in the '.next' directory. Try building your app with 'next build' before starting the production server. https://nextjs.org/docs/messages/production-start-no-build-id
+    at setupFsCheck (C:\Users\furkan\Desktop\projects\to-do-list\node_modules\next\src\server\lib\router-utils\filesystem.ts:157:13)
+    at initialize (C:\Users\furkan\Desktop\projects\to-do-list\node_modules\next\src\server\lib\router-server.ts:96:21)
+    at Server.<anonymous> (C:\Users\furkan\Desktop\projects\to-do-list\node_modules\next\src\server\lib\start-server.ts:293:28)
+2026-01-10 17:59:17 +01:00: Error: Could not find a production build in the '.next' directory. Try building your app with 'next build' before starting the production server. https://nextjs.org/docs/messages/production-start-no-build-id
+    at setupFsCheck (C:\Users\furkan\Desktop\projects\to-do-list\node_modules\next\src\server\lib\router-utils\filesystem.ts:157:13)
+    at initialize (C:\Users\furkan\Desktop\projects\to-do-list\node_modules\next\src\server\lib\router-server.ts:96:21)
+    at Server.<anonymous> (C:\Users\furkan\Desktop\projects\to-do-list\node_modules\next\src\server\lib\start-server.ts:293:28)
+2026-01-10 17:59:17 +01:00: Error: Could not find a production build in the '.next' directory. Try building your app with 'next build' before starting the production server. https://nextjs.org/docs/messages/production-start-no-build-id
+    at setupFsCheck (C:\Users\furkan\Desktop\projects\to-do-list\node_modules\next\src\server\lib\router-utils\filesystem.ts:157:13)
+    at initialize (C:\Users\furkan\Desktop\projects\to-do-list\node_modules\next\src\server\lib\router-server.ts:96:21)
+    at Server.<anonymous> (C:\Users\furkan\Desktop\projects\to-do-list\node_modules\next\src\server\lib\start-server.ts:293:28)

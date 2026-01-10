@@ -47,6 +47,8 @@ export default function TodoList() {
   const [showWelcomeModal, setShowWelcomeModal] = useState(false);
   const [dateFilter, setDateFilter] = useState<"ALL" | "TODAY" | "YESTERDAY" | "LAST_WEEK">("ALL");
   const [draggedTodoId, setDraggedTodoId] = useState<string | null>(null);
+  const [showFilterDropdown, setShowFilterDropdown] = useState(false);
+  const [showAddTodoModal, setShowAddTodoModal] = useState(false);
 
   useEffect(() => {
     fetchTodos();
@@ -318,7 +320,7 @@ export default function TodoList() {
   };
 
   const userTodos = selectedUserId
-    ? todos.filter((todo) => todo.listOwnerId === selectedUserId)
+    ? todos.filter((todo) => todo.assignedUserIds.includes(selectedUserId))
     : [];
 
   const getFilteredByDate = (todos: Todo[]) => {
@@ -379,11 +381,45 @@ export default function TodoList() {
             />
           </div>
           
-          <ProfileSwitcher
-            users={users}
-            currentUserId={currentUserId}
-            onSelectUser={handleSelectCurrentUser}
-          />
+          <div className="flex items-center gap-3">
+            {/* Filter Dropdown */}
+            <div className="relative">
+              <button
+                onClick={() => setShowFilterDropdown(!showFilterDropdown)}
+                className="px-3 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors flex items-center gap-2"
+                title="Filter by date"
+              >
+                🔍
+                <span className="text-xs">{dateFilter === "ALL" ? "All" : dateFilter === "LAST_WEEK" ? "Week" : dateFilter.charAt(0) + dateFilter.slice(1).toLowerCase()}</span>
+              </button>
+              {showFilterDropdown && (
+                <div className="absolute right-0 top-full mt-1 bg-gray-800 border border-gray-700 rounded-lg shadow-lg py-1 z-50 min-w-[120px]">
+                  {["ALL", "TODAY", "YESTERDAY", "LAST_WEEK"].map((date) => (
+                    <button
+                      key={date}
+                      onClick={() => {
+                        setDateFilter(date as any);
+                        setShowFilterDropdown(false);
+                      }}
+                      className={`w-full px-4 py-2 text-sm text-left transition-colors ${
+                        dateFilter === date
+                          ? "bg-green-600 text-white"
+                          : "text-gray-300 hover:bg-gray-700"
+                      }`}
+                    >
+                      {date === "LAST_WEEK" ? "Last Week" : date.charAt(0) + date.slice(1).toLowerCase()}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+            
+            <ProfileSwitcher
+              users={users}
+              currentUserId={currentUserId}
+              onSelectUser={handleSelectCurrentUser}
+            />
+          </div>
         </div>
       </div>
 
@@ -399,30 +435,6 @@ export default function TodoList() {
 
       {selectedUser && currentUserId && (
         <div className="space-y-3">
-          <div className="flex items-center gap-3 flex-wrap bg-gray-800 rounded-lg px-3 py-2">
-            <TodoForm 
-              currentUserId={currentUserId}
-              selectedUserId={selectedUser.id}
-              allUsers={users}
-              onAdd={handleAddTodo}
-            />
-            
-            <div className="flex gap-2 flex-wrap ml-auto">
-              {["ALL", "TODAY", "YESTERDAY", "LAST_WEEK"].map((date) => (
-                <button
-                  key={date}
-                  onClick={() => setDateFilter(date as any)}
-                  className={`px-3 py-1.5 text-sm rounded-lg font-medium transition-colors ${
-                    dateFilter === date
-                      ? "bg-green-600 text-white"
-                      : "bg-gray-700 text-gray-300 hover:bg-gray-600"
-                  }`}
-                >
-                  {date === "LAST_WEEK" ? "Last Week" : date.charAt(0) + date.slice(1).toLowerCase()}
-                </button>
-              ))}
-            </div>
-          </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 h-[calc(100vh-180px)]">
             {/* TODO Column */}
@@ -530,6 +542,43 @@ export default function TodoList() {
         </div>
       )}
       </div>
+
+      {/* Fixed Floating Add Button */}
+      {selectedUser && currentUserId && (
+        <button
+          onClick={() => setShowAddTodoModal(true)}
+          className="fixed bottom-6 left-6 w-14 h-14 bg-blue-600 hover:bg-blue-700 text-white rounded-full shadow-lg flex items-center justify-center text-2xl font-bold transition-all hover:scale-110 z-40"
+          title="Add new todo"
+        >
+          +
+        </button>
+      )}
+
+      {/* Todo Form Modal */}
+      {showAddTodoModal && selectedUser && currentUserId && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-gray-800 rounded-lg p-6 shadow-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-semibold text-white">Add New Todo</h3>
+              <button
+                onClick={() => setShowAddTodoModal(false)}
+                className="text-gray-400 hover:text-white text-2xl"
+              >
+                ×
+              </button>
+            </div>
+            <TodoForm 
+              currentUserId={currentUserId}
+              selectedUserId={selectedUser.id}
+              allUsers={users}
+              onAdd={(todo) => {
+                handleAddTodo(todo);
+                setShowAddTodoModal(false);
+              }}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }

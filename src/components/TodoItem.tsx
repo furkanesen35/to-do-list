@@ -92,47 +92,14 @@ export default function TodoItem({
   };
 
   const getBackgroundColor = () => {
-    // Fallback color if creator doesn't exist
+    // Always use creator's color, regardless of how many people are assigned
     const fallbackColor = "#1E3A8A";
-    
-    // Debug logging
-    if (isSubTodo) {
-      console.log(`[SUBTASK COLOR] ${todo.title}:`, {
-        creatorExists: !!todo.creator,
-        creatorColor: todo.creator?.color,
-        assignedUserIds: todo.assignedUserIds,
-        willUseColor: todo.creator?.color || fallbackColor
-      });
-    }
-
-    if (todo.assignedUserIds.length === 1) {
-      // Single user - use creator's color
-      return todo.creator?.color || fallbackColor;
-    } else if (todo.assignedUserIds.length > 1) {
-      // Multiple users - create gradient with assigned users' colors
-      const assignedUsers = allUsers.filter((u) =>
-        todo.assignedUserIds.includes(u.id)
-      );
-      if (assignedUsers.length === 0) return fallbackColor;
-      const colors = assignedUsers.map((u) => u.color).join(", ");
-      return `linear-gradient(135deg, ${colors})`;
-    }
     return todo.creator?.color || fallbackColor;
   };
 
-  const backgroundStyle =
-    todo.assignedUserIds.length > 1
-      ? { background: getBackgroundColor() }
-      : { backgroundColor: getBackgroundColor() };
+  const backgroundStyle = { backgroundColor: getBackgroundColor() };
 
-  const textColor =
-    todo.assignedUserIds.length > 1
-      ? getTextColorForGradient(
-          allUsers
-            .filter((u) => todo.assignedUserIds.includes(u.id))
-            .map((u) => u.color)
-        )
-      : getContrastTextColor(todo.creator?.color || "#1E3A8A");
+  const textColor = getContrastTextColor(todo.creator?.color || "#1E3A8A");
 
   const handleMouseEnter = (e: React.MouseEvent) => {
     e.stopPropagation();
