@@ -40,6 +40,7 @@ export default function TodoItem({
   onDrop,
   isSubTodo = false,
 }: TodoItemProps) {
+  const [isExpanded, setIsExpanded] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [title, setTitle] = useState(todo.title);
   const [description, setDescription] = useState(todo.description || "");
@@ -411,16 +412,62 @@ export default function TodoItem({
         </div>
       ) : (
         <div className="space-y-2">
-          {/* Row 1: Title, Buttons, and Priority */}
-          <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-1 sm:gap-2">
+          {/* Row 1: Title, Buttons, and Priority - Always Visible */}
+          <div className="flex items-center justify-between gap-2">
+            {/* Expand/Collapse Icon */}
+            <button
+              onClick={() => setIsExpanded(!isExpanded)}
+              className="flex-shrink-0 w-5 h-5 flex items-center justify-center hover:bg-gray-600 rounded transition-colors text-xs"
+              title={isExpanded ? "Collapse" : "Expand"}
+            >
+              {isExpanded ? "▼" : "▶"}
+            </button>
+
             <h3
-              className={`flex-1 font-semibold select-text cursor-text ${
-                isSubTodo ? "text-xs" : "text-base"
+              className={`flex-1 font-semibold select-text cursor-text truncate ${
+                isSubTodo ? "text-xs" : "text-sm"
               }`}
+              onClick={() => setIsExpanded(!isExpanded)}
             >
               {todo.title}
             </h3>
-            <div className="flex items-center gap-2 flex-shrink-0 self-end sm:self-auto">
+            
+            {/* Priority Badge - Always Visible */}
+            <span
+              className={`px-2 py-0.5 text-xs rounded-full flex-shrink-0 ${
+                priorityColors[todo.priority]
+              }`}
+            >
+              {todo.priority}
+            </span>
+
+            {/* Assigned Users - Always Visible as Small Icons */}
+            <div className="flex -space-x-1 flex-shrink-0">
+              {assignedUserIds.slice(0, 3).map((userId) => {
+                const user = allUsers.find((u) => u.id === userId);
+                return user ? (
+                  <div
+                    key={userId}
+                    className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold border-2 border-gray-800"
+                    style={{
+                      backgroundColor: user.color,
+                      color: getContrastTextColor(user.color),
+                    }}
+                    title={user.name}
+                  >
+                    {user.name.charAt(0)}
+                  </div>
+                ) : null;
+              })}
+              {assignedUserIds.length > 3 && (
+                <div className="w-6 h-6 rounded-full flex items-center justify-center text-xs bg-gray-600 border-2 border-gray-800">
+                  +{assignedUserIds.length - 3}
+                </div>
+              )}
+            </div>
+
+            {/* Action Buttons - Always Visible on Hover */}
+            <div className="flex items-center gap-1 flex-shrink-0">
               <div
                 className={`flex items-center gap-1 transition-opacity ${
                   shouldShowButtons ? "opacity-100" : "opacity-0"
@@ -439,9 +486,6 @@ export default function TodoItem({
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
-                      console.log("🟢 Promote button clicked for:", todo.id, todo.title);
-                      console.log("   - Current parentId:", todo.parentId);
-                      console.log("   - Setting parentId to null");
                       onUpdate(todo.id, { parentId: null });
                     }}
                     className="w-6 h-6 flex items-center justify-center bg-green-600 hover:bg-green-700 text-white rounded transition-colors text-xs pointer-events-auto"
@@ -477,62 +521,58 @@ export default function TodoItem({
                   </span>
                 )}
               </button>
-              <span
-                className={`px-2 py-1 text-xs rounded-full ${
-                  priorityColors[todo.priority]
-                }`}
-              >
-                {todo.priority}
-              </span>
             </div>
           </div>
 
-          {/* Row 2: Description */}
-          {todo.description && (
-            <p className="select-text cursor-text" style={{ opacity: 0.9 }}>
-              {todo.description}
-            </p>
-          )}
+          {/* Expanded Content - Only shown when isExpanded is true */}
+          {isExpanded && (
+            <>
+              {/* Row 2: Description */}
+              {todo.description && (
+                <p className="select-text cursor-text ml-7" style={{ opacity: 0.9 }}>
+                  {todo.description}
+                </p>
+              )}
 
-          {/* Row 3: Dates */}
-          <div
-            className="flex items-center gap-3 text-xs select-text"
-            style={{ opacity: 0.8 }}
-          >
-            <span
-              title={`Created: ${new Date(todo.createdAt).toLocaleString()}`}
-            >
-              📅 {getDateDisplay(todo.createdAt)}
-            </span>
-            {todo.dueDate && (
-              <span title={`Due: ${new Date(todo.dueDate).toLocaleString()}`}>
-                🎯 {getDateDisplay(todo.dueDate)}
-              </span>
-            )}
-          </div>
-
-          {/* Sub-todos Section (only for parent todos) */}
-          {!isSubTodo && (
-            <div className="mt-1 pt-1 border-t border-gray-700">
-              <div className="flex items-center justify-between mb-2">
-                <button
-                  onClick={() => setShowSubTodos(!showSubTodos)}
-                  className="text-sm font-medium flex items-center gap-1"
-                  style={{ opacity: 0.8 }}
+              {/* Row 3: Dates */}
+              <div
+                className="flex items-center gap-3 text-xs select-text ml-7"
+                style={{ opacity: 0.8 }}
+              >
+                <span
+                  title={`Created: ${new Date(todo.createdAt).toLocaleString()}`}
                 >
-                  {showSubTodos ? "▼" : "▶"} Sub-tasks ({subTodos.length})
-                </button>
-                <button
-                  onClick={() => setIsAddingSubTodo(true)}
-                  className="text-xs px-2 py-1 bg-gray-700 hover:bg-gray-600 text-white rounded transition-colors"
-                >
-                  + Add Sub-task
-                </button>
+                  📅 {getDateDisplay(todo.createdAt)}
+                </span>
+                {todo.dueDate && (
+                  <span title={`Due: ${new Date(todo.dueDate).toLocaleString()}`}>
+                    🎯 {getDateDisplay(todo.dueDate)}
+                  </span>
+                )}
               </div>
 
-              {showSubTodos && (
-                <div className="space-y-1">
-                  {isAddingSubTodo && (
+              {/* Sub-todos Section (only for parent todos) */}
+              {!isSubTodo && (
+                <div className="mt-1 pt-1 ml-7 border-t border-gray-700">
+                  <div className="flex items-center justify-between mb-2">
+                    <button
+                      onClick={() => setShowSubTodos(!showSubTodos)}
+                      className="text-sm font-medium flex items-center gap-1"
+                      style={{ opacity: 0.8 }}
+                    >
+                      {showSubTodos ? "▼" : "▶"} Sub-tasks ({subTodos.length})
+                    </button>
+                    <button
+                      onClick={() => setIsAddingSubTodo(true)}
+                      className="text-xs px-2 py-1 bg-gray-700 hover:bg-gray-600 text-white rounded transition-colors"
+                    >
+                      + Add Sub-task
+                    </button>
+                  </div>
+
+                  {showSubTodos && (
+                    <div className="space-y-1">
+                      {isAddingSubTodo && (
                     <div className="p-3 mb-2 bg-gray-900 rounded-lg border border-gray-600 space-y-2">
                       <div>
                         <label className="block text-xs font-medium text-gray-300 mb-1">
@@ -664,9 +704,11 @@ export default function TodoItem({
                       isSubTodo={true}
                     />
                   ))}
+                    </div>
+                  )}
                 </div>
               )}
-            </div>
+            </>
           )}
         </div>
       )}

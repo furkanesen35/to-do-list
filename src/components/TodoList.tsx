@@ -363,21 +363,32 @@ export default function TodoList() {
   };
 
   return (
-    <div className="space-y-6">
-      <ProfileSwitcher
-        users={users}
-        currentUserId={currentUserId}
-        onSelectUser={handleSelectCurrentUser}
-      />
+    <div className="flex flex-col h-screen">
+      {/* Sticky Top Bar */}
+      <div className="sticky top-0 z-50 bg-gray-800 border-b border-gray-700 px-4 py-3">
+        <div className="flex items-center justify-between gap-4 flex-wrap">
+          <div className="flex items-center gap-4 flex-1">
+            <h1 className="text-xl font-bold text-blue-400 whitespace-nowrap">📋 Office Todo</h1>
+            <TaskTable
+              users={users}
+              selectedUserId={selectedUserId}
+              onSelectUser={setSelectedUserId}
+              onAddUser={handleAddUser}
+              onDeleteUser={handleDeleteUser}
+              onUpdateUser={handleUpdateUser}
+            />
+          </div>
+          
+          <ProfileSwitcher
+            users={users}
+            currentUserId={currentUserId}
+            onSelectUser={handleSelectCurrentUser}
+          />
+        </div>
+      </div>
 
-      <TaskTable
-        users={users}
-        selectedUserId={selectedUserId}
-        onSelectUser={setSelectedUserId}
-        onAddUser={handleAddUser}
-        onDeleteUser={handleDeleteUser}
-        onUpdateUser={handleUpdateUser}
-      />
+      {/* Main Content Area */}
+      <div className="flex-1 overflow-auto px-4 py-4">
 
       <WelcomeModal
         show={showWelcomeModal}
@@ -387,8 +398,8 @@ export default function TodoList() {
       />
 
       {selectedUser && currentUserId && (
-        <>
-          <div className="flex items-center gap-3 flex-wrap">
+        <div className="space-y-3">
+          <div className="flex items-center gap-3 flex-wrap bg-gray-800 rounded-lg px-3 py-2">
             <TodoForm 
               currentUserId={currentUserId}
               selectedUserId={selectedUser.id}
@@ -396,15 +407,15 @@ export default function TodoList() {
               onAdd={handleAddTodo}
             />
             
-            <div className="flex gap-2 flex-wrap">
+            <div className="flex gap-2 flex-wrap ml-auto">
               {["ALL", "TODAY", "YESTERDAY", "LAST_WEEK"].map((date) => (
                 <button
                   key={date}
                   onClick={() => setDateFilter(date as any)}
-                  className={`px-3 py-2 rounded-lg font-medium transition-colors ${
+                  className={`px-3 py-1.5 text-sm rounded-lg font-medium transition-colors ${
                     dateFilter === date
                       ? "bg-green-600 text-white"
-                      : "bg-gray-800 text-gray-300 hover:bg-gray-700"
+                      : "bg-gray-700 text-gray-300 hover:bg-gray-600"
                   }`}
                 >
                   {date === "LAST_WEEK" ? "Last Week" : date.charAt(0) + date.slice(1).toLowerCase()}
@@ -413,10 +424,10 @@ export default function TodoList() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 h-[calc(100vh-180px)]">
             {/* TODO Column */}
-            <div 
-              className="bg-gray-800 rounded-lg p-4 min-h-[200px]"
+            <div
+              className="bg-gray-800 rounded-lg p-4 overflow-y-auto"
               onDragOver={handleDragOver}
               onDrop={(e) => handleDrop(e, "TODO")}
             >
@@ -448,7 +459,7 @@ export default function TodoList() {
 
             {/* IN_PROGRESS Column */}
             <div 
-              className="bg-gray-800 rounded-lg p-4 min-h-[200px]"
+              className="bg-gray-800 rounded-lg p-4 overflow-y-auto"
               onDragOver={handleDragOver}
               onDrop={(e) => handleDrop(e, "IN_PROGRESS")}
             >
@@ -480,7 +491,7 @@ export default function TodoList() {
 
             {/* DONE Column */}
             <div 
-              className="bg-gray-800 rounded-lg p-4 min-h-[200px]"
+              className="bg-gray-800 rounded-lg p-4 overflow-y-auto"
               onDragOver={handleDragOver}
               onDrop={(e) => handleDrop(e, "DONE")}
             >
@@ -510,7 +521,7 @@ export default function TodoList() {
               </div>
             </div>
           </div>
-        </>
+        </div>
       )}
 
       {!selectedUser && users.length === 0 && (
@@ -518,6 +529,7 @@ export default function TodoList() {
           No team members yet. Click the + button above to add someone!
         </div>
       )}
+      </div>
     </div>
   );
 }

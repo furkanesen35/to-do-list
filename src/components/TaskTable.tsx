@@ -62,9 +62,8 @@ export default function TaskTable({
   };
 
   return (
-    <div className="bg-gray-800 rounded-lg p-4">
-      <div className="flex items-center gap-2 flex-wrap">
-        {users.map((user) => (
+    <div className="flex items-center gap-2 flex-wrap flex-1">
+      {users.map((user) => (
           <div
             key={user.id}
             className={`group relative flex items-center gap-2 px-4 py-2 rounded-lg transition-colors cursor-pointer ${
@@ -112,7 +111,6 @@ export default function TaskTable({
         >
           + Add Person
         </button>
-      </div>
 
       {showAddForm && (
         <form onSubmit={handleAddUser} className="mt-4 p-4 bg-gray-700 rounded-lg">

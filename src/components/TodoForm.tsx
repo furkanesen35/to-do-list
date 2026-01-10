@@ -59,16 +59,18 @@ export default function TodoForm({ currentUserId, selectedUserId, allUsers, onAd
   };
 
   return (
-    <div className="bg-gray-800 rounded-lg p-6 shadow-lg">
+    <div>
       {!isOpen ? (
         <button
           onClick={() => setIsOpen(true)}
-          className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors"
+          className="px-3 py-1.5 text-sm bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors"
         >
           + Add New Todo
         </button>
       ) : (
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-gray-800 rounded-lg p-6 shadow-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-2">
               Title *
@@ -169,6 +171,8 @@ export default function TodoForm({ currentUserId, selectedUserId, allUsers, onAd
             </button>
           </div>
         </form>
+          </div>
+        </div>
       )}
     </div>
   );

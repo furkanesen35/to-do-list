@@ -18,7 +18,7 @@ export default function ProfileSwitcher({
   const currentUser = users.find((u) => u.id === currentUserId);
 
   return (
-    <div className="flex items-center justify-end gap-3 mb-4">
+    <div className="flex items-center gap-3 flex-shrink-0">
       <span className="text-sm text-gray-400">Logged in as:</span>
       <div className="relative">
         <select
