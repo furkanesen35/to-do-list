@@ -1,23 +1,21 @@
 module.exports = {
   apps: [
     {
-      name: 'todo-list',
-      script: 'npm',
+      name: 'office-todo-list',
+      script: 'node_modules/next/dist/bin/next',
       args: 'start',
-      cwd: '/home/furkan/projects/to-do-list',
-      env: {
-        NODE_ENV: 'production',
-        PORT: 3000,
-        HOSTNAME: '0.0.0.0'
-      },
+      cwd: 'C:/Users/furkan/Desktop/projects/to-do-list',
       instances: 1,
       autorestart: true,
       watch: false,
       max_memory_restart: '1G',
-      error_file: '/home/furkan/.pm2/logs/todo-list-error.log',
-      out_file: '/home/furkan/.pm2/logs/todo-list-out.log',
-      log_file: '/home/furkan/.pm2/logs/todo-list-combined.log',
-      time: true
+      env: {
+        NODE_ENV: 'production',
+        PORT: 3000
+      },
+      error_file: './logs/err.log',
+      out_file: './logs/out.log',
+      log_date_format: 'YYYY-MM-DD HH:mm:ss Z'
     }
   ]
 };
