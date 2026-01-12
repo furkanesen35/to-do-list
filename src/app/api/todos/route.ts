@@ -1,63 +1,55 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
+// Recursive function to fetch todos with all nested subtodos
+async function getTodosWithSubTodos(parentId: string | null = null): Promise<any[]> {
+  const todos = await prisma.todo.findMany({
+    where: {
+      parentId: parentId,
+    },
+    include: {
+      listOwner: {
+        select: {
+          id: true,
+          name: true,
+          color: true,
+        },
+      },
+      creator: {
+        select: {
+          id: true,
+          name: true,
+          color: true,
+        },
+      },
+      _count: {
+        select: {
+          comments: true,
+        },
+      },
+    },
+    orderBy: parentId === null 
+      ? { createdAt: "desc" }  // Root todos ordered desc
+      : { createdAt: "asc" },   // Subtodos ordered asc
+  });
+
+  // Recursively fetch subtodos for each todo
+  const todosWithSubTodos = await Promise.all(
+    todos.map(async (todo) => {
+      const subTodos = await getTodosWithSubTodos(todo.id);
+      return {
+        ...todo,
+        subTodos,
+      };
+    })
+  );
+
+  return todosWithSubTodos;
+}
+
 export async function GET() {
   try {
-    const todos = await prisma.todo.findMany({
-      where: {
-        parentId: null, // Only get parent todos, not sub-todos
-      },
-      include: {
-        listOwner: {
-          select: {
-            id: true,
-            name: true,
-            color: true,
-          },
-        },
-        creator: {
-          select: {
-            id: true,
-            name: true,
-            color: true,
-          },
-        },
-        subTodos: {
-          include: {
-            listOwner: {
-              select: {
-                id: true,
-                name: true,
-                color: true,
-              },
-            },
-            creator: {
-              select: {
-                id: true,
-                name: true,
-                color: true,
-              },
-            },
-            _count: {
-              select: {
-                comments: true,
-              },
-            },
-          },
-          orderBy: {
-            createdAt: "asc",
-          },
-        },
-        _count: {
-          select: {
-            comments: true,
-          },
-        },
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
-    });
+    const todos = await getTodosWithSubTodos(null);
     return NextResponse.json(todos);
   } catch (error) {
     console.error("Failed to fetch todos:", error);

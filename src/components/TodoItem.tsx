@@ -189,15 +189,6 @@ export default function TodoItem({
   const commentsCount = (todo as any)._count?.comments || 0;
   const subTodos = (todo as any).subTodos || [];
 
-  // Debug: log comment count for subtasks
-  if (isSubTodo) {
-    console.log(
-      `[SUBTODO] ${todo.title} - _count:`,
-      (todo as any)._count,
-      `commentsCount: ${commentsCount}`
-    );
-  }
-
   const handleStatusChange = (status: Todo["status"]) => {
     onUpdate(todo.id, { status });
   };
@@ -208,7 +199,6 @@ export default function TodoItem({
   const [isDropTarget, setIsDropTarget] = useState(false);
 
   const handleDragHandleStart = (e: React.DragEvent) => {
-    console.log("🟢 Drag started for todo:", todo.id, todo.title);
     e.stopPropagation();
     setIsDragging(true);
     onDragStart?.(e, todo.id);
@@ -218,7 +208,6 @@ export default function TodoItem({
   };
 
   const handleDragHandleEnd = () => {
-    console.log("🔴 Drag ended for todo:", todo.id, todo.title);
     setIsDragging(false);
   };
 
@@ -243,9 +232,7 @@ export default function TodoItem({
     setIsDropTarget(false);
 
     const draggedId = e.dataTransfer.getData("todoId");
-    console.log("⬇️ Drop on task:", todo.id, "draggedId:", draggedId);
     if (draggedId && draggedId !== todo.id) {
-      console.log("🔄 Making", draggedId, "a subtask of", todo.id);
       // Make dragged task a subtask of this task
       await onUpdate(draggedId, { parentId: todo.id });
     }
@@ -518,8 +505,8 @@ export default function TodoItem({
                 )}
               </div>
 
-              {/* Sub-todos Section (only for parent todos) */}
-              {!isSubTodo && (
+              {/* Sub-todos Section - Now supports infinite nesting */}
+              {subTodos.length > 0 && (
                 <div className="mt-1 pt-1 ml-7 border-t border-gray-700">
                   <div className="flex items-center justify-between mb-2">
                     <button
@@ -671,6 +658,134 @@ export default function TodoItem({
                       isSubTodo={true}
                     />
                   ))}
+                    </div>
+                  )}
+                </div>
+              )}
+              
+              {/* Show "Add Sub-task" button even when no subtasks exist yet */}
+              {subTodos.length === 0 && onAddSubTodo && (
+                <div className="mt-1 pt-1 ml-7 border-t border-gray-700">
+                  <button
+                    onClick={() => setIsAddingSubTodo(true)}
+                    className="text-xs px-2 py-1 bg-gray-700 hover:bg-gray-600 text-white rounded transition-colors"
+                  >
+                    + Add Sub-task
+                  </button>
+                  {isAddingSubTodo && (
+                    <div className="p-3 mt-2 bg-gray-900 rounded-lg border border-gray-600 space-y-2">
+                      <div>
+                        <label className="block text-xs font-medium text-gray-300 mb-1">
+                          Title *
+                        </label>
+                        <input
+                          type="text"
+                          value={newSubTodoTitle}
+                          onChange={(e) => setNewSubTodoTitle(e.target.value)}
+                          placeholder="Sub-task title..."
+                          className="w-full px-2 py-1 text-sm bg-gray-800 border border-gray-600 rounded text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          autoFocus
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-medium text-gray-300 mb-1">
+                          Description
+                        </label>
+                        <textarea
+                          value={newSubTodoDescription}
+                          onChange={(e) =>
+                            setNewSubTodoDescription(e.target.value)
+                          }
+                          placeholder="Description..."
+                          className="w-full px-2 py-1 text-sm bg-gray-800 border border-gray-600 rounded text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          rows={2}
+                        />
+                      </div>
+                      <div className="grid grid-cols-2 gap-2">
+                        <div>
+                          <label className="block text-xs font-medium text-gray-300 mb-1">
+                            Priority
+                          </label>
+                          <select
+                            value={newSubTodoPriority}
+                            onChange={(e) =>
+                              setNewSubTodoPriority(e.target.value as any)
+                            }
+                            className="w-full px-2 py-1 text-sm bg-gray-800 border border-gray-600 rounded text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          >
+                            <option value="LOW">Low</option>
+                            <option value="MEDIUM">Medium</option>
+                            <option value="HIGH">High</option>
+                            <option value="URGENT">Urgent</option>
+                          </select>
+                        </div>
+                        <div>
+                          <label className="block text-xs font-medium text-gray-300 mb-1">
+                            Due Date
+                          </label>
+                          <input
+                            type="date"
+                            value={newSubTodoDueDate}
+                            onChange={(e) =>
+                              setNewSubTodoDueDate(e.target.value)
+                            }
+                            className="w-full px-2 py-1 text-sm bg-gray-800 border border-gray-600 rounded text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <label className="block text-xs font-medium text-gray-300 mb-1">
+                          Assign To
+                        </label>
+                        <div className="flex flex-wrap gap-1">
+                          {allUsers.map((user) => (
+                            <button
+                              key={user.id}
+                              type="button"
+                              onClick={() => toggleSubTodoAssignedUser(user.id)}
+                              className={`px-2 py-1 rounded text-xs font-medium transition-colors ${
+                                newSubTodoAssignedUserIds.includes(user.id)
+                                  ? ""
+                                  : "bg-gray-700 text-gray-300 hover:bg-gray-600"
+                              }`}
+                              style={{
+                                backgroundColor:
+                                  newSubTodoAssignedUserIds.includes(user.id)
+                                    ? user.color
+                                    : undefined,
+                                color: newSubTodoAssignedUserIds.includes(
+                                  user.id
+                                )
+                                  ? getContrastTextColor(user.color)
+                                  : undefined,
+                              }}
+                            >
+                              {user.name}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                      <div className="flex gap-2">
+                        <button
+                          onClick={handleAddSubTodo}
+                          className="px-3 py-1 text-xs bg-green-600 hover:bg-green-700 text-white rounded transition-colors"
+                        >
+                          Add Sub-task
+                        </button>
+                        <button
+                          onClick={() => {
+                            setIsAddingSubTodo(false);
+                            setNewSubTodoTitle("");
+                            setNewSubTodoDescription("");
+                            setNewSubTodoPriority("MEDIUM");
+                            setNewSubTodoDueDate("");
+                            setNewSubTodoAssignedUserIds([currentUserId]);
+                          }}
+                          className="px-3 py-1 text-xs bg-gray-600 hover:bg-gray-700 text-white rounded transition-colors"
+                        >
+                          Cancel
+                        </button>
+                      </div>
                     </div>
                   )}
                 </div>
