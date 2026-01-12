@@ -63,20 +63,10 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    console.log("========== POST /api/todos ==========");
-    console.log("Received body:", JSON.stringify(body, null, 2));
     
     const { title, description, listOwnerId, createdById, assignedUserIds, priority, dueDate, parentId } = body;
 
-    console.log("Extracted values:");
-    console.log("  title:", title);
-    console.log("  listOwnerId:", listOwnerId);
-    console.log("  createdById:", createdById);
-    console.log("  assignedUserIds:", assignedUserIds);
-    console.log("  parentId:", parentId);
-
     if (!title || !listOwnerId || !createdById) {
-      console.log("❌ Validation failed - missing required fields");
       return NextResponse.json(
         { error: "Title, listOwnerId, and createdById are required" },
         { status: 400 }
@@ -87,12 +77,7 @@ export async function POST(request: Request) {
     const listOwner = await prisma.user.findUnique({ where: { id: listOwnerId } });
     const creator = await prisma.user.findUnique({ where: { id: createdById } });
     
-    console.log("User validation:");
-    console.log("  listOwner exists:", !!listOwner, listOwner?.name);
-    console.log("  creator exists:", !!creator, creator?.name);
-    
     if (!listOwner) {
-      console.log("❌ listOwner not found in database");
       return NextResponse.json(
         { error: `List owner with id ${listOwnerId} does not exist` },
         { status: 400 }
@@ -100,7 +85,6 @@ export async function POST(request: Request) {
     }
     
     if (!creator) {
-      console.log("❌ creator not found in database");
       return NextResponse.json(
         { error: `Creator with id ${createdById} does not exist` },
         { status: 400 }
@@ -142,7 +126,6 @@ export async function POST(request: Request) {
       },
     });
 
-    console.log("✅ Todo created successfully:", todo.id);
     return NextResponse.json(todo, { status: 201 });
   } catch (error) {
     console.error("Failed to create todo:", error);

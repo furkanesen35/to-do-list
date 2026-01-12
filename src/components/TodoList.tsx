@@ -59,18 +59,13 @@ export default function TodoList() {
     // Validate saved user ID once users are loaded
     if (users.length > 0 && !currentUserId) {
       const savedUserId = localStorage.getItem("currentUserId");
-      console.log("========== VALIDATING USER ==========");
-      console.log("Saved user ID from localStorage:", savedUserId);
-      console.log("Available users:", users.map(u => `${u.name} (${u.id})`));
       
       if (savedUserId) {
         // Check if the saved user still exists
         const userExists = users.some(u => u.id === savedUserId);
         if (userExists) {
-          console.log("✅ User found, setting current user");
           setCurrentUserId(savedUserId);
         } else {
-          console.log("❌ Saved user no longer exists, clearing localStorage");
           localStorage.removeItem("currentUserId");
         }
       }
@@ -134,11 +129,8 @@ export default function TodoList() {
     try {
       const response = await fetch("/api/users");
       const data = await response.json();
-      console.log("========== FETCHED USERS ==========");
-      console.log("Users in database:", data);
       if (Array.isArray(data)) {
         setUsers(data);
-        console.log("User IDs:", data.map(u => `${u.name}: ${u.id}`));
       } else {
         console.error("Invalid users data:", data);
         setUsers([]);
@@ -224,9 +216,6 @@ export default function TodoList() {
         body: JSON.stringify(updates),
       });
       const updatedTodo = await response.json();
-      console.log("✅ PATCH response for todo:", id, updatedTodo);
-      console.log("  - Has creator?", !!updatedTodo.creator);
-      console.log("  - Creator color:", updatedTodo.creator?.color);
       
       // Refetch all todos to ensure parent todos reflect subtask changes
       await fetchTodos();
@@ -292,8 +281,6 @@ export default function TodoList() {
       dueDate: dueDate || null,
     };
     
-    console.log("Creating subtask with payload:", payload);
-    
     try {
       const response = await fetch("/api/todos", {
         method: "POST",
@@ -309,7 +296,6 @@ export default function TodoList() {
       }
       
       const newSubTodo = await response.json();
-      console.log("Subtask created successfully:", newSubTodo);
       
       // Refresh todos to get updated parent with sub-todos
       await fetchTodos();
