@@ -28,6 +28,8 @@ export default function CommentSection({
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState("");
   const [loading, setLoading] = useState(false);
+  const [editingCommentId, setEditingCommentId] = useState<string | null>(null);
+  const [editingText, setEditingText] = useState("");
 
   const fetchComments = async () => {
     try {
@@ -77,6 +79,24 @@ export default function CommentSection({
       setComments(comments.filter((c) => c.id !== commentId));
     } catch (error) {
       console.error("Failed to delete comment:", error);
+    }
+  };
+
+  const handleEditComment = async (commentId: string) => {
+    if (!editingText.trim()) return;
+
+    try {
+      const response = await fetch(`/api/comments/${commentId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: editingText }),
+      });
+      const updatedComment = await response.json();
+      setComments(comments.map((c) => c.id === commentId ? updatedComment : c));
+      setEditingCommentId(null);
+      setEditingText("");
+    } catch (error) {
+      console.error("Failed to edit comment:", error);
     }
   };
 
@@ -135,18 +155,61 @@ export default function CommentSection({
                         {getTimeAgo(comment.createdAt)}
                       </span>
                     </div>
-                    <p className="text-gray-300 whitespace-pre-wrap">
-                      {comment.text}
-                    </p>
+                    {editingCommentId === comment.id ? (
+                      <div className="flex gap-2 mt-2">
+                        <textarea
+                          value={editingText}
+                          onChange={(e) => setEditingText(e.target.value)}
+                          className="flex-1 px-2 py-1 bg-gray-800 border border-gray-600 rounded text-white focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                          rows={2}
+                          autoFocus
+                        />
+                        <div className="flex flex-col gap-1">
+                          <button
+                            onClick={() => handleEditComment(comment.id)}
+                            className="px-2 py-1 bg-green-600 hover:bg-green-700 rounded text-xs transition-colors"
+                            title="Save"
+                          >
+                            ✓
+                          </button>
+                          <button
+                            onClick={() => {
+                              setEditingCommentId(null);
+                              setEditingText("");
+                            }}
+                            className="px-2 py-1 bg-gray-600 hover:bg-gray-700 rounded text-xs transition-colors"
+                            title="Cancel"
+                          >
+                            ✕
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <p className="text-gray-300 whitespace-pre-wrap">
+                        {comment.text}
+                      </p>
+                    )}
                   </div>
-                  {comment.user.id === currentUserId && (
-                    <button
-                      onClick={() => handleDeleteComment(comment.id)}
-                      className="p-1 hover:bg-red-600 rounded text-xs transition-colors"
-                      title="Delete comment"
-                    >
-                      🗑️
-                    </button>
+                  {comment.user.id === currentUserId && editingCommentId !== comment.id && (
+                    <div className="flex gap-1">
+                      <button
+                        onClick={() => {
+                          setEditingCommentId(comment.id);
+                          setEditingText(comment.text);
+                        }}
+                        className="p-1 hover:bg-blue-600 rounded text-xs transition-colors"
+                        title="Edit comment"
+                      >
+                        ✏️
+                      </button>
+                      <button
+                        onClick={() => handleDeleteComment(comment.id)}
+                        className="p-1 hover:bg-red-600 rounded text-xs transition-colors"
+                        title="Delete comment"
+                      >
+                        🗑️
+                      </button>
+                    </div>
                   )}
                 </div>
               </div>

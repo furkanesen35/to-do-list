@@ -422,7 +422,7 @@ export default function TodoList() {
       {selectedUser && currentUserId && (
         <div className="space-y-3">
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 h-[calc(100vh-180px)]">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
             {/* TODO Column */}
             <div
               className="bg-gray-800 rounded-lg p-4 overflow-y-auto"

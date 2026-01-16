@@ -151,6 +151,44 @@ export default function TodoItem({
     URGENT: "bg-red-700 text-red-200",
   };
 
+  // Status indicator for subtasks - shows actual status regardless of parent's column
+  const getStatusIndicator = (status: Todo["status"]) => {
+    switch (status) {
+      case "DONE":
+        return { dot: "🟢", color: "#22c55e", label: "Done" };
+      case "IN_PROGRESS":
+        return { dot: "🔵", color: "#3b82f6", label: "In Progress" };
+      case "TODO":
+      default:
+        return { dot: "⚪", color: "#9ca3af", label: "Not Started" };
+    }
+  };
+
+  // Get next status in cycle: TODO → IN_PROGRESS → DONE → TODO
+  const getNextStatus = (status: Todo["status"]): Todo["status"] => {
+    switch (status) {
+      case "TODO":
+        return "IN_PROGRESS";
+      case "IN_PROGRESS":
+        return "DONE";
+      case "DONE":
+        return "TODO";
+      default:
+        return "TODO";
+    }
+  };
+
+  // Calculate subtask status summary
+  const getSubtaskStatusSummary = (subtasks: Todo[]) => {
+    const summary = { todo: 0, inProgress: 0, completed: 0 };
+    subtasks.forEach((sub) => {
+      if (sub.status === "DONE") summary.completed++;
+      else if (sub.status === "IN_PROGRESS") summary.inProgress++;
+      else summary.todo++;
+    });
+    return summary;
+  };
+
   const handleSave = () => {
     onUpdate(todo.id, {
       title,
@@ -383,6 +421,20 @@ export default function TodoItem({
               }`}
               onClick={() => setIsExpanded(!isExpanded)}
             >
+              {/* Status indicator dot for subtasks - clickable to cycle status */}
+              {isSubTodo && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onUpdate(todo.id, { status: getNextStatus(todo.status) });
+                  }}
+                  className="mr-1 inline-block hover:scale-125 transition-transform cursor-pointer"
+                  style={{ fontSize: "10px" }}
+                  title={`${getStatusIndicator(todo.status).label} - Click to change`}
+                >
+                  {getStatusIndicator(todo.status).dot}
+                </button>
+              )}
               {todo.title}
             </h3>
             
@@ -514,7 +566,35 @@ export default function TodoItem({
                       className="text-sm font-medium flex items-center gap-1"
                       style={{ opacity: 0.8 }}
                     >
-                      {showSubTodos ? "▼" : "▶"} Sub-tasks ({subTodos.length})
+                      {showSubTodos ? "▼" : "▶"} Sub-tasks
+                      {/* Progress summary with colored status counts */}
+                      <span className="ml-1 flex items-center gap-1 text-xs font-normal">
+                        {(() => {
+                          const summary = getSubtaskStatusSummary(subTodos);
+                          return (
+                            <>
+                              {summary.todo > 0 && (
+                                <span className="flex items-center" title="Not Started">
+                                  <span style={{ fontSize: "10px" }}>⚪</span>
+                                  <span className="text-gray-400">{summary.todo}</span>
+                                </span>
+                              )}
+                              {summary.inProgress > 0 && (
+                                <span className="flex items-center" title="In Progress">
+                                  <span style={{ fontSize: "10px" }}>🔵</span>
+                                  <span className="text-blue-400">{summary.inProgress}</span>
+                                </span>
+                              )}
+                              {summary.completed > 0 && (
+                                <span className="flex items-center" title="Completed">
+                                  <span style={{ fontSize: "10px" }}>🟢</span>
+                                  <span className="text-green-400">{summary.completed}</span>
+                                </span>
+                              )}
+                            </>
+                          );
+                        })()}
+                      </span>
                     </button>
                     <button
                       onClick={() => setIsAddingSubTodo(true)}
