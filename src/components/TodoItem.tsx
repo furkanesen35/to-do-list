@@ -9,7 +9,10 @@ import {
 } from "@/lib/colorUtils";
 
 type TodoItemProps = {
-  todo: Todo;
+  todo: Todo & { 
+    parentChain?: { id: string; title: string }[];
+    nestingLevel?: number;
+  };
   onUpdate: (id: string, updates: Partial<Todo>) => void;
   onDelete: (id: string) => void;
   onAddSubTodo?: (
@@ -404,6 +407,30 @@ export default function TodoItem({
         </div>
       ) : (
         <div className="space-y-2">
+          {/* Parent Chain Breadcrumb - Shows when task is filtered and has parents */}
+          {todo.parentChain && todo.parentChain.length > 0 && (
+            <div className="flex items-center gap-1 text-xs text-gray-400 border-l-2 border-blue-500 pl-2 py-1 bg-gray-800 bg-opacity-40 rounded overflow-hidden">
+              <span className="text-blue-400 flex-shrink-0">📂</span>
+              <div className="flex items-center gap-1 min-w-0 flex-1 overflow-hidden">
+                {todo.parentChain.map((parent, index) => (
+                  <span key={parent.id} className="flex items-center gap-1 min-w-0 flex-shrink">
+                    {index > 0 && <span className="text-gray-600 flex-shrink-0">›</span>}
+                    <span className="font-medium truncate max-w-[100px]" title={parent.title}>
+                      {parent.title}
+                    </span>
+                  </span>
+                ))}
+                <span className="text-gray-600 flex-shrink-0">›</span>
+                <span className="text-yellow-400 font-semibold flex-shrink-0">Current</span>
+              </div>
+              {todo.nestingLevel !== undefined && (
+                <span className="flex-shrink-0 text-xs bg-gray-700 px-2 py-0.5 rounded whitespace-nowrap">
+                  Lv {todo.nestingLevel}
+                </span>
+              )}
+            </div>
+          )}
+          
           {/* Row 1: Title, Buttons, and Priority - Always Visible */}
           <div className="flex items-center justify-between gap-2">
             {/* Expand/Collapse Icon */}

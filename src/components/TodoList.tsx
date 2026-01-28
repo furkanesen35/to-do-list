@@ -30,6 +30,7 @@ export type Todo = {
     name: string;
     color: string;
   };
+  subTodos?: Todo[];
 };
 
 export type User = {
@@ -45,7 +46,12 @@ export default function TodoList() {
   const [currentUserId, setCurrentUserId] = useState<string | null>(null); // Who you are (auth)
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null); // Whose list you're viewing
   const [showWelcomeModal, setShowWelcomeModal] = useState(false);
-  const [dateFilter, setDateFilter] = useState<"ALL" | "TODAY" | "YESTERDAY" | "LAST_WEEK">("ALL");
+  const [dateFilter, setDateFilter] = useState<
+    "ALL" | 
+    "CREATED_TODAY" | "UPDATED_TODAY" | 
+    "CREATED_YESTERDAY" | "UPDATED_YESTERDAY" | 
+    "CREATED_THIS_WEEK" | "UPDATED_THIS_WEEK"
+  >("ALL");
   const [draggedTodoId, setDraggedTodoId] = useState<string | null>(null);
   const [showFilterDropdown, setShowFilterDropdown] = useState(false);
   const [showAddTodoModal, setShowAddTodoModal] = useState(false);
@@ -309,27 +315,85 @@ export default function TodoList() {
     ? todos.filter((todo) => todo.assignedUserIds.includes(selectedUserId))
     : [];
 
-  const getFilteredByDate = (todos: Todo[]) => {
-    if (dateFilter === "ALL") return todos;
+  // Extended type for todos with parent chain info
+  type TodoWithContext = Todo & { 
+    subTodos?: TodoWithContext[];
+    parentChain?: { id: string; title: string }[];
+    nestingLevel?: number;
+  };
+
+  // Flatten all todos and their nested subtasks with parent chain information
+  const flattenTodos = (
+    todos: (Todo & { subTodos?: Todo[] })[], 
+    parentChain: { id: string; title: string }[] = [],
+    nestingLevel: number = 0
+  ): TodoWithContext[] => {
+    const result: TodoWithContext[] = [];
+    
+    const flatten = (
+      todo: Todo & { subTodos?: Todo[] }, 
+      chain: { id: string; title: string }[],
+      level: number
+    ) => {
+      result.push({
+        ...todo,
+        parentChain: chain.length > 0 ? [...chain] : undefined,
+        nestingLevel: level,
+        subTodos: [] // Remove subTodos for flat display
+      });
+      
+      if (todo.subTodos && todo.subTodos.length > 0) {
+        const newChain = [...chain, { id: todo.id, title: todo.title }];
+        todo.subTodos.forEach(subTodo => flatten(subTodo, newChain, level + 1));
+      }
+    };
+    
+    todos.forEach(todo => flatten(todo, parentChain, nestingLevel));
+    return result;
+  };
+
+  // Check if a specific todo matches the date filter
+  const matchesDateFilter = (todo: Todo, filterType: typeof dateFilter): boolean => {
+    if (filterType === "ALL") return true;
     
     const now = new Date();
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
     const yesterday = new Date(today);
     yesterday.setDate(yesterday.getDate() - 1);
-    const lastWeek = new Date(today);
-    lastWeek.setDate(lastWeek.getDate() - 7);
+    const weekStart = new Date(today);
+    weekStart.setDate(weekStart.getDate() - 7);
 
-    return todos.filter((todo) => {
-      const createdAt = new Date(todo.createdAt);
-      if (dateFilter === "TODAY") {
-        return createdAt >= today;
-      } else if (dateFilter === "YESTERDAY") {
-        return createdAt >= yesterday && createdAt < today;
-      } else if (dateFilter === "LAST_WEEK") {
-        return createdAt >= lastWeek;
+    const checkDate = (dateStr: string, isCreated: boolean): boolean => {
+      const date = new Date(dateStr);
+      const prefix = isCreated ? "CREATED" : "UPDATED";
+      
+      if (filterType === `${prefix}_TODAY`) {
+        return date >= today && date < tomorrow;
+      } else if (filterType === `${prefix}_YESTERDAY`) {
+        return date >= yesterday && date < today;
+      } else if (filterType === `${prefix}_THIS_WEEK`) {
+        return date >= weekStart && date < tomorrow;
       }
-      return true;
-    });
+      return false;
+    };
+
+    const isCreatedFilter = filterType.startsWith("CREATED");
+    const dateToCheck = isCreatedFilter ? todo.createdAt : todo.updatedAt;
+    return checkDate(dateToCheck, isCreatedFilter);
+  };
+
+  const getFilteredByDate = (todos: (Todo & { subTodos?: Todo[] })[]): TodoWithContext[] => {
+    if (dateFilter === "ALL") {
+      return todos as TodoWithContext[];
+    }
+    
+    // Flatten all todos with parent chain information
+    const allTodos = flattenTodos(todos);
+    
+    // Filter only the todos that match the date filter
+    return allTodos.filter(todo => matchesDateFilter(todo, dateFilter));
   };
 
   const filteredTodos = getFilteredByDate(userTodos);
@@ -376,24 +440,79 @@ export default function TodoList() {
                 title="Filter by date"
               >
                 🔍
-                <span className="text-xs">{dateFilter === "ALL" ? "All" : dateFilter === "LAST_WEEK" ? "Week" : dateFilter.charAt(0) + dateFilter.slice(1).toLowerCase()}</span>
+                <span className="text-xs">
+                  {dateFilter === "ALL" 
+                    ? "All" 
+                    : dateFilter === "CREATED_TODAY"
+                    ? "Created Today"
+                    : dateFilter === "UPDATED_TODAY"
+                    ? "Updated Today"
+                    : dateFilter === "CREATED_YESTERDAY"
+                    ? "Created Yesterday"
+                    : dateFilter === "UPDATED_YESTERDAY"
+                    ? "Updated Yesterday"
+                    : dateFilter === "CREATED_THIS_WEEK"
+                    ? "Created Week"
+                    : "Updated Week"}
+                </span>
               </button>
               {showFilterDropdown && (
-                <div className="absolute right-0 top-full mt-1 bg-gray-800 border border-gray-700 rounded-lg shadow-lg py-1 z-50 min-w-[120px]">
-                  {["ALL", "TODAY", "YESTERDAY", "LAST_WEEK"].map((date) => (
+                <div className="absolute right-0 top-full mt-1 bg-gray-800 border border-gray-700 rounded-lg shadow-lg py-1 z-50 min-w-[180px]">
+                  <button
+                    onClick={() => {
+                      setDateFilter("ALL");
+                      setShowFilterDropdown(false);
+                    }}
+                    className={`w-full px-4 py-2 text-sm text-left transition-colors ${
+                      dateFilter === "ALL"
+                        ? "bg-green-600 text-white"
+                        : "text-gray-300 hover:bg-gray-700"
+                    }`}
+                  >
+                    All Tasks
+                  </button>
+                  <div className="border-t border-gray-700 my-1"></div>
+                  <div className="px-3 py-1 text-xs text-gray-500 font-semibold">CREATED</div>
+                  {["CREATED_TODAY", "CREATED_YESTERDAY", "CREATED_THIS_WEEK"].map((filter) => (
                     <button
-                      key={date}
+                      key={filter}
                       onClick={() => {
-                        setDateFilter(date as any);
+                        setDateFilter(filter as any);
                         setShowFilterDropdown(false);
                       }}
                       className={`w-full px-4 py-2 text-sm text-left transition-colors ${
-                        dateFilter === date
-                          ? "bg-green-600 text-white"
+                        dateFilter === filter
+                          ? "bg-blue-600 text-white"
                           : "text-gray-300 hover:bg-gray-700"
                       }`}
                     >
-                      {date === "LAST_WEEK" ? "Last Week" : date.charAt(0) + date.slice(1).toLowerCase()}
+                      {filter === "CREATED_TODAY" 
+                        ? "Created Today" 
+                        : filter === "CREATED_YESTERDAY"
+                        ? "Created Yesterday"
+                        : "Created This Week"}
+                    </button>
+                  ))}
+                  <div className="border-t border-gray-700 my-1"></div>
+                  <div className="px-3 py-1 text-xs text-gray-500 font-semibold">UPDATED</div>
+                  {["UPDATED_TODAY", "UPDATED_YESTERDAY", "UPDATED_THIS_WEEK"].map((filter) => (
+                    <button
+                      key={filter}
+                      onClick={() => {
+                        setDateFilter(filter as any);
+                        setShowFilterDropdown(false);
+                      }}
+                      className={`w-full px-4 py-2 text-sm text-left transition-colors ${
+                        dateFilter === filter
+                          ? "bg-yellow-600 text-white"
+                          : "text-gray-300 hover:bg-gray-700"
+                      }`}
+                    >
+                      {filter === "UPDATED_TODAY" 
+                        ? "Updated Today" 
+                        : filter === "UPDATED_YESTERDAY"
+                        ? "Updated Yesterday"
+                        : "Updated This Week"}
                     </button>
                   ))}
                 </div>
