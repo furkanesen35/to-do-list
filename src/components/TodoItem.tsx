@@ -29,6 +29,7 @@ type TodoItemProps = {
   onDragOver?: (e: React.DragEvent) => void;
   onDrop?: (e: React.DragEvent, status: Todo["status"]) => void;
   isSubTodo?: boolean;
+  isColumnFocused?: boolean;
 };
 
 export default function TodoItem({
@@ -42,6 +43,7 @@ export default function TodoItem({
   onDragOver,
   onDrop,
   isSubTodo = false,
+  isColumnFocused = true,
 }: TodoItemProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -229,6 +231,7 @@ export default function TodoItem({
 
   const commentsCount = (todo as any)._count?.comments || 0;
   const subTodos = (todo as any).subTodos || [];
+  const directSubTaskCount = subTodos.length; // Only count direct children, not nested
 
   const handleStatusChange = (status: Todo["status"]) => {
     onUpdate(todo.id, { status });
@@ -309,7 +312,20 @@ export default function TodoItem({
           : "border-gray-700"
       }`}
     >
-      {isEditing ? (
+      {/* Minimal View for Unfocused Column */}
+      {!isColumnFocused && !isSubTodo ? (
+        <div className="flex flex-col items-center justify-center py-2 px-1 min-h-[60px]">
+          <div className="text-xs font-medium text-center line-clamp-2 mb-1 leading-tight">
+            {todo.title}
+          </div>
+          {directSubTaskCount > 0 && (
+            <div className="text-[10px] bg-gray-700 bg-opacity-60 px-1.5 py-0.5 rounded flex items-center gap-1">
+              <span>📋</span>
+              <span>{directSubTaskCount}</span>
+            </div>
+          )}
+        </div>
+      ) : isEditing ? (
         <div className="space-y-3">
           <div>
             <label className="block text-xs font-medium text-gray-300 mb-1">
@@ -763,6 +779,7 @@ export default function TodoItem({
                       onDragOver={onDragOver}
                       onDrop={onDrop}
                       isSubTodo={true}
+                      isColumnFocused={isColumnFocused}
                     />
                   ))}
                     </div>

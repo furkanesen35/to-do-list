@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import TodoItem from "./TodoItem";
@@ -55,6 +55,7 @@ export default function TodoList() {
   const [draggedTodoId, setDraggedTodoId] = useState<string | null>(null);
   const [showFilterDropdown, setShowFilterDropdown] = useState(false);
   const [showAddTodoModal, setShowAddTodoModal] = useState(false);
+  const [focusedColumn, setFocusedColumn] = useState<"TODO" | "IN_PROGRESS" | "DONE" | null>(null);
 
   useEffect(() => {
     fetchTodos();
@@ -400,6 +401,10 @@ export default function TodoList() {
 
   const selectedUser = users.find((u) => u.id === selectedUserId);
 
+  const handleFocusColumn = (column: "TODO" | "IN_PROGRESS" | "DONE") => {
+    setFocusedColumn(focusedColumn === column ? null : column);
+  };
+
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
@@ -541,16 +546,77 @@ export default function TodoList() {
       {selectedUser && currentUserId && (
         <div className="space-y-3">
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          <div className="flex gap-4">
             {/* TODO Column */}
             <div
-              className="bg-gray-800 rounded-lg p-4 overflow-y-auto"
+              className={`bg-gray-800 rounded-lg p-4 overflow-y-auto transition-all duration-300 ${
+                focusedColumn === "TODO" 
+                  ? "flex-[88]" 
+                  : focusedColumn 
+                  ? "flex-[6]" 
+                  : "flex-1"
+              }`}
               onDragOver={handleDragOver}
               onDrop={(e) => handleDrop(e, "TODO")}
             >
               <h3 className="text-xl font-bold text-blue-400 mb-4 flex items-center justify-between">
-                <span>📝 Todo</span>
-                <span className="text-sm bg-blue-600 px-2 py-1 rounded">{todosByStatus.TODO.length}</span>
+                <span className="flex items-center gap-2">
+                  {focusedColumn === null || focusedColumn === "TODO" ? (
+                    <>
+                      <svg className="w-5 h-5 inline-block" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <rect x="8" y="2" width="8" height="4" rx="1" fill="currentColor" opacity="0.3"/>
+                        <rect x="5" y="4" width="14" height="18" rx="2"/>
+                        <path d="M9 10h6M9 14h6M9 18h4" strokeLinecap="round"/>
+                        <path d="M9 10l1 1 2-2" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                      <span>Todo</span>
+                      <button
+                        onClick={() => handleFocusColumn("TODO")}
+                        className="bg-white text-gray-900 hover:bg-gray-100 p-2 rounded transition-all hover:scale-110 flex items-center justify-center"
+                        title={focusedColumn === "TODO" ? "Reset view" : "Focus this column"}
+                      >
+                        <span className="relative inline-block w-5 h-5">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-full h-full">
+                            <path d="M4 4 L4 8 M4 4 L8 4" strokeLinecap="round" strokeLinejoin="round"/>
+                            <path d="M20 4 L20 8 M20 4 L16 4" strokeLinecap="round" strokeLinejoin="round"/>
+                            <path d="M4 20 L4 16 M4 20 L8 20" strokeLinecap="round" strokeLinejoin="round"/>
+                            <path d="M20 20 L20 16 M20 20 L16 20" strokeLinecap="round" strokeLinejoin="round"/>
+                            <circle cx="12" cy="12" r="3"/>
+                          </svg>
+                          {focusedColumn === "TODO" && (
+                            <span className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                              <span className="block w-full h-[2px] bg-current transform rotate-45" style={{width: '130%'}}></span>
+                            </span>
+                          )}
+                        </span>
+                      </button>
+                    </>
+                  ) : (
+                    <button
+                      onClick={() => handleFocusColumn("TODO")}
+                      className="flex items-center gap-1.5 hover:scale-105 transition-transform"
+                      title="Focus this column"
+                    >
+                      <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <rect x="8" y="2" width="8" height="4" rx="1" fill="currentColor" opacity="0.3"/>
+                        <rect x="5" y="4" width="14" height="18" rx="2"/>
+                        <path d="M9 10h6M9 14h6M9 18h4" strokeLinecap="round"/>
+                      </svg>
+                      <span className="bg-white text-gray-900 hover:bg-gray-100 px-2 py-1.5 rounded transition-all flex items-center">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5">
+                          <path d="M4 4 L4 8 M4 4 L8 4" strokeLinecap="round" strokeLinejoin="round"/>
+                          <path d="M20 4 L20 8 M20 4 L16 4" strokeLinecap="round" strokeLinejoin="round"/>
+                          <path d="M4 20 L4 16 M4 20 L8 20" strokeLinecap="round" strokeLinejoin="round"/>
+                          <path d="M20 20 L20 16 M20 20 L16 20" strokeLinecap="round" strokeLinejoin="round"/>
+                          <circle cx="12" cy="12" r="3"/>
+                        </svg>
+                      </span>
+                    </button>
+                  )}
+                </span>
+                {(focusedColumn === null || focusedColumn === "TODO") && (
+                  <span className="text-sm bg-blue-600 px-2 py-1 rounded">{todosByStatus.TODO.length}</span>
+                )}
               </h3>
               <div className="space-y-3">
                 {todosByStatus.TODO.length === 0 ? (
@@ -568,6 +634,7 @@ export default function TodoList() {
                       onDragStart={handleDragStart}
                       onDragOver={handleDragOver}
                       onDrop={handleDrop}
+                      isColumnFocused={focusedColumn === null || focusedColumn === "TODO"}
                     />
                   ))
                 )}
@@ -576,13 +643,64 @@ export default function TodoList() {
 
             {/* IN_PROGRESS Column */}
             <div 
-              className="bg-gray-800 rounded-lg p-4 overflow-y-auto"
+              className={`bg-gray-800 rounded-lg p-4 overflow-y-auto transition-all duration-300 ${
+                focusedColumn === "IN_PROGRESS" 
+                  ? "flex-[88]" 
+                  : focusedColumn 
+                  ? "flex-[6]" 
+                  : "flex-1"
+              }`}
               onDragOver={handleDragOver}
               onDrop={(e) => handleDrop(e, "IN_PROGRESS")}
             >
               <h3 className="text-xl font-bold text-yellow-400 mb-4 flex items-center justify-between">
-                <span>⚡ In Progress</span>
-                <span className="text-sm bg-yellow-600 px-2 py-1 rounded">{todosByStatus.IN_PROGRESS.length}</span>
+                <span className="flex items-center gap-2">
+                  {focusedColumn === null || focusedColumn === "IN_PROGRESS" ? (
+                    <>
+                      🕐 In Progress
+                      <button
+                        onClick={() => handleFocusColumn("IN_PROGRESS")}
+                        className="bg-white text-gray-900 hover:bg-gray-100 p-2 rounded transition-all hover:scale-110 flex items-center justify-center"
+                        title={focusedColumn === "IN_PROGRESS" ? "Reset view" : "Focus this column"}
+                      >
+                        <span className="relative inline-block w-5 h-5">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-full h-full">
+                            <path d="M4 4 L4 8 M4 4 L8 4" strokeLinecap="round" strokeLinejoin="round"/>
+                            <path d="M20 4 L20 8 M20 4 L16 4" strokeLinecap="round" strokeLinejoin="round"/>
+                            <path d="M4 20 L4 16 M4 20 L8 20" strokeLinecap="round" strokeLinejoin="round"/>
+                            <path d="M20 20 L20 16 M20 20 L16 20" strokeLinecap="round" strokeLinejoin="round"/>
+                            <circle cx="12" cy="12" r="3"/>
+                          </svg>
+                          {focusedColumn === "IN_PROGRESS" && (
+                            <span className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                              <span className="block w-full h-[2px] bg-current transform rotate-45" style={{width: '130%'}}></span>
+                            </span>
+                          )}
+                        </span>
+                      </button>
+                    </>
+                  ) : (
+                    <button
+                      onClick={() => handleFocusColumn("IN_PROGRESS")}
+                      className="flex items-center gap-1.5 hover:scale-105 transition-transform"
+                      title="Focus this column"
+                    >
+                      🕐
+                      <span className="bg-white text-gray-900 hover:bg-gray-100 px-2 py-1.5 rounded transition-all flex items-center">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5">
+                          <path d="M4 4 L4 8 M4 4 L8 4" strokeLinecap="round" strokeLinejoin="round"/>
+                          <path d="M20 4 L20 8 M20 4 L16 4" strokeLinecap="round" strokeLinejoin="round"/>
+                          <path d="M4 20 L4 16 M4 20 L8 20" strokeLinecap="round" strokeLinejoin="round"/>
+                          <path d="M20 20 L20 16 M20 20 L16 20" strokeLinecap="round" strokeLinejoin="round"/>
+                          <circle cx="12" cy="12" r="3"/>
+                        </svg>
+                      </span>
+                    </button>
+                  )}
+                </span>
+                {(focusedColumn === null || focusedColumn === "IN_PROGRESS") && (
+                  <span className="text-sm bg-yellow-600 px-2 py-1 rounded">{todosByStatus.IN_PROGRESS.length}</span>
+                )}
               </h3>
               <div className="space-y-3">
                 {todosByStatus.IN_PROGRESS.length === 0 ? (
@@ -600,6 +718,7 @@ export default function TodoList() {
                       onDragStart={handleDragStart}
                       onDragOver={handleDragOver}
                       onDrop={handleDrop}
+                      isColumnFocused={focusedColumn === null || focusedColumn === "IN_PROGRESS"}
                     />
                   ))
                 )}
@@ -608,13 +727,64 @@ export default function TodoList() {
 
             {/* DONE Column */}
             <div 
-              className="bg-gray-800 rounded-lg p-4 overflow-y-auto"
+              className={`bg-gray-800 rounded-lg p-4 overflow-y-auto transition-all duration-300 ${
+                focusedColumn === "DONE" 
+                  ? "flex-[88]" 
+                  : focusedColumn 
+                  ? "flex-[6]" 
+                  : "flex-1"
+              }`}
               onDragOver={handleDragOver}
               onDrop={(e) => handleDrop(e, "DONE")}
             >
               <h3 className="text-xl font-bold text-green-400 mb-4 flex items-center justify-between">
-                <span>✅ Done</span>
-                <span className="text-sm bg-green-600 px-2 py-1 rounded">{todosByStatus.DONE.length}</span>
+                <span className="flex items-center gap-2">
+                  {focusedColumn === null || focusedColumn === "DONE" ? (
+                    <>
+                      🏁 Done
+                      <button
+                        onClick={() => handleFocusColumn("DONE")}
+                        className="bg-white text-gray-900 hover:bg-gray-100 p-2 rounded transition-all hover:scale-110 flex items-center justify-center"
+                        title={focusedColumn === "DONE" ? "Reset view" : "Focus this column"}
+                      >
+                        <span className="relative inline-block w-5 h-5">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-full h-full">
+                            <path d="M4 4 L4 8 M4 4 L8 4" strokeLinecap="round" strokeLinejoin="round"/>
+                            <path d="M20 4 L20 8 M20 4 L16 4" strokeLinecap="round" strokeLinejoin="round"/>
+                            <path d="M4 20 L4 16 M4 20 L8 20" strokeLinecap="round" strokeLinejoin="round"/>
+                            <path d="M20 20 L20 16 M20 20 L16 20" strokeLinecap="round" strokeLinejoin="round"/>
+                            <circle cx="12" cy="12" r="3"/>
+                          </svg>
+                          {focusedColumn === "DONE" && (
+                            <span className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                              <span className="block w-full h-[2px] bg-current transform rotate-45" style={{width: '130%'}}></span>
+                            </span>
+                          )}
+                        </span>
+                      </button>
+                    </>
+                  ) : (
+                    <button
+                      onClick={() => handleFocusColumn("DONE")}
+                      className="flex items-center gap-1.5 hover:scale-105 transition-transform"
+                      title="Focus this column"
+                    >
+                      🏁
+                      <span className="bg-white text-gray-900 hover:bg-gray-100 px-2 py-1.5 rounded transition-all flex items-center">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5">
+                          <path d="M4 4 L4 8 M4 4 L8 4" strokeLinecap="round" strokeLinejoin="round"/>
+                          <path d="M20 4 L20 8 M20 4 L16 4" strokeLinecap="round" strokeLinejoin="round"/>
+                          <path d="M4 20 L4 16 M4 20 L8 20" strokeLinecap="round" strokeLinejoin="round"/>
+                          <path d="M20 20 L20 16 M20 20 L16 20" strokeLinecap="round" strokeLinejoin="round"/>
+                          <circle cx="12" cy="12" r="3"/>
+                        </svg>
+                      </span>
+                    </button>
+                  )}
+                </span>
+                {(focusedColumn === null || focusedColumn === "DONE") && (
+                  <span className="text-sm bg-green-600 px-2 py-1 rounded">{todosByStatus.DONE.length}</span>
+                )}
               </h3>
               <div className="space-y-3">
                 {todosByStatus.DONE.length === 0 ? (
@@ -632,6 +802,7 @@ export default function TodoList() {
                       onDragStart={handleDragStart}
                       onDragOver={handleDragOver}
                       onDrop={handleDrop}
+                      isColumnFocused={focusedColumn === null || focusedColumn === "DONE"}
                     />
                   ))
                 )}
